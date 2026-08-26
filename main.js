@@ -101,3 +101,48 @@ run(() => {
 
   addEventListener("blur", () => { blob.style.opacity = "0"; });
 });
+
+/* ── 4. 감쇠 스크롤 (데스크탑 전용) ──
+   Damped scroll, desktop only.
+
+   실제 스크롤 위치(window.scrollTo)를 움직인다. 콘텐츠를 transform 으로 미는 방식이
+   더 흔하지만 그러면 position: sticky 헤더가 죽는다.
+   Moves the real scroll position. The commoner transform-based approach would kill the
+   sticky header.
+
+   ⚠️ 이 블록은 접근성 비용을 알고 넣은 것이다 — 스크롤이 입력을 즉시 따라가지 않으므로
+   빠르게 훑는 사용자에게는 반응이 굼뜨게 느껴질 수 있다. 빼려면 이 run(...) 하나를 지우면
+   되고 나머지 동작에는 영향이 없다.
+   Deliberate accessibility cost. Delete this one run(...) to remove it; nothing else
+   depends on it. */
+run(() => {
+  if (reduce) return;                                                  // 모션 최소화 존중
+  if (!matchMedia("(hover: hover) and (pointer: fine)").matches) return; // 터치는 네이티브 관성 유지
+
+  const EASE = 0.12;
+  let target = scrollY, current = scrollY, running = false;
+  const maxScroll = () => document.documentElement.scrollHeight - innerHeight;
+
+  const tick = () => {
+    current += (target - current) * EASE;
+    if (Math.abs(target - current) < 0.5) { current = target; running = false; }
+    else requestAnimationFrame(tick);
+    window.scrollTo(0, current);
+  };
+
+  // deltaMode 정규화 — 휠 마우스는 줄(1), 일부는 페이지(2) 단위로 보고한다
+  // Normalise deltaMode: wheel mice report lines (1), some report pages (2)
+  const px = (e) => e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
+
+  addEventListener("wheel", (e) => {
+    if (e.ctrlKey) return;              // 핀치 확대는 건드리지 않음 / leave pinch-zoom alone
+    e.preventDefault();
+    target = Math.max(0, Math.min(maxScroll(), target + px(e)));
+    if (!running) { running = true; requestAnimationFrame(tick); }
+  }, { passive: false });
+
+  // 휠이 아닌 스크롤(키보드, 스크롤바 드래그, 앵커 이동, 포커스 이동)은 가로채지 않고
+  // 목표값만 재동기화한다 — 그래야 Space/PageDown/Tab 이 평소대로 동작한다
+  // Non-wheel scrolling is never intercepted, only resynced, so keyboard and anchors work
+  addEventListener("scroll", () => { if (!running) { target = current = scrollY; } }, { passive: true });
+});
