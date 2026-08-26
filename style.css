@@ -176,10 +176,10 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 }
 
 /* 커서 리빌 레이어 / cursor reveal layer
-   히어로 위에 겹치는 반전판(검은 배경 + 흰 글자). 커서가 지나간 자리만 마스크로 열린다.
-   마스크 3장이 서로 다른 속도로 커서를 쫓아 머리와 꼬리를 만든다 — main.js 참조.
-   An inverted copy stacked over the hero, opened only where the cursor has been.
-   Three mask layers chase the cursor at different rates to make a head and a tail. */
+   히어로 위에 겹치는 반전판(검은 배경 + 흰 글자). 마스크는 main.js 가 매 프레임 만든다 —
+   커서가 실제로 지나간 경로를 샘플링한 획이라 여기에 고정 모양을 두지 않는다.
+   An inverted copy stacked over the hero. main.js builds the mask each frame from the
+   path the cursor actually took, so no fixed shape is declared here. */
 .hero-reveal {
   position: absolute;
   inset: 0;
@@ -187,18 +187,9 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
   background: var(--fg);
   color: var(--bg);
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  /* 좌표는 요소 기준 px, main.js 가 매 프레임 갱신 / element-local px, set per frame */
-  mask-image:
-    radial-gradient(circle 190px at var(--x1, -999px) var(--y1, -999px),
-      #000 0%, rgba(0, 0, 0, 0.6) 50%, transparent 100%),
-    radial-gradient(circle 140px at var(--x2, -999px) var(--y2, -999px),
-      #000 0%, rgba(0, 0, 0, 0.5) 50%, transparent 100%),
-    radial-gradient(circle 95px at var(--x3, -999px) var(--y3, -999px),
-      #000 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+  opacity: 0;                   /* JS 가 올리고 내린다 — 멈추면 잉크가 마르듯 0 으로 */
+  transition: opacity 0.35s ease;
 }
-.hero-reveal.is-on { opacity: 1; }
 
 /* 모션 최소화 설정이면 전부 끔 / respect reduced motion */
 @media (prefers-reduced-motion: reduce) {

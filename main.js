@@ -1,5 +1,5 @@
-/* B 패스: 스크롤 리빌 + 히어로 글자 등장 + 커서 반전 블롭
-   B pass: scroll reveal, hero letter entrance, difference-blend cursor blob
+/* 스크롤 리빌 + 히어로 글자 등장 + 커서 리빌 + 감쇠 스크롤
+   Scroll reveal, hero letter entrance, cursor reveal, damped scroll
    라이브러리 없음 / no libraries */
 
 /* CSS가 콘텐츠를 숨기고 이 파일이 되돌리는 구조라, 여기서 예외가 나면 페이지가
@@ -62,18 +62,17 @@ run(() => {
 
    구조는 참조 사이트와 같다. base(흰 배경 + 검은 글자) 위에 reveal(검은 배경 + 흰 글자)을
    겹치고, 커서가 지나간 자리만 마스크로 열어 준다. 그쪽은 그 마스크를 Three.js 유체
-   셰이더로 그리지만, 서로 다른 속도로 커서를 쫓는 radial-gradient 3장이면 같은 번짐과
-   꼬리가 나온다.
-   Same structure as the reference: an inverted layer above the base, opened only where the
-   cursor has been. They paint that mask with a WebGL fluid sim; three radial gradients
-   chasing the cursor at different rates give the same smear for none of the weight.
+   셰이더로 그린다.
 
-   단색 원을 페이지 전체에 띄웠던 이전 방식과 다른 점: 열린 자리가 "설계된 반전판"이라
-   여백 위에서도 결함으로 보이지 않는다. */
+   ⚠️ radial-gradient 는 이름 그대로 원이다. 커서를 쫓는 점 몇 개로 만들면 커서가 멈춘
+   순간 전부 한 자리에 수렴해 **가만히 있는 원**이 남는다. 그래서 (a) 쫓아가는 점이 아니라
+   실제 커서 경로를 샘플링해 획을 만들고, (b) 멈추면 잉크가 마르듯 걷어낸다. 원이 화면에
+   머무를 수 있는 상태를 없애는 것이 요점이다.
+   Gradients are circles; followers all converge when the pointer stops, leaving a static
+   disc. So sample the actual path instead, and dry the ink when movement stops. */
 run(() => {
   if (reduce || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
   // 마스크 미지원 브라우저에서는 아예 만들지 않는다 — 만들면 검은 판이 통째로 덮인다
-  // Never build it without mask support, or the panel would cover the hero outright
   if (!CSS.supports("mask-image", "radial-gradient(#000, #000)")) return;
 
   const hero = document.querySelector(".hero");
@@ -88,43 +87,54 @@ run(() => {
   reveal.appendChild(clone);
   hero.appendChild(reveal);
 
-  // 세 점이 서로 다른 속도로 커서를 쫓는다 → 앞의 점이 머리, 뒤의 점이 꼬리
-  // Three followers at different rates: the fast one leads, the slow ones trail
-  const pts = [{ x: 0, y: 0, k: 0.35 }, { x: 0, y: 0, k: 0.18 }, { x: 0, y: 0, k: 0.10 }];
-  let tx = 0, ty = 0, inside = false, running = false, seeded = false;
+  const LIFE = 480;    // 획 한 점이 남아 있는 시간(ms) / how long a stroke point lives
+  const IDLE = 200;    // 이 시간 이상 안 움직이면 마르기 시작 / ink starts drying
+  const STEP = 13;     // 이 거리마다 점을 찍는다 / sample spacing in px
+  const MAX = 14;
+
+  let trail = [], lastMove = 0, inside = false, running = false;
 
   const frame = () => {
-    let moving = false;
-    pts.forEach((p, i) => {
-      p.x += (tx - p.x) * p.k;
-      p.y += (ty - p.y) * p.k;
-      if (Math.abs(tx - p.x) > 0.5 || Math.abs(ty - p.y) > 0.5) moving = true;
-      reveal.style.setProperty(`--x${i + 1}`, p.x.toFixed(1) + "px");
-      reveal.style.setProperty(`--y${i + 1}`, p.y.toFixed(1) + "px");
-    });
-    if (moving || inside) requestAnimationFrame(tick);
-    else running = false;
+    const now = performance.now();
+    trail = trail.filter((p) => now - p.t < LIFE);
+    const moving = now - lastMove < IDLE;
+
+    if (!inside || (!moving && !trail.length)) {
+      reveal.style.opacity = "0";
+      running = false;
+      return;                                   // 남은 점이 없으면 루프를 멈춘다
+    }
+
+    // 오래된 점일수록 작고 옅게 → 획이 꼬리 쪽으로 가늘어진다
+    // Older points are smaller and fainter, so the stroke tapers
+    reveal.style.maskImage = trail
+      .map((p) => {
+        const a = 1 - (now - p.t) / LIFE;
+        return `radial-gradient(circle ${(46 + 120 * a).toFixed(0)}px at ${p.x.toFixed(0)}px ${p.y.toFixed(0)}px, rgba(0,0,0,${(0.9 * a).toFixed(2)}) 0%, transparent 100%)`;
+      })
+      .join(",");
+    reveal.style.opacity = "1";
+    requestAnimationFrame(frame);
   };
-  const tick = () => frame();
 
   addEventListener("pointermove", (e) => {
     const r = hero.getBoundingClientRect();
-    // 마스크 좌표는 요소 기준이므로 뷰포트 좌표에서 변환한다 / mask coords are element-local
-    tx = e.clientX - r.left;
-    ty = e.clientY - r.top;
     const over = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
-    if (over !== inside) {
-      inside = over;
-      reveal.classList.toggle("is-on", inside);
+    if (!over) { inside = false; return; }
+
+    // 마스크 좌표는 요소 기준이므로 뷰포트 좌표에서 변환 / mask coords are element-local
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    const last = trail[trail.length - 1];
+    if (!last || Math.hypot(x - last.x, y - last.y) >= STEP) {
+      trail.push({ x, y, t: performance.now() });
+      if (trail.length > MAX) trail.shift();
     }
-    if (!seeded) {   // 첫 진입 때 꼬리가 좌상단에서 날아오지 않도록 세 점을 같은 자리에 둠
-      seeded = true;
-      pts.forEach((p) => { p.x = tx; p.y = ty; });
-    }
-    if (!running) { running = true; requestAnimationFrame(tick); }
+    inside = true;
+    lastMove = performance.now();
+    if (!running) { running = true; requestAnimationFrame(frame); }
   }, { passive: true });
 
-  addEventListener("blur", () => { inside = false; reveal.classList.remove("is-on"); });
+  addEventListener("blur", () => { inside = false; trail = []; });
 });
 
 /* ── 4. 감쇠 스크롤 (데스크탑 전용) ──
