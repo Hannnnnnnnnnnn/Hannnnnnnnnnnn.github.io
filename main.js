@@ -86,14 +86,14 @@ run(() => {
   document.body.insertAdjacentHTML("beforeend",
     '<svg class="ink-defs" aria-hidden="true" focusable="false">' +
     '<filter id="hero-ink" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">' +
-      '<feGaussianBlur in="SourceGraphic" stdDeviation="13" result="blur"/>' +
+      '<feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>' +
       // 알파를 세게 밀어 임계값을 만든다 → 흐린 원들이 하나의 덩어리로 합쳐진다
       // Push alpha hard to threshold it, merging the blurred circles into one mass
       '<feColorMatrix in="blur" type="matrix" result="goo" ' +
-        'values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -11"/>' +
+        'values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 17 -6"/>' +
       // 난류로 경계를 흔들어 원의 흔적을 지운다 / turbulence breaks up the circular edge
-      '<feTurbulence type="fractalNoise" baseFrequency="0.011 0.019" numOctaves="2" seed="9" result="noise"/>' +
-      '<feDisplacementMap in="goo" in2="noise" scale="38" xChannelSelector="R" yChannelSelector="G"/>' +
+      '<feTurbulence type="fractalNoise" baseFrequency="0.006 0.085" numOctaves="2" seed="9" result="noise"/>' +
+      '<feDisplacementMap in="goo" in2="noise" scale="17" xChannelSelector="R" yChannelSelector="G"/>' +
     '</filter></svg>');
 
   const ink = document.createElement("div");
@@ -107,10 +107,10 @@ run(() => {
   ink.appendChild(reveal);
   hero.appendChild(ink);
 
-  const LIFE = 480;    // 획 한 점이 남아 있는 시간(ms) / how long a stroke point lives
+  const LIFE = 520;    // 획 한 점이 남아 있는 시간(ms) / how long a stroke point lives
   const IDLE = 200;    // 이 시간 이상 안 움직이면 마르기 시작 / ink starts drying
-  const STEP = 13;     // 이 거리마다 점을 찍는다 / sample spacing in px
-  const MAX = 14;
+  const STEP = 6;      // 촘촘해야 융합 후 리본이 된다 / dense enough to fuse into a ribbon
+  const MAX = 30;
 
   let trail = [], lastMove = 0, inside = false, running = false;
 
@@ -130,7 +130,9 @@ run(() => {
     reveal.style.maskImage = trail
       .map((p) => {
         const a = 1 - (now - p.t) / LIFE;
-        return `radial-gradient(circle ${(46 + 120 * a).toFixed(0)}px at ${p.x.toFixed(0)}px ${p.y.toFixed(0)}px, rgba(0,0,0,${(0.9 * a).toFixed(2)}) 0%, transparent 100%)`;
+        // 꼬리로 갈수록 가늘어진다 — 붓을 떼는 느낌 / tapers toward the tail
+        const rad = p.w * (0.5 + 0.5 * a);
+        return `radial-gradient(circle ${rad.toFixed(0)}px at ${p.x.toFixed(0)}px ${p.y.toFixed(0)}px, rgba(0,0,0,${(0.5 + 0.5 * a).toFixed(2)}) 0%, rgba(0,0,0,${(0.35 + 0.45 * a).toFixed(2)}) 60%, transparent 100%)`;
       })
       .join(",");
     ink.style.opacity = "1";
@@ -146,7 +148,12 @@ run(() => {
     const x = e.clientX - r.left, y = e.clientY - r.top;
     const last = trail[trail.length - 1];
     if (!last || Math.hypot(x - last.x, y - last.y) >= STEP) {
-      trail.push({ x, y, t: performance.now() });
+      const now = performance.now();
+      // 같은 거리(STEP)를 지나는 데 걸린 시간이 곧 속도의 역수다.
+      // 빨리 그으면 가늘고 천천히 그으면 굵게 — 실제 붓이 하는 일.
+      // Time to cover a fixed distance is the inverse of speed: fast strokes thin out.
+      const dt = last ? Math.min(80, now - last.t) : 26;
+      trail.push({ x, y, t: now, w: 15 + 33 * Math.min(1, dt / 55) });
       if (trail.length > MAX) trail.shift();
     }
     inside = true;
