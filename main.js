@@ -57,49 +57,74 @@ run(() => {
   document.addEventListener("visibilitychange", sweep);  // 탭이 살아나면 재확인 / re-check on wake
 });
 
-/* ── 3. 커서 블롭 — 히어로 타이포 위에서만 ──
-   Cursor blob, only over the hero type.
-   mix-blend-mode: difference 는 "아래 있는 것을 반전"시키는 효과라, 반전할 대상이 없는
-   여백 위에서는 흰 원이 흰 배경과 연산되어 그냥 검은 원이 된다. 이 레이아웃은 대부분이
-   여백이므로 글자 영역 안에 있을 때만 보이게 제한한다.
-   difference inverts what is beneath it; over empty white there is nothing to invert and
-   the blob reads as a stray black disc. This page is mostly whitespace, so it is limited
-   to the letterforms. */
+/* ── 3. 커서 리빌 — 히어로를 반전판으로 뚫어 보여준다 ──
+   Cursor reveal: punches through to an inverted copy of the hero.
+
+   구조는 참조 사이트와 같다. base(흰 배경 + 검은 글자) 위에 reveal(검은 배경 + 흰 글자)을
+   겹치고, 커서가 지나간 자리만 마스크로 열어 준다. 그쪽은 그 마스크를 Three.js 유체
+   셰이더로 그리지만, 서로 다른 속도로 커서를 쫓는 radial-gradient 3장이면 같은 번짐과
+   꼬리가 나온다.
+   Same structure as the reference: an inverted layer above the base, opened only where the
+   cursor has been. They paint that mask with a WebGL fluid sim; three radial gradients
+   chasing the cursor at different rates give the same smear for none of the weight.
+
+   단색 원을 페이지 전체에 띄웠던 이전 방식과 다른 점: 열린 자리가 "설계된 반전판"이라
+   여백 위에서도 결함으로 보이지 않는다. */
 run(() => {
   if (reduce || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-  const display = document.querySelector(".display");
-  if (!display) return;   // 히어로가 없는 페이지(About, 작업 상세)에는 아예 붙지 않음
+  // 마스크 미지원 브라우저에서는 아예 만들지 않는다 — 만들면 검은 판이 통째로 덮인다
+  // Never build it without mask support, or the panel would cover the hero outright
+  if (!CSS.supports("mask-image", "radial-gradient(#000, #000)")) return;
 
-  const blob = document.createElement("div");
-  blob.className = "cursor-blob";
-  document.body.appendChild(blob);
+  const hero = document.querySelector(".hero");
+  const display = hero && hero.querySelector(".display");
+  if (!hero || !display) return;
 
-  // 글자 상자들의 합집합으로 판정 — h1 블록 상자를 쓰면 글자 오른쪽 빈 공간까지 포함된다
-  // Test against the letters' union, not the h1 block box, which extends past the text
-  const overType = (x, y) => {
-    const ls = display.querySelectorAll(".ltr");
-    if (!ls.length) return false;
-    const a = ls[0].getBoundingClientRect();
-    const b = ls[ls.length - 1].getBoundingClientRect();
-    return x >= a.left && x <= b.right && y >= a.top && y <= a.bottom;
-  };
+  const reveal = document.createElement("div");
+  reveal.className = "hero-reveal";
+  reveal.setAttribute("aria-hidden", "true");   // 시각용 사본, 스크린리더에는 원본만
+  const clone = display.cloneNode(true);
+  clone.classList.add("is-in");                 // 사본은 등장 애니메이션 없이 최종 상태로
+  reveal.appendChild(clone);
+  hero.appendChild(reveal);
 
-  let x = 0, y = 0, queued = false;
-  addEventListener("pointermove", (e) => {
-    x = e.clientX; y = e.clientY;
-    if (queued) return;
-    queued = true;
-    // pointermove 는 탭이 보일 때만 발생하므로 여기선 rAF 가 안전
-    // pointermove only fires while visible, so rAF is safe here
-    requestAnimationFrame(() => {
-      queued = false;
-      blob.style.setProperty("--x", x + "px");
-      blob.style.setProperty("--y", y + "px");
-      blob.style.opacity = overType(x, y) ? "1" : "0";
+  // 세 점이 서로 다른 속도로 커서를 쫓는다 → 앞의 점이 머리, 뒤의 점이 꼬리
+  // Three followers at different rates: the fast one leads, the slow ones trail
+  const pts = [{ x: 0, y: 0, k: 0.35 }, { x: 0, y: 0, k: 0.18 }, { x: 0, y: 0, k: 0.10 }];
+  let tx = 0, ty = 0, inside = false, running = false, seeded = false;
+
+  const frame = () => {
+    let moving = false;
+    pts.forEach((p, i) => {
+      p.x += (tx - p.x) * p.k;
+      p.y += (ty - p.y) * p.k;
+      if (Math.abs(tx - p.x) > 0.5 || Math.abs(ty - p.y) > 0.5) moving = true;
+      reveal.style.setProperty(`--x${i + 1}`, p.x.toFixed(1) + "px");
+      reveal.style.setProperty(`--y${i + 1}`, p.y.toFixed(1) + "px");
     });
+    if (moving || inside) requestAnimationFrame(tick);
+    else running = false;
+  };
+  const tick = () => frame();
+
+  addEventListener("pointermove", (e) => {
+    const r = hero.getBoundingClientRect();
+    // 마스크 좌표는 요소 기준이므로 뷰포트 좌표에서 변환한다 / mask coords are element-local
+    tx = e.clientX - r.left;
+    ty = e.clientY - r.top;
+    const over = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    if (over !== inside) {
+      inside = over;
+      reveal.classList.toggle("is-on", inside);
+    }
+    if (!seeded) {   // 첫 진입 때 꼬리가 좌상단에서 날아오지 않도록 세 점을 같은 자리에 둠
+      seeded = true;
+      pts.forEach((p) => { p.x = tx; p.y = ty; });
+    }
+    if (!running) { running = true; requestAnimationFrame(tick); }
   }, { passive: true });
 
-  addEventListener("blur", () => { blob.style.opacity = "0"; });
+  addEventListener("blur", () => { inside = false; reveal.classList.remove("is-on"); });
 });
 
 /* ── 4. 감쇠 스크롤 (데스크탑 전용) ──

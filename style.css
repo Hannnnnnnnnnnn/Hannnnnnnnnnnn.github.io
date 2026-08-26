@@ -56,7 +56,7 @@ img { max-width: 100%; height: auto; display: block; }
 /* ── 히어로: 뷰포트를 꽉 채우는 타이포 ──
    Hero: type sized to fill the viewport. overflow는 이 섹션에만 —
    body에 걸면 sticky 헤더가 죽음 / never on an ancestor of the sticky header */
-.hero { overflow: hidden; padding: clamp(3rem, 12vh, 8rem) var(--pad) 0; }
+.hero { position: relative; overflow: hidden; padding: clamp(3rem, 12vh, 8rem) var(--pad) 0; }
 .display {
   margin: 0;
   font-size: clamp(3rem, 15.5vw, 18rem);
@@ -175,29 +175,30 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
   transform: none;
 }
 
-/* 커서 블롭 / cursor blob
-   히어로 타이포 위에서만 표시된다(main.js가 판정). 경계는 그라데이션으로 흐리게 —
-   단색 원이면 글자를 벗어나는 순간 딱딱한 검은 원이 되어 결함처럼 보인다.
-   Shown only over the hero type (main.js decides). The edge fades out; a hard-edged
-   solid circle reads as a defect the moment it leaves the letterforms. */
-.cursor-blob {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 16rem;
-  aspect-ratio: 1;
-  /* closest-side: 그라데이션 끝을 상자 변에 맞춰 잘림 없이 완전히 투명해지게
-     closest-side lands the fade exactly on the box edge, so nothing is clipped */
-  background: radial-gradient(circle closest-side,
-    #fff 0%, #fff 22%, rgba(255, 255, 255, 0.55) 55%, rgba(255, 255, 255, 0) 100%);
-  mix-blend-mode: difference;   /* 아래 색을 반전 / inverts what is beneath */
+/* 커서 리빌 레이어 / cursor reveal layer
+   히어로 위에 겹치는 반전판(검은 배경 + 흰 글자). 커서가 지나간 자리만 마스크로 열린다.
+   마스크 3장이 서로 다른 속도로 커서를 쫓아 머리와 꼬리를 만든다 — main.js 참조.
+   An inverted copy stacked over the hero, opened only where the cursor has been.
+   Three mask layers chase the cursor at different rates to make a head and a tail. */
+.hero-reveal {
+  position: absolute;
+  inset: 0;
+  padding: inherit;             /* 원본 h1 과 정확히 겹치도록 .hero 의 패딩을 그대로 */
+  background: var(--fg);
+  color: var(--bg);
   pointer-events: none;
-  z-index: 100;
   opacity: 0;
-  transform: translate(var(--x, -50vw), var(--y, -50vh)) translate(-50%, -50%);
-  transition: opacity 0.25s ease;
-  will-change: transform;
+  transition: opacity 0.3s ease;
+  /* 좌표는 요소 기준 px, main.js 가 매 프레임 갱신 / element-local px, set per frame */
+  mask-image:
+    radial-gradient(circle 190px at var(--x1, -999px) var(--y1, -999px),
+      #000 0%, rgba(0, 0, 0, 0.6) 50%, transparent 100%),
+    radial-gradient(circle 140px at var(--x2, -999px) var(--y2, -999px),
+      #000 0%, rgba(0, 0, 0, 0.5) 50%, transparent 100%),
+    radial-gradient(circle 95px at var(--x3, -999px) var(--y3, -999px),
+      #000 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
 }
+.hero-reveal.is-on { opacity: 1; }
 
 /* 모션 최소화 설정이면 전부 끔 / respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
@@ -206,5 +207,5 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
     transform: none;
     transition: none;
   }
-  .cursor-blob { display: none; }
+  .hero-reveal { display: none; }
 }
