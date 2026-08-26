@@ -40,6 +40,8 @@ private 저장소에서는 read-only조차 불가. 그래서 "권한을 준다"�
 | `c2b20ae` | 정적 5페이지 스캐폴드 |
 | `296f1f3` | A 패스 — 디스플레이 타이포 + 에디토리얼 행 리스트 |
 | `7124a3e` | B 패스 — 스크롤 리빌 / 낱자 등장 / 커서 블롭 |
+| `d47ce9a` | CLAUDE.md + 세션 로그 |
+| `44b60dd` | `.nojekyll` — 실제로 배포를 성립시킨 커밋 |
 
 ## 참조 사이트 분석 (noth.in)
 
@@ -92,7 +94,42 @@ computed opacity가 1인지 확인 — 통과. 발동을 확인하지 않은 안
 바이트 수를 먼저 대조했다면 즉시 알았다. `pages/builds`의 `status`가 `building`인지
 묻는 게 폴링보다 정확하다.
 
-### 4. 그 밖
+### 4. 세 번의 배포가 조용히 실패하고 있었다 (그리고 나는 성공했다고 보고했다)
+
+A 패스를 푸시한 뒤 "라이브 반영됐어"라고 보고했다. **틀렸다.** push는 성공했지만 Pages
+빌드가 실패했고, 라이브는 계속 첫 스캐폴드를 서빙하고 있었다. B 패스도, 문서 커밋도
+같은 식으로 실패했다 — 3연속. 아무도 알려주지 않았다.
+
+들킨 경위도 우연에 가까웠다. 배포 확인차 라이브 `main.js`를 받아 마커를 grep했는데 0이
+나왔고, 그게 "아직 파일이 없다"는 신호였다. 바이트 수를 봤더니 9378(로컬 4114) — 받은 건
+404 페이지였다.
+
+    commit    pusher           dur       status
+    c2b20ae   Hannnnnnnnnnnn   38485ms   built
+    296f1f3   Han-Atacz            0ms   errored
+    7124a3e   Han-Atacz            0ms   errored
+    d47ce9a   Han-Atacz            0ms   errored
+    44b60dd   Han-Atacz        40363ms   built     ← .nojekyll 추가
+
+**여기서 한 번 크게 틀렸다.** 위 표의 앞 4줄만 보고 "소유자가 트리거한 빌드만 성공한다"는
+가설을 세웠고, 상관이 완벽했기 때문에 "결정적 패턴"이라고 단언했다. 그 직후 5번째 줄이
+collaborator 푸시로 성공하며 가설을 무너뜨렸다. 진짜 원인은 pusher가 아니라 **Jekyll 처리
+단계**였고, `.nojekyll` 하나로 해결됐다.
+
+이 저장소는 Jekyll을 전혀 쓰지 않는다 — front matter도, Liquid도, 밑줄 파일도 없다.
+그런데도 Pages는 기본으로 Jekyll을 돌리고 있었고, 그 단계가 실패 지점만 제공했다.
+실패한 빌드의 `error.message`는 `"Page build failed."` 한 줄, `duration`은 `0`.
+API가 주는 정보는 그게 전부라 정확히 무엇이 Jekyll을 넘어뜨렸는지는 끝내 특정하지 못했다.
+`.nojekyll`이 그 질문 자체를 없앴으므로 더 파지 않았다.
+
+남길 규칙 세 가지:
+- **`.nojekyll`을 지우지 마라.** 장식이 아니라 배포가 성립하는 이유다.
+- **push 성공 ≠ 배포 성공.** `pages/builds`의 `status`와 `duration`을 읽고, 라이브 파일을
+  받아 로컬과 바이트 대조하고, 신·구 마커로 확인한 뒤에 "반영됐다"고 말할 것.
+  성공한 빌드는 40초쯤 걸린다. `dur=0`은 시작도 못 한 실패다.
+- **표본 4개짜리 완벽한 상관을 "결정적"이라고 부르지 마라.**
+
+### 5. 그 밖
 
 - `overflow: hidden`을 body/html에 걸면 sticky 헤더가 죽는다 → `.hero`에만
 - 지연 초기화는 rAF가 아니라 `setTimeout` (rAF는 백그라운드 탭에서 발화 안 함)
