@@ -146,3 +146,61 @@ footer {
   padding: 1.5rem var(--pad);
   border-top: 1px solid var(--fg);
 }
+
+/* ══ B 패스: 모션 / B pass: motion ══════════════════════════
+   JS가 없거나 실패하면 아래 규칙이 하나도 적용되지 않아 전부 그냥 보인다
+   Without JS none of this applies and everything simply shows */
+
+/* 히어로 낱자 — --i 는 JS가 섞은 순서 / --i is the shuffled order from JS */
+html.js .display .ltr {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.35em);
+}
+html.js .display.is-in .ltr {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--i) * 55ms);
+}
+
+/* 스크롤 리빌 / scroll reveal */
+html.js :is(.rows li, .section-head, .hero-caption, .prose > *) {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* 커서 블롭 / cursor blob */
+.cursor-blob {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 13rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fff;
+  mix-blend-mode: difference;   /* 흰 원이 아래 색을 반전 / inverts what is beneath */
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+  transform: translate(var(--x, -50vw), var(--y, -50vh)) translate(-50%, -50%) scale(var(--s, 1));
+  transition: opacity 0.3s ease, scale 0.3s ease;
+  will-change: transform;
+}
+/* 행 위에서는 커지게 — :has() 덕에 JS 추가 없음 / grows over a row, no extra JS */
+body:has(.row:hover) .cursor-blob { --s: 1.5; }
+
+/* 모션 최소화 설정이면 전부 끔 / respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html.js :is(.display .ltr, .rows li, .section-head, .hero-caption, .prose > *) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .cursor-blob { display: none; }
+}
