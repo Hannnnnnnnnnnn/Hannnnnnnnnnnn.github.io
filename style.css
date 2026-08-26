@@ -175,25 +175,29 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
   transform: none;
 }
 
-/* 커서 블롭 / cursor blob */
+/* 커서 블롭 / cursor blob
+   히어로 타이포 위에서만 표시된다(main.js가 판정). 경계는 그라데이션으로 흐리게 —
+   단색 원이면 글자를 벗어나는 순간 딱딱한 검은 원이 되어 결함처럼 보인다.
+   Shown only over the hero type (main.js decides). The edge fades out; a hard-edged
+   solid circle reads as a defect the moment it leaves the letterforms. */
 .cursor-blob {
   position: fixed;
   top: 0;
   left: 0;
-  width: 13rem;
+  width: 16rem;
   aspect-ratio: 1;
-  border-radius: 50%;
-  background: #fff;
-  mix-blend-mode: difference;   /* 흰 원이 아래 색을 반전 / inverts what is beneath */
+  /* closest-side: 그라데이션 끝을 상자 변에 맞춰 잘림 없이 완전히 투명해지게
+     closest-side lands the fade exactly on the box edge, so nothing is clipped */
+  background: radial-gradient(circle closest-side,
+    #fff 0%, #fff 22%, rgba(255, 255, 255, 0.55) 55%, rgba(255, 255, 255, 0) 100%);
+  mix-blend-mode: difference;   /* 아래 색을 반전 / inverts what is beneath */
   pointer-events: none;
   z-index: 100;
   opacity: 0;
-  transform: translate(var(--x, -50vw), var(--y, -50vh)) translate(-50%, -50%) scale(var(--s, 1));
-  transition: opacity 0.3s ease, scale 0.3s ease;
+  transform: translate(var(--x, -50vw), var(--y, -50vh)) translate(-50%, -50%);
+  transition: opacity 0.25s ease;
   will-change: transform;
 }
-/* 행 위에서는 커지게 — :has() 덕에 JS 추가 없음 / grows over a row, no extra JS */
-body:has(.row:hover) .cursor-blob { --s: 1.5; }
 
 /* 모션 최소화 설정이면 전부 끔 / respect reduced motion */
 @media (prefers-reduced-motion: reduce) {

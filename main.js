@@ -57,14 +57,32 @@ run(() => {
   document.addEventListener("visibilitychange", sweep);  // 탭이 살아나면 재확인 / re-check on wake
 });
 
-/* ── 3. 커서 블롭 — mix-blend-mode: difference 로 지나가는 자리를 반전 ──
-   Cursor blob inverting whatever it passes over.
-   마크업을 5개 파일에 넣지 않으려고 JS에서 생성 / created here to keep the 5 pages clean */
+/* ── 3. 커서 블롭 — 히어로 타이포 위에서만 ──
+   Cursor blob, only over the hero type.
+   mix-blend-mode: difference 는 "아래 있는 것을 반전"시키는 효과라, 반전할 대상이 없는
+   여백 위에서는 흰 원이 흰 배경과 연산되어 그냥 검은 원이 된다. 이 레이아웃은 대부분이
+   여백이므로 글자 영역 안에 있을 때만 보이게 제한한다.
+   difference inverts what is beneath it; over empty white there is nothing to invert and
+   the blob reads as a stray black disc. This page is mostly whitespace, so it is limited
+   to the letterforms. */
 run(() => {
   if (reduce || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  const display = document.querySelector(".display");
+  if (!display) return;   // 히어로가 없는 페이지(About, 작업 상세)에는 아예 붙지 않음
+
   const blob = document.createElement("div");
   blob.className = "cursor-blob";
   document.body.appendChild(blob);
+
+  // 글자 상자들의 합집합으로 판정 — h1 블록 상자를 쓰면 글자 오른쪽 빈 공간까지 포함된다
+  // Test against the letters' union, not the h1 block box, which extends past the text
+  const overType = (x, y) => {
+    const ls = display.querySelectorAll(".ltr");
+    if (!ls.length) return false;
+    const a = ls[0].getBoundingClientRect();
+    const b = ls[ls.length - 1].getBoundingClientRect();
+    return x >= a.left && x <= b.right && y >= a.top && y <= a.bottom;
+  };
 
   let x = 0, y = 0, queued = false;
   addEventListener("pointermove", (e) => {
@@ -77,7 +95,7 @@ run(() => {
       queued = false;
       blob.style.setProperty("--x", x + "px");
       blob.style.setProperty("--y", y + "px");
-      blob.style.opacity = "1";
+      blob.style.opacity = overType(x, y) ? "1" : "0";
     });
   }, { passive: true });
 
