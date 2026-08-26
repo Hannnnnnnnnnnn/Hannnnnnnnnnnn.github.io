@@ -1,22 +1,26 @@
 # Portfolio
 
-정적 HTML/CSS. 빌드 스텝 없음 — 파일을 그대로 GitHub Pages가 서빙한다.
-Static HTML/CSS, no build step.
+`https://hannnnnnnnnnnn.github.io/`
+
+정적 HTML/CSS/JS. 빌드 스텝도 라이브러리도 없다 — GitHub Pages가 루트를 그대로 서빙한다.
+Static HTML/CSS/JS, no build step, no libraries.
 
 ## 구조 / Structure
 
-    index.html    홈 — 소개 + 프로젝트 카드
-    about.html    About me
-    work-1.html   프로젝트 상세 (Problem / Approach / Result)
-    work-2.html
-    work-3.html
-    style.css     전부 여기. :root 토큰만 바꾸면 톤이 바뀐다
+    index.html          홈 — 히어로 + 작업 행 리스트
+    about.html          About
+    work-1..3.html      프로젝트 상세 (Problem / Approach / Result)
+    style.css           전부 여기. :root 토큰이 재디자인 지점
+    main.js             모션 3종 (스크롤 리빌 / 낱자 등장 / 커서 블롭)
+    CLAUDE.md           작업 규칙·함정
+    docs/session-logs/  세션별 기록
 
-## 로컬 확인 / Preview
+## 로컬 미리보기 / Preview
 
-    open index.html            # 그냥 열면 됨
-    python3 -m http.server     # 상대경로까지 실서버처럼 볼 때
+    python3 -m http.server 8765     # http://127.0.0.1:8765/
+    pkill -f "http.server 8765"
 
 ## 배포 / Deploy
 
-Settings → Pages → Deploy from a branch → `main` / `/ (root)`.
+`main`에 push하면 끝. 확인은 [`CLAUDE.md`](./CLAUDE.md) "배포" 절 참고 —
+초록색 push는 배포 완료가 아니다.
