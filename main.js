@@ -79,13 +79,33 @@ run(() => {
   const display = hero && hero.querySelector(".display");
   if (!hero || !display) return;
 
+  // 잉크 필터. 필터는 마스크보다 **먼저** 적용되므로 .hero-reveal 자신에 걸면 소용이 없다.
+  // 마스크가 끝난 결과를 감싸는 래퍼에 걸어야 마스크 경계가 변형된다.
+  // Filters run before masking, so it must sit on a wrapper around the masked result.
+  // 참조가 해석되지 않는 브라우저에서는 필터가 무시될 뿐 — 원래 모양으로 남는다(안전한 폴백).
+  document.body.insertAdjacentHTML("beforeend",
+    '<svg class="ink-defs" aria-hidden="true" focusable="false">' +
+    '<filter id="hero-ink" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">' +
+      '<feGaussianBlur in="SourceGraphic" stdDeviation="13" result="blur"/>' +
+      // 알파를 세게 밀어 임계값을 만든다 → 흐린 원들이 하나의 덩어리로 합쳐진다
+      // Push alpha hard to threshold it, merging the blurred circles into one mass
+      '<feColorMatrix in="blur" type="matrix" result="goo" ' +
+        'values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -11"/>' +
+      // 난류로 경계를 흔들어 원의 흔적을 지운다 / turbulence breaks up the circular edge
+      '<feTurbulence type="fractalNoise" baseFrequency="0.011 0.019" numOctaves="2" seed="9" result="noise"/>' +
+      '<feDisplacementMap in="goo" in2="noise" scale="38" xChannelSelector="R" yChannelSelector="G"/>' +
+    '</filter></svg>');
+
+  const ink = document.createElement("div");
+  ink.className = "hero-ink";
   const reveal = document.createElement("div");
   reveal.className = "hero-reveal";
   reveal.setAttribute("aria-hidden", "true");   // 시각용 사본, 스크린리더에는 원본만
   const clone = display.cloneNode(true);
   clone.classList.add("is-in");                 // 사본은 등장 애니메이션 없이 최종 상태로
   reveal.appendChild(clone);
-  hero.appendChild(reveal);
+  ink.appendChild(reveal);
+  hero.appendChild(ink);
 
   const LIFE = 480;    // 획 한 점이 남아 있는 시간(ms) / how long a stroke point lives
   const IDLE = 200;    // 이 시간 이상 안 움직이면 마르기 시작 / ink starts drying
@@ -100,7 +120,7 @@ run(() => {
     const moving = now - lastMove < IDLE;
 
     if (!inside || (!moving && !trail.length)) {
-      reveal.style.opacity = "0";
+      ink.style.opacity = "0";
       running = false;
       return;                                   // 남은 점이 없으면 루프를 멈춘다
     }
@@ -113,7 +133,7 @@ run(() => {
         return `radial-gradient(circle ${(46 + 120 * a).toFixed(0)}px at ${p.x.toFixed(0)}px ${p.y.toFixed(0)}px, rgba(0,0,0,${(0.9 * a).toFixed(2)}) 0%, transparent 100%)`;
       })
       .join(",");
-    reveal.style.opacity = "1";
+    ink.style.opacity = "1";
     requestAnimationFrame(frame);
   };
 

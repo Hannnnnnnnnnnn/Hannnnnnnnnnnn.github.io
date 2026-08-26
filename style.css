@@ -6,6 +6,8 @@
   --muted: #8f8f8f;
   --line: #dedede;
   --pad: clamp(1.25rem, 4vw, 3.5rem);   /* 좌우 여백 / gutter */
+  --hero-pad-top: clamp(3rem, 12vh, 8rem);
+
   --grot: "Helvetica Neue", Helvetica, Arial, sans-serif;
   /* 웹폰트로 바꾸려면 위 한 줄만 교체 / swap this one line for a webfont */
 }
@@ -56,7 +58,7 @@ img { max-width: 100%; height: auto; display: block; }
 /* ── 히어로: 뷰포트를 꽉 채우는 타이포 ──
    Hero: type sized to fill the viewport. overflow는 이 섹션에만 —
    body에 걸면 sticky 헤더가 죽음 / never on an ancestor of the sticky header */
-.hero { position: relative; overflow: hidden; padding: clamp(3rem, 12vh, 8rem) var(--pad) 0; }
+.hero { position: relative; overflow: hidden; padding: var(--hero-pad-top) var(--pad) 0; }
 .display {
   margin: 0;
   font-size: clamp(3rem, 15.5vw, 18rem);
@@ -175,21 +177,35 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
   transform: none;
 }
 
-/* 커서 리빌 레이어 / cursor reveal layer
-   히어로 위에 겹치는 반전판(검은 배경 + 흰 글자). 마스크는 main.js 가 매 프레임 만든다 —
-   커서가 실제로 지나간 경로를 샘플링한 획이라 여기에 고정 모양을 두지 않는다.
-   An inverted copy stacked over the hero. main.js builds the mask each frame from the
-   path the cursor actually took, so no fixed shape is declared here. */
+/* 커서 리빌 / cursor reveal
+   .hero-ink   — 잉크 필터를 거는 래퍼. 필터는 마스크보다 먼저 적용되므로, 마스크가 끝난
+                 결과를 감싼 이 래퍼에 걸어야 경계가 변형된다. 페이드도 여기서 한다
+                 (임계값 필터가 반투명 상태를 뭉개기 때문).
+   .hero-reveal — 히어로 위에 겹치는 반전판. 마스크는 main.js 가 매 프레임 만든다.
+   The filter must sit on a wrapper around the masked result, since filters run first.
+   Fading happens on the wrapper too: the alpha threshold would crush a partial state. */
+.hero-ink {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;                   /* JS 가 올리고 내린다 / driven by JS */
+  transition: opacity 0.35s ease;
+  filter: url(#hero-ink);       /* 참조가 안 되면 무시될 뿐 — 원래 모양으로 남는다 */
+}
 .hero-reveal {
   position: absolute;
   inset: 0;
-  padding: inherit;             /* 원본 h1 과 정확히 겹치도록 .hero 의 패딩을 그대로 */
+  /* .hero 와 같은 패딩이어야 사본 h1 이 원본과 정확히 겹친다. 래퍼가 하나 끼어 있어
+     inherit 체인을 쓸 수 없으므로 변수로 못 박는다.
+     Same padding as .hero so the cloned h1 lands on the original; the wrapper breaks
+     the inherit chain, so the value is pinned to a variable instead. */
+  padding: var(--hero-pad-top) var(--pad) 0;
   background: var(--fg);
   color: var(--bg);
-  pointer-events: none;
-  opacity: 0;                   /* JS 가 올리고 내린다 — 멈추면 잉크가 마르듯 0 으로 */
-  transition: opacity 0.35s ease;
 }
+
+/* 필터 정의만 담는 0 크기 SVG / zero-size SVG holding only the filter definition */
+.ink-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 
 /* 모션 최소화 설정이면 전부 끔 / respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
@@ -198,5 +214,5 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
     transform: none;
     transition: none;
   }
-  .hero-reveal { display: none; }
+  .hero-ink { display: none; }
 }
