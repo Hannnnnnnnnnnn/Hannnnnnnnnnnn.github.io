@@ -57,111 +57,148 @@ run(() => {
   document.addEventListener("visibilitychange", sweep);  // 탭이 살아나면 재확인 / re-check on wake
 });
 
-/* ── 3. 커서 리빌 — 히어로를 반전판으로 뚫어 보여준다 ──
-   Cursor reveal: punches through to an inverted copy of the hero.
+/* ── 3. 브러시 리빌 — 붓 자국을 경로에 찍는다 ──
+   Brush reveal: stamps a brush tip along the cursor path.
 
-   구조는 참조 사이트와 같다. base(흰 배경 + 검은 글자) 위에 reveal(검은 배경 + 흰 글자)을
-   겹치고, 커서가 지나간 자리만 마스크로 열어 준다. 그쪽은 그 마스크를 Three.js 유체
-   셰이더로 그린다.
+   흰색을 mix-blend-mode: difference 로 얹으면 흰 배경은 검게, 검은 글자는 희게 뒤집힌다.
+   따로 반전판을 만들어 마스크로 뚫던 이전 구조와 결과가 같으면서 레이어가 셋 줄었다.
+   White under difference inverts the backdrop, giving the same result as the masked
+   inverted panel this replaces, with three fewer layers.
 
-   ⚠️ radial-gradient 는 이름 그대로 원이다. 커서를 쫓는 점 몇 개로 만들면 커서가 멈춘
-   순간 전부 한 자리에 수렴해 **가만히 있는 원**이 남는다. 그래서 (a) 쫓아가는 점이 아니라
-   실제 커서 경로를 샘플링해 획을 만들고, (b) 멈추면 잉크가 마르듯 걷어낸다. 원이 화면에
-   머무를 수 있는 상태를 없애는 것이 요점이다.
-   Gradients are circles; followers all converge when the pointer stops, leaving a static
-   disc. So sample the actual path instead, and dry the ink when movement stops. */
+   ⚠️ 처음 커서 블롭이 결함으로 보였던 것은 블렌드 탓이 아니라 모양이 **원**이라서였다.
+   붓 자국은 원이 아니므로 그 문제가 발생하지 않는다.
+
+   질감은 코드가 아니라 **스탬프 비트맵**에서 나온다. 절차적 노이즈로는 붓털을 못 만든다 —
+   초기화 때 붓끝 텍스처를 한 장 그려 두고, 그것을 진행 방향으로 회전시켜 반복해 찍는다.
+   페인팅 앱이 쓰는 방식이고, 스캔한 붓끝 PNG 로 갈아끼우면 그대로 더 좋아진다.
+   Texture comes from the stamp bitmap, not from code; swap in a scanned tip to improve it. */
 run(() => {
   if (reduce || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-  // 마스크 미지원 브라우저에서는 아예 만들지 않는다 — 만들면 검은 판이 통째로 덮인다
-  if (!CSS.supports("mask-image", "radial-gradient(#000, #000)")) return;
-
   const hero = document.querySelector(".hero");
-  const display = hero && hero.querySelector(".display");
-  if (!hero || !display) return;
+  if (!hero || !hero.querySelector(".display")) return;
 
-  // 잉크 필터. 필터는 마스크보다 **먼저** 적용되므로 .hero-reveal 자신에 걸면 소용이 없다.
-  // 마스크가 끝난 결과를 감싸는 래퍼에 걸어야 마스크 경계가 변형된다.
-  // Filters run before masking, so it must sit on a wrapper around the masked result.
-  // 참조가 해석되지 않는 브라우저에서는 필터가 무시될 뿐 — 원래 모양으로 남는다(안전한 폴백).
-  document.body.insertAdjacentHTML("beforeend",
-    '<svg class="ink-defs" aria-hidden="true" focusable="false">' +
-    '<filter id="hero-ink" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">' +
-      '<feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>' +
-      // 알파를 세게 밀어 임계값을 만든다 → 흐린 원들이 하나의 덩어리로 합쳐진다
-      // Push alpha hard to threshold it, merging the blurred circles into one mass
-      '<feColorMatrix in="blur" type="matrix" result="goo" ' +
-        'values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 17 -6"/>' +
-      // 난류로 경계를 흔들어 원의 흔적을 지운다 / turbulence breaks up the circular edge
-      '<feTurbulence type="fractalNoise" baseFrequency="0.006 0.085" numOctaves="2" seed="9" result="noise"/>' +
-      '<feDisplacementMap in="goo" in2="noise" scale="17" xChannelSelector="R" yChannelSelector="G"/>' +
-    '</filter></svg>');
-
-  const ink = document.createElement("div");
-  ink.className = "hero-ink";
-  const reveal = document.createElement("div");
-  reveal.className = "hero-reveal";
-  reveal.setAttribute("aria-hidden", "true");   // 시각용 사본, 스크린리더에는 원본만
-  const clone = display.cloneNode(true);
-  clone.classList.add("is-in");                 // 사본은 등장 애니메이션 없이 최종 상태로
-  reveal.appendChild(clone);
-  ink.appendChild(reveal);
-  hero.appendChild(ink);
-
-  const LIFE = 520;    // 획 한 점이 남아 있는 시간(ms) / how long a stroke point lives
-  const IDLE = 200;    // 이 시간 이상 안 움직이면 마르기 시작 / ink starts drying
-  const STEP = 6;      // 촘촘해야 융합 후 리본이 된다 / dense enough to fuse into a ribbon
-  const MAX = 30;
-
-  let trail = [], lastMove = 0, inside = false, running = false;
-
-  const frame = () => {
-    const now = performance.now();
-    trail = trail.filter((p) => now - p.t < LIFE);
-    const moving = now - lastMove < IDLE;
-
-    if (!inside || (!moving && !trail.length)) {
-      ink.style.opacity = "0";
-      running = false;
-      return;                                   // 남은 점이 없으면 루프를 멈춘다
+  /* 붓끝 텍스처 — 결이 x축을 따라 흐른다. 찍을 때 진행 방향으로 회전시키므로
+     결이 획을 따라 눕는다. 중간중간 끊긴 붓털이 마른 자국을 만든다.
+     Bristles run along x; the stamp is rotated to the direction of travel.
+     Gaps between bristles are what read as dry brush. */
+  const TIP = 128;
+  const tip = document.createElement("canvas");
+  tip.width = tip.height = TIP;
+  (function paintTip(c) {
+    const BRISTLES = 34;
+    for (let i = 0; i < BRISTLES; i++) {
+      const y = ((i + 0.5) / BRISTLES) * TIP;
+      // 붓털마다 길이와 진하기가 다르다. 일부는 아예 짧아 빈 골을 남긴다
+      const len = TIP * (0.45 + Math.random() * 0.55);
+      const x0 = (TIP - len) * Math.random();
+      c.globalAlpha = 0.30 + Math.random() * 0.7;
+      c.lineWidth = (TIP / BRISTLES) * (0.5 + Math.random() * 0.9);
+      c.lineCap = "round";
+      c.strokeStyle = "#fff";
+      c.beginPath();
+      c.moveTo(x0, y + (Math.random() - 0.5) * 2);
+      c.lineTo(x0 + len, y + (Math.random() - 0.5) * 2);
+      c.stroke();
     }
+    // 가장자리를 타원으로 부드럽게 깎는다 / soften the outline into an oval
+    c.globalAlpha = 1;
+    c.globalCompositeOperation = "destination-in";
+    const g = c.createRadialGradient(TIP / 2, TIP / 2, TIP * 0.1, TIP / 2, TIP / 2, TIP * 0.5);
+    g.addColorStop(0, "rgba(255,255,255,1)");
+    g.addColorStop(0.82, "rgba(255,255,255,0.95)");
+    g.addColorStop(1, "rgba(255,255,255,0)");
+    c.fillStyle = g;
+    c.fillRect(0, 0, TIP, TIP);
+    c.globalCompositeOperation = "source-over";
+  })(tip.getContext("2d"));
 
-    // 오래된 점일수록 작고 옅게 → 획이 꼬리 쪽으로 가늘어진다
-    // Older points are smaller and fainter, so the stroke tapers
-    reveal.style.maskImage = trail
-      .map((p) => {
-        const a = 1 - (now - p.t) / LIFE;
-        // 꼬리로 갈수록 가늘어진다 — 붓을 떼는 느낌 / tapers toward the tail
-        const rad = p.w * (0.5 + 0.5 * a);
-        return `radial-gradient(circle ${rad.toFixed(0)}px at ${p.x.toFixed(0)}px ${p.y.toFixed(0)}px, rgba(0,0,0,${(0.5 + 0.5 * a).toFixed(2)}) 0%, rgba(0,0,0,${(0.35 + 0.45 * a).toFixed(2)}) 60%, transparent 100%)`;
-      })
-      .join(",");
-    ink.style.opacity = "1";
-    requestAnimationFrame(frame);
+  const canvas = document.createElement("canvas");
+  canvas.className = "hero-brush";
+  canvas.setAttribute("aria-hidden", "true");
+  hero.appendChild(canvas);
+  const ctx = canvas.getContext("2d");
+
+  let dpr = 1, W = 0, H = 0;
+  const resize = () => {
+    const r = hero.getBoundingClientRect();
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   };
+  resize();
+  addEventListener("resize", resize, { passive: true });
+
+  const LIFE = 620;   // 자국이 남아 있는 시간(ms) / how long a mark lives
+  const IDLE = 220;   // 이 시간 이상 안 움직이면 마르기 시작 / ink starts drying
+  const STEP = 7;     // 이 거리마다 찍는다 / stamp spacing
+  const MAX = 190;   // 보간 후 마크가 촘촘해진다 / marks are dense once interpolated
+
+  let marks = [], lastMove = 0, running = false;
+
+  const draw = () => {
+    const now = performance.now();
+    marks = marks.filter((m) => now - m.t < LIFE);
+    if (!marks.length && now - lastMove > IDLE) {
+      ctx.clearRect(0, 0, W, H);
+      running = false;
+      return;
+    }
+    ctx.clearRect(0, 0, W, H);
+    for (const m of marks) {
+      const a = 1 - (now - m.t) / LIFE;
+      const along = m.w * 0.85;     // 진행 방향 길이 / length along the stroke
+      const across = m.w;           // 획 폭 / width across it
+      ctx.save();
+      ctx.translate(m.x, m.y);
+      ctx.rotate(m.angle);
+      ctx.globalAlpha = Math.min(1, 0.55 + 0.45 * a);
+      ctx.drawImage(tip, -along / 2, -across / 2, along, across);
+      ctx.restore();
+    }
+    requestAnimationFrame(draw);
+  };
+
+  let px = 0, py = 0, pt = 0, drawing = false;
 
   addEventListener("pointermove", (e) => {
     const r = hero.getBoundingClientRect();
-    const over = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
-    if (!over) { inside = false; return; }
+    const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    if (!inside) { drawing = false; return; }
+    if (Math.abs(r.width - W) > 1 || Math.abs(r.height - H) > 1) resize();
 
-    // 마스크 좌표는 요소 기준이므로 뷰포트 좌표에서 변환 / mask coords are element-local
     const x = e.clientX - r.left, y = e.clientY - r.top;
-    const last = trail[trail.length - 1];
-    if (!last || Math.hypot(x - last.x, y - last.y) >= STEP) {
-      const now = performance.now();
-      // 같은 거리(STEP)를 지나는 데 걸린 시간이 곧 속도의 역수다.
-      // 빨리 그으면 가늘고 천천히 그으면 굵게 — 실제 붓이 하는 일.
-      // Time to cover a fixed distance is the inverse of speed: fast strokes thin out.
-      const dt = last ? Math.min(80, now - last.t) : 26;
-      trail.push({ x, y, t: now, w: 15 + 33 * Math.min(1, dt / 55) });
-      if (trail.length > MAX) trail.shift();
+    const now = performance.now();
+    if (!drawing) { drawing = true; px = x; py = y; pt = now; return; }
+
+    const dist = Math.hypot(x - px, y - py);
+    if (dist < STEP) return;
+
+    /* 이벤트가 온 지점에만 찍으면 안 된다. 커서를 빠르게 휘두르면 pointermove 사이가
+       50~100px 씩 벌어져 자국이 낱개로 끊긴다. 직전 점과 새 점 사이를 STEP 간격으로
+       보간해 채워 찍어야 이벤트 밀도와 무관하게 획이 이어진다. 페인팅 앱의 표준 처리.
+       Stamping only where events land breaks the stroke apart on fast movement; interpolate
+       along the segment so the stroke is continuous regardless of event density. */
+    const angle = Math.atan2(y - py, x - px);
+    const dt = Math.max(1, Math.min(120, now - pt));
+    // 속도는 px/ms. 느리게 그으면 굵고 빠르게 그으면 가늘다 — 실제 붓의 성질
+    // Speed in px/ms: slow strokes lay down more pigment, fast ones thin out
+    const speed = dist / dt;
+    const w = 38 + 54 * (1 - Math.min(1, speed / 2));
+    const steps = Math.min(48, Math.floor(dist / STEP));
+    for (let i = 1; i <= steps; i++) {
+      const f = i / steps;
+      marks.push({ x: px + (x - px) * f, y: py + (y - py) * f, t: now, w, angle });
     }
-    inside = true;
-    lastMove = performance.now();
-    if (!running) { running = true; requestAnimationFrame(frame); }
+    while (marks.length > MAX) marks.shift();
+
+    px = x; py = y; pt = now;
+    lastMove = now;
+    if (!running) { running = true; requestAnimationFrame(draw); }
   }, { passive: true });
 
-  addEventListener("blur", () => { inside = false; trail = []; });
+  addEventListener("blur", () => { marks = []; });
 });
 
 /* ── 4. 감쇠 스크롤 (데스크탑 전용) ──
