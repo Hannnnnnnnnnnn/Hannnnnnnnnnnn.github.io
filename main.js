@@ -57,96 +57,29 @@ run(() => {
   document.addEventListener("visibilitychange", sweep);  // 탭이 살아나면 재확인 / re-check on wake
 });
 
-/* ── 3. 브러시 리빌 — 붓 자국을 경로에 찍는다 ──
-   Brush reveal: stamps a brush tip along the cursor path.
+/* ── 3. 잉크 리빌 — 획 전체를 하나의 패스로 그린다 ──
+   Ink reveal: the whole stroke is drawn as a single path.
 
    흰색을 mix-blend-mode: difference 로 얹으면 흰 배경은 검게, 검은 글자는 희게 뒤집힌다.
-   따로 반전판을 만들어 마스크로 뚫던 이전 구조와 결과가 같으면서 레이어가 셋 줄었다.
-   White under difference inverts the backdrop, giving the same result as the masked
-   inverted panel this replaces, with three fewer layers.
+   White under difference inverts the backdrop.
 
-   ⚠️ 처음 커서 블롭이 결함으로 보였던 것은 블렌드 탓이 아니라 모양이 **원**이라서였다.
-   붓 자국은 원이 아니므로 그 문제가 발생하지 않는다.
-
-   질감은 코드가 아니라 **스탬프 비트맵**에서 나온다. 절차적 노이즈로는 붓털을 못 만든다 —
-   초기화 때 붓끝 텍스처를 한 장 그려 두고, 그것을 진행 방향으로 회전시켜 반복해 찍는다.
-   페인팅 앱이 쓰는 방식이고, 스캔한 붓끝 PNG 로 갈아끼우면 그대로 더 좋아진다.
-   Texture comes from the stamp bitmap, not from code; swap in a scanned tip to improve it. */
+   ⚠️ 왜 스탬프를 겹쳐 찍지 않는가: 비트맵을 겹치면 "겹침의 경계"가 생기고, 그 경계는
+   회전을 무작위로 주면 지그재그로, 천천히 돌리면 규칙적인 물결로 망가진다. 둘 다 개별
+   스탬프를 손봐서는 못 고치고 블러로 덮는 수밖에 없었다. 획을 **하나의 닫힌 패스**로
+   그리면 합집합 경계라는 것이 존재하지 않아 블러 없이도 선명하다. 덤으로 프레임당
+   비트맵 240장이 패스 하나로 줄어든다.
+   A single filled path has no union boundary to go wrong, so it stays crisp without blur —
+   and costs one fill instead of hundreds of bitmap draws. */
 run(() => {
   if (reduce || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
   const hero = document.querySelector(".hero");
   if (!hero || !hero.querySelector(".display")) return;
-
-  /* 잉크 덩어리 텍스처 — 각도마다 반지름을 흔든 닫힌 경로에 위성 방울을 얹는다.
-     평행한 붓털(빗질)이 아니라 불규칙한 잉크 자국이어야 "뿌려지는" 느낌이 난다.
-     An irregular blob rather than combed bristles; ink splashes, it does not rake.
-     크게 찍을 것이므로 비트맵 해상도도 올린다 / higher res since it is stamped large. */
-  const TIP = 256;
-  const tip = document.createElement("canvas");
-  tip.width = tip.height = TIP;
-  (function paintTip(c) {
-    const cx = TIP / 2, cy = TIP / 2, TAU = Math.PI * 2;
-
-    /* 윤곽은 매끄러운 하모닉만으로 만든다. 정점마다 난수를 더하면 가장자리가 오톨도톨해져
-       액체가 아니라 부스러기처럼 보인다 — 무작위성은 위상(phase)에만 준다.
-       Build the outline from smooth harmonics only; per-vertex noise makes it crunchy
-       rather than liquid, so the randomness lives in the phases instead. */
-    const p1 = Math.random() * TAU, p2 = Math.random() * TAU, p3 = Math.random() * TAU;
-    const radius = (a) => TIP * (0.29
-      + 0.085 * Math.sin(a * 2 + p1)     // 큰 로브 — 표면장력이 만드는 덩어리
-      + 0.050 * Math.sin(a * 3 + p2)
-      + 0.026 * Math.sin(a * 5 + p3));
-
-    // 가장자리를 살짝 번지게 — 종이에 스민 잉크의 젖은 경계 / wet, slightly bled edge
-    const canBlur = "filter" in c;
-    if (canBlur) c.filter = "blur(2px)";
-    c.fillStyle = "#fff";
-
-    /* 점을 직선으로 이으면 다각형이 된다. 이웃한 두 점의 중점을 지나는 2차 곡선으로 이으면
-       모든 이음매가 매끄러워진다(접선이 연속).
-       Straight segments give a polygon; quadratics through the midpoints keep the tangent
-       continuous at every joint. */
-    const N = 120, pts = [];
-    for (let i = 0; i < N; i++) {
-      const a = (i / N) * TAU;
-      pts.push([cx + Math.cos(a) * radius(a), cy + Math.sin(a) * radius(a)]);
-    }
-    c.beginPath();
-    c.moveTo((pts[N - 1][0] + pts[0][0]) / 2, (pts[N - 1][1] + pts[0][1]) / 2);
-    for (let i = 0; i < N; i++) {
-      const cur = pts[i], nxt = pts[(i + 1) % N];
-      c.quadraticCurveTo(cur[0], cur[1], (cur[0] + nxt[0]) / 2, (cur[1] + nxt[1]) / 2);
-    }
-    c.closePath();
-    c.fill();
-
-    // 본체에서 떨어져 나온 방울 — 표면장력 때문에 둥글다 / satellites, round by surface tension
-    for (let i = 0; i < 14; i++) {
-      const a = Math.random() * TAU;
-      const d = TIP * (0.30 + Math.random() * 0.15);
-      c.globalAlpha = 0.4 + Math.random() * 0.6;
-      c.beginPath();
-      c.arc(cx + Math.cos(a) * d, cy + Math.sin(a) * d, TIP * (0.008 + Math.random() * 0.028), 0, TAU);
-      c.fill();
-    }
-    c.globalAlpha = 1;
-    if (canBlur) c.filter = "none";
-  })(tip.getContext("2d"));
 
   const canvas = document.createElement("canvas");
   canvas.className = "hero-brush";
   canvas.setAttribute("aria-hidden", "true");
   hero.appendChild(canvas);
   const ctx = canvas.getContext("2d");
-
-  /* 스탬프는 먼저 이 오프스크린에 모아 그린 뒤, 합집합을 한 번 흐려서 얹는다.
-     스탬프를 하나씩 흐려봐야 소용없다 — 각져 보이는 것도, 구슬처럼 이어져 보이는 것도
-     개별 모양이 아니라 **겹침의 경계**에서 생기기 때문이다. 경계를 통째로 녹여야 액체가 된다.
-     Stamps go to an offscreen first and the union is blurred once. Blurring each stamp does
-     nothing: both the zigzag and the beading live in the union boundary, not in one mark. */
-  const layer = document.createElement("canvas");
-  const lctx = layer.getContext("2d");
-  const canBlurMain = "filter" in ctx;
 
   let dpr = 1, W = 0, H = 0;
   const resize = () => {
@@ -156,67 +89,111 @@ run(() => {
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    layer.width = canvas.width;
-    layer.height = canvas.height;
-    lctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   };
   resize();
   addEventListener("resize", resize, { passive: true });
 
-  const IDLE = 220;   // 이 시간 이상 안 움직이면 마르기 시작 / ink starts drying
-  const FADE = 620;   // 마르는 데 걸리는 시간 / how long the dry-out takes
-  const STEP = 16;    // 스탬프가 커졌으므로 간격도 넓힌다 / wider spacing for a bigger stamp
-  const MAX = 240;    // 획 하나가 통째로 남으므로 넉넉히 / a whole stroke persists at once
+  const TAU = Math.PI * 2;
+  const IDLE = 140;     // 이 시간 안에 움직임이 있으면 잉크가 유지된다 / keeps the ink wet
+  const STEP = 9;       // 경로 샘플 간격 / path sample spacing
+  const MAX = 260;
+  const RISE = 55;      // 차오르는 시정수(ms) — 빠르게 / fast to appear
+  const DRY = 420;      // 마르는 시정수(ms) — 느리게 / slow to dry
 
-  /* 마크마다 제 나이로 사라지면 꼬리부터 지워져 획이 갉아먹히는 것처럼 보인다.
-     스트로크 전체가 하나의 알파를 공유하고 통째로 걷힌다.
-     Per-mark ageing erodes the stroke from its tail; the whole stroke shares one alpha
-     and lifts off together instead. */
-  let marks = [], drops = [], lastMove = 0, running = false, alpha = 0;
+  // 폭이 길이를 따라 흔들리도록 — 위상은 로드 때 한 번만 / width wobble, phases fixed once
+  const ph = Array.from({ length: 4 }, () => Math.random() * TAU);
+
+  let marks = [], drops = [], lastMove = 0, running = false;
+  let alpha = 0, lastFrame = 0;
+
+  /* 점열을 매끄러운 닫힌 패스로 — 이웃 두 점의 중점을 지나는 2차 곡선이라 이음매가 없다
+     Smooth closed path through midpoints, so no joint shows */
+  const tracePath = (pts) => {
+    const n = pts.length;
+    ctx.moveTo((pts[n - 1][0] + pts[0][0]) / 2, (pts[n - 1][1] + pts[0][1]) / 2);
+    for (let i = 0; i < n; i++) {
+      const cur = pts[i], nxt = pts[(i + 1) % n];
+      ctx.quadraticCurveTo(cur[0], cur[1], (cur[0] + nxt[0]) / 2, (cur[1] + nxt[1]) / 2);
+    }
+  };
 
   const draw = () => {
     const now = performance.now();
-    const idleFor = now - lastMove;
-    alpha = idleFor <= IDLE ? 1 : Math.max(0, 1 - (idleFor - IDLE) / FADE);
-    if (alpha <= 0) {
-      marks = []; drops = [];
+    const dt = Math.min(64, lastFrame ? now - lastFrame : 16);
+    lastFrame = now;
+
+    /* 지수 감쇠 — 목표값으로 부드럽게 접근한다. 임계시간까지 버티다 선형으로 떨어뜨리면
+       시작이 툭 끊기고, 페이드 중에 다시 움직였을 때 알파가 1로 점프한다.
+       Exponential approach: a hold-then-linear ramp starts abruptly and snaps back to full
+       if the pointer moves again mid-fade. */
+    const target = now - lastMove < IDLE ? 1 : 0;
+    const tau = target > alpha ? RISE : DRY;
+    alpha += (target - alpha) * (1 - Math.exp(-dt / tau));
+
+    if (alpha < 0.012 && target === 0) {
+      alpha = 0; marks = []; drops = [];
       ctx.clearRect(0, 0, W, H);
       running = false;
       return;
     }
-    lctx.clearRect(0, 0, W, H);
-    lctx.fillStyle = "#fff";
-    for (const m of marks) {
-      const size = m.w * m.scale;
-      lctx.save();
-      lctx.translate(m.x, m.y);
-      lctx.rotate(m.angle + m.spin);
-      lctx.drawImage(tip, -size * 0.5, -size * 0.5, size, size);
-      lctx.restore();
-    }
-    // 방울도 같은 잉크 비트맵을 작게 찍는다 — 완벽한 원은 잉크가 아니라 물방울무늬로 보인다
-    // Reuse the ink bitmap for droplets; perfect circles read as polka dots, not splatter
-    for (const d of drops) {
-      lctx.save();
-      lctx.translate(d.x, d.y);
-      lctx.rotate(d.spin);
-      // 날아간 방향으로 늘어난다 / stretched along the direction it was flung
-      lctx.drawImage(tip, -d.r * d.stretch, -d.r, d.r * 2 * d.stretch, d.r * 2);
-      lctx.restore();
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = "#fff";
+
+    const n = marks.length;
+    if (n > 2) {
+      const halfW = (i) => {
+        const m = marks[i];
+        /* 저주파만 쓰면 매끈한 아메바가 된다. 고주파까지 겹쳐야 가장자리가 찢어지고,
+           합이 바닥에 가까워지는 지점에서 폭이 잘록해져 마른 붓 끊김이 생긴다.
+           패스는 여전히 하나이므로 블러 없이도 선명하다.
+           Low frequencies alone give a smooth amoeba; the high ones tear the edge, and where
+           the sum bottoms out the ribbon pinches, which reads as the brush running dry. */
+        const wob = 0.60
+          + 0.20 * Math.sin(m.s * 0.021 + ph[0])
+          + 0.13 * Math.sin(m.s * 0.058 + ph[1])
+          + 0.09 * Math.sin(m.s * 0.134 + ph[2])
+          + 0.06 * Math.sin(m.s * 0.315 + ph[3]);
+        // 양 끝을 길게 가늘게 — 짧게 깎으면 화살촉처럼 뾰족해진다
+        // Taper over a long run; a short one turns the end into an arrowhead
+        const endT = Math.min(1, Math.min(i, n - 1 - i) / 20);
+        return m.w * 0.5 * Math.max(0.04, wob) * (0.10 + 0.90 * endT * endT);
+      };
+      const normal = (i) => {
+        const a = marks[Math.max(0, i - 1)], b = marks[Math.min(n - 1, i + 1)];
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const len = Math.hypot(dx, dy) || 1;
+        return [-dy / len, dx / len];
+      };
+      const outline = [];
+      for (let i = 0; i < n; i++) {
+        const [nx, ny] = normal(i), h = halfW(i);
+        outline.push([marks[i].x + nx * h, marks[i].y + ny * h]);
+      }
+      for (let i = n - 1; i >= 0; i--) {
+        const [nx, ny] = normal(i), h = halfW(i);
+        outline.push([marks[i].x - nx * h, marks[i].y - ny * h]);
+      }
+      ctx.beginPath();
+      tracePath(outline);
+      ctx.fill();
     }
 
-    // 합집합을 한 번 흐려 경계를 녹인다. 페이드 알파도 여기서 한 번만 적용된다
-    // Blur the union once; the stroke's fade alpha is applied here, a single time
-    ctx.clearRect(0, 0, W, H);
-    ctx.save();
-    if (canBlurMain) ctx.filter = "blur(9px)";
-    ctx.globalAlpha = alpha;
-    ctx.drawImage(layer, 0, 0, W, H);
-    ctx.restore();
+    for (const d of drops) {
+      ctx.save();
+      ctx.translate(d.x, d.y);
+      ctx.rotate(d.spin);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, d.r * d.stretch, d.r, 0, 0, TAU);   // 날아간 방향으로 늘어난 방울
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
     requestAnimationFrame(draw);
   };
 
-  let px = 0, py = 0, pt = 0, drawing = false, run_len = 0;
+  let px = 0, py = 0, pt = 0, drawing = false, runLen = 0;
 
   addEventListener("pointermove", (e) => {
     const r = hero.getBoundingClientRect();
@@ -231,50 +208,36 @@ run(() => {
     const dist = Math.hypot(x - px, y - py);
     if (dist < STEP) return;
 
-    /* 이벤트가 온 지점에만 찍으면 안 된다. 커서를 빠르게 휘두르면 pointermove 사이가
-       50~100px 씩 벌어져 자국이 낱개로 끊긴다. 구간을 STEP 간격으로 보간해 채워 찍는다.
-       Interpolate along the segment so the stroke is continuous regardless of event density. */
+    /* 이벤트가 온 지점만 이으면 획이 각진다. 커서를 빠르게 휘두르면 pointermove 사이가
+       50~100px 씩 벌어지기 때문. 구간을 STEP 간격으로 보간해 채운다.
+       Interpolate along the segment; events arrive too sparsely on a fast sweep. */
     const angle = Math.atan2(y - py, x - px);
     const dt = Math.max(1, Math.min(120, now - pt));
-    const speed = dist / dt;                                  // px/ms
-    const w = 150 + 210 * (1 - Math.min(1, speed / 2));       // 느릴수록 굵게
-    const steps = Math.min(48, Math.floor(dist / STEP));
+    const speed = dist / dt;                                // px/ms
+    const w = 150 + 210 * (1 - Math.min(1, speed / 2));     // 느릴수록 굵게
+    const steps = Math.min(60, Math.floor(dist / STEP));
     for (let i = 1; i <= steps; i++) {
       const f = i / steps;
-      // 스탬프마다 회전·크기를 흔들어야 같은 비트맵을 반복해도 균일해 보이지 않는다
-      // Jitter each stamp or the repeated bitmap reads as a uniform tube
-      /* 스탬프마다 회전을 무작위로 주면 이웃끼리 각도가 크게 어긋나 합집합 경계가
-         지그재그로 튀고, 그게 "각졌다"로 읽힌다. 경로를 따라 서서히 도는 값을 쓰면
-         변화는 남으면서 봉투선이 매끈해진다. 크기 흔들림도 좁게.
-         Random per-stamp rotation makes the union boundary zigzag; drifting it along the
-         path keeps the variety without the corners. */
-      run_len += (dist / steps);
-      marks.push({
-        x: px + (x - px) * f, y: py + (y - py) * f, w, angle,
-        spin: run_len * 0.006,
-        scale: 0.96 + 0.06 * Math.sin(run_len * 0.035),
-      });
+      runLen += dist / steps;
+      marks.push({ x: px + (x - px) * f, y: py + (y - py) * f, w, s: runLen });
     }
     while (marks.length > MAX) marks.shift();
 
-    /* 빠르게 그으면 잉크가 튄다 — 획 옆으로 방울이 흩어진다
-       Fast strokes fling droplets sideways off the stroke */
+    // 빠르게 그으면 잉크가 튄다 / fast strokes fling droplets
     if (speed > 0.9) {
-      const n = Math.min(4, Math.round(speed * 1.4));
-      for (let i = 0; i < n; i++) {
+      const count = Math.min(4, Math.round(speed * 1.4));
+      for (let i = 0; i < count; i++) {
         const side = Math.random() < 0.5 ? 1 : -1;
         const perp = angle + (Math.PI / 2) * side * (0.55 + Math.random() * 0.45);
-        const off = w * (0.22 + Math.random() * 0.5);          // 획에 가깝게 / stay near the stroke
+        const off = w * (0.22 + Math.random() * 0.5);
         const alongF = Math.random();
         const rnd = Math.random();
         drops.push({
           x: px + (x - px) * alongF + Math.cos(perp) * off,
           y: py + (y - py) * alongF + Math.sin(perp) * off,
-          // 제곱으로 작은 쪽에 치우치게 — 큰 방울은 가끔만 / squared, so big drops are rare
-          r: w * (0.010 + rnd * rnd * 0.05),
+          r: w * (0.010 + rnd * rnd * 0.05),      // 제곱 — 큰 방울은 가끔만
           stretch: 1 + Math.random() * 1.6,
           spin: perp,
-          t: now,
         });
       }
       if (drops.length > 70) drops.splice(0, drops.length - 70);
@@ -282,10 +245,10 @@ run(() => {
 
     px = x; py = y; pt = now;
     lastMove = now;
-    if (!running) { running = true; requestAnimationFrame(draw); }
+    if (!running) { running = true; lastFrame = 0; requestAnimationFrame(draw); }
   }, { passive: true });
 
-  addEventListener("blur", () => { marks = []; });
+  addEventListener("blur", () => { marks = []; drops = []; });
 });
 
 /* ── 4. 감쇠 스크롤 (데스크탑 전용) ──
