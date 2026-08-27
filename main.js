@@ -85,30 +85,52 @@ run(() => {
   const tip = document.createElement("canvas");
   tip.width = tip.height = TIP;
   (function paintTip(c) {
-    const cx = TIP / 2, cy = TIP / 2;
+    const cx = TIP / 2, cy = TIP / 2, TAU = Math.PI * 2;
+
+    /* 윤곽은 매끄러운 하모닉만으로 만든다. 정점마다 난수를 더하면 가장자리가 오톨도톨해져
+       액체가 아니라 부스러기처럼 보인다 — 무작위성은 위상(phase)에만 준다.
+       Build the outline from smooth harmonics only; per-vertex noise makes it crunchy
+       rather than liquid, so the randomness lives in the phases instead. */
+    const p1 = Math.random() * TAU, p2 = Math.random() * TAU, p3 = Math.random() * TAU;
+    const radius = (a) => TIP * (0.29
+      + 0.085 * Math.sin(a * 2 + p1)     // 큰 로브 — 표면장력이 만드는 덩어리
+      + 0.050 * Math.sin(a * 3 + p2)
+      + 0.026 * Math.sin(a * 5 + p3));
+
+    // 가장자리를 살짝 번지게 — 종이에 스민 잉크의 젖은 경계 / wet, slightly bled edge
+    const canBlur = "filter" in c;
+    if (canBlur) c.filter = "blur(2.5px)";
     c.fillStyle = "#fff";
+
+    /* 점을 직선으로 이으면 다각형이 된다. 이웃한 두 점의 중점을 지나는 2차 곡선으로 이으면
+       모든 이음매가 매끄러워진다(접선이 연속).
+       Straight segments give a polygon; quadratics through the midpoints keep the tangent
+       continuous at every joint. */
+    const N = 120, pts = [];
+    for (let i = 0; i < N; i++) {
+      const a = (i / N) * TAU;
+      pts.push([cx + Math.cos(a) * radius(a), cy + Math.sin(a) * radius(a)]);
+    }
     c.beginPath();
-    const N = 56;
-    for (let i = 0; i <= N; i++) {
-      const a = (i / N) * Math.PI * 2;
-      // 저주파 + 고주파를 겹쳐 가장자리를 찢는다 / low and high frequency wobble
-      const rr = TIP * (0.30 + 0.10 * Math.sin(a * 3 + 1.2) + 0.06 * Math.sin(a * 7 + 0.4)
-                        + 0.03 * Math.sin(a * 13) + Math.random() * 0.02);
-      const x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr;
-      i ? c.lineTo(x, y) : c.moveTo(x, y);
+    c.moveTo((pts[N - 1][0] + pts[0][0]) / 2, (pts[N - 1][1] + pts[0][1]) / 2);
+    for (let i = 0; i < N; i++) {
+      const cur = pts[i], nxt = pts[(i + 1) % N];
+      c.quadraticCurveTo(cur[0], cur[1], (cur[0] + nxt[0]) / 2, (cur[1] + nxt[1]) / 2);
     }
     c.closePath();
     c.fill();
-    // 본체에서 떨어져 나온 위성 방울 / satellites flung off the body
-    for (let i = 0; i < 16; i++) {
-      const a = Math.random() * Math.PI * 2;
-      const d = TIP * (0.30 + Math.random() * 0.16);
-      c.globalAlpha = 0.35 + Math.random() * 0.65;
+
+    // 본체에서 떨어져 나온 방울 — 표면장력 때문에 둥글다 / satellites, round by surface tension
+    for (let i = 0; i < 14; i++) {
+      const a = Math.random() * TAU;
+      const d = TIP * (0.30 + Math.random() * 0.15);
+      c.globalAlpha = 0.4 + Math.random() * 0.6;
       c.beginPath();
-      c.arc(cx + Math.cos(a) * d, cy + Math.sin(a) * d, TIP * (0.006 + Math.random() * 0.03), 0, 6.2832);
+      c.arc(cx + Math.cos(a) * d, cy + Math.sin(a) * d, TIP * (0.008 + Math.random() * 0.028), 0, TAU);
       c.fill();
     }
     c.globalAlpha = 1;
+    if (canBlur) c.filter = "none";
   })(tip.getContext("2d"));
 
   const canvas = document.createElement("canvas");
