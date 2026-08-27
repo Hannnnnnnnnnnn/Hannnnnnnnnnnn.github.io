@@ -103,8 +103,11 @@ run(() => {
   // 폭이 길이를 따라 흔들리도록 — 위상은 로드 때 한 번만 / width wobble, phases fixed once
   const ph = Array.from({ length: 4 }, () => Math.random() * TAU);
 
-  let marks = [], drops = [], lastMove = 0, running = false;
-  let alpha = 0, lastFrame = 0;
+  /* 획을 여러 개로 나눠 각자 알파를 갖는다. 하나로 공유하면 페이드 도중 다시 움직였을 때
+     이미 마르던 부분까지 같이 되살아난다 — 옛 잉크는 계속 마르고 새 잉크만 배어들어야 한다.
+     One alpha per stroke: a shared one revives ink that was already drying when the pointer
+     moves again. Old strokes keep drying while the new one soaks in. */
+  let strokes = [], cur = null, lastMove = 0, running = false, lastFrame = 0;
 
   /* 점열을 매끄러운 닫힌 패스로 — 이웃 두 점의 중점을 지나는 2차 곡선이라 이음매가 없다
      Smooth closed path through midpoints, so no joint shows */
@@ -117,48 +120,28 @@ run(() => {
     }
   };
 
-  const draw = () => {
-    const now = performance.now();
-    const dt = Math.min(64, lastFrame ? now - lastFrame : 16);
-    lastFrame = now;
-
-    /* 지수 감쇠 — 목표값으로 부드럽게 접근한다. 임계시간까지 버티다 선형으로 떨어뜨리면
-       시작이 툭 끊기고, 페이드 중에 다시 움직였을 때 알파가 1로 점프한다.
-       Exponential approach: a hold-then-linear ramp starts abruptly and snaps back to full
-       if the pointer moves again mid-fade. */
-    const target = now - lastMove < IDLE ? 1 : 0;
-    const tau = target > alpha ? RISE : DRY;
-    alpha += (target - alpha) * (1 - Math.exp(-dt / tau));
-
-    if (alpha < 0.012 && target === 0) {
-      alpha = 0; marks = []; drops = [];
-      ctx.clearRect(0, 0, W, H);
-      running = false;
-      return;
-    }
-
-    ctx.clearRect(0, 0, W, H);
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = "#fff";
-
-    const n = marks.length;
+  const drawStroke = (st) => {
+    const marks = st.marks, n = marks.length;
+    ctx.globalAlpha = st.alpha;
     if (n > 2) {
       const halfW = (i) => {
         const m = marks[i];
         /* 저주파만 쓰면 매끈한 아메바가 된다. 고주파까지 겹쳐야 가장자리가 찢어지고,
            합이 바닥에 가까워지는 지점에서 폭이 잘록해져 마른 붓 끊김이 생긴다.
-           패스는 여전히 하나이므로 블러 없이도 선명하다.
-           Low frequencies alone give a smooth amoeba; the high ones tear the edge, and where
-           the sum bottoms out the ribbon pinches, which reads as the brush running dry. */
+           Low frequencies alone give a smooth amoeba; the high ones tear the edge. */
         const wob = 0.60
           + 0.20 * Math.sin(m.s * 0.021 + ph[0])
           + 0.13 * Math.sin(m.s * 0.058 + ph[1])
           + 0.09 * Math.sin(m.s * 0.134 + ph[2])
           + 0.06 * Math.sin(m.s * 0.315 + ph[3]);
-        // 양 끝을 길게 가늘게 — 짧게 깎으면 화살촉처럼 뾰족해진다
-        // Taper over a long run; a short one turns the end into an arrowhead
-        const endT = Math.min(1, Math.min(i, n - 1 - i) / 20);
-        return m.w * 0.5 * Math.max(0.04, wob) * (0.10 + 0.90 * endT * endT);
+        /* 테이퍼는 꼬리에만 건다. 양 끝에 대칭으로 걸면 커서 쪽(가장 최근)까지 깎여
+           앞부분이 가늘어진다. 머리는 오히려 잉크를 머금은 것처럼 더 굵게.
+           Taper the tail only; a symmetric taper thins the head, which is where the brush
+           is actually loaded. */
+        const fromTail = i, fromHead = n - 1 - i;
+        const taper = 0.10 + 0.90 * Math.min(1, fromTail / 20) ** 2;
+        const head = 1 + 0.55 * Math.exp(-fromHead / 16);
+        return m.w * 0.5 * Math.max(0.04, wob) * taper * head;
       };
       const normal = (i) => {
         const a = marks[Math.max(0, i - 1)], b = marks[Math.min(n - 1, i + 1)];
@@ -179,8 +162,7 @@ run(() => {
       tracePath(outline);
       ctx.fill();
     }
-
-    for (const d of drops) {
+    for (const d of st.drops) {
       ctx.save();
       ctx.translate(d.x, d.y);
       ctx.rotate(d.spin);
@@ -189,6 +171,35 @@ run(() => {
       ctx.fill();
       ctx.restore();
     }
+  };
+
+  const draw = () => {
+    const now = performance.now();
+    const dt = Math.min(64, lastFrame ? now - lastFrame : 16);
+    lastFrame = now;
+
+    // 손을 멈추면 이 획은 끝난다. 다시 움직이면 새 획이 시작되고, 끝난 획은 계속 마른다
+    // A pause ends the stroke; moving again starts a new one and never revives the old
+    const wet = now - lastMove < IDLE;
+    if (!wet) cur = null;
+
+    /* 지수 감쇠 — 목표값으로 부드럽게 접근한다. 임계시간까지 버티다 선형으로 떨어뜨리면
+       시작이 툭 끊긴다. Exponential approach; a hold-then-linear ramp starts abruptly. */
+    for (const st of strokes) {
+      const target = st === cur ? 1 : 0;
+      const tau = target > st.alpha ? RISE : DRY;
+      st.alpha += (target - st.alpha) * (1 - Math.exp(-dt / tau));
+    }
+    strokes = strokes.filter((st) => st.alpha >= 0.012 || st === cur);
+
+    if (!strokes.length) {
+      ctx.clearRect(0, 0, W, H);
+      running = false;
+      return;
+    }
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#fff";
+    for (const st of strokes) drawStroke(st);
     ctx.globalAlpha = 1;
     requestAnimationFrame(draw);
   };
@@ -215,13 +226,16 @@ run(() => {
     const dt = Math.max(1, Math.min(120, now - pt));
     const speed = dist / dt;                                // px/ms
     const w = 150 + 210 * (1 - Math.min(1, speed / 2));     // 느릴수록 굵게
+    if (!cur) { cur = { marks: [], drops: [], alpha: 0 }; strokes.push(cur); }
+    while (strokes.length > 4) strokes.shift();   // 동시에 마르는 획 수를 묶어 둔다
+
     const steps = Math.min(60, Math.floor(dist / STEP));
     for (let i = 1; i <= steps; i++) {
       const f = i / steps;
       runLen += dist / steps;
-      marks.push({ x: px + (x - px) * f, y: py + (y - py) * f, w, s: runLen });
+      cur.marks.push({ x: px + (x - px) * f, y: py + (y - py) * f, w, s: runLen });
     }
-    while (marks.length > MAX) marks.shift();
+    while (cur.marks.length > MAX) cur.marks.shift();
 
     // 빠르게 그으면 잉크가 튄다 / fast strokes fling droplets
     if (speed > 0.9) {
@@ -232,7 +246,7 @@ run(() => {
         const off = w * (0.22 + Math.random() * 0.5);
         const alongF = Math.random();
         const rnd = Math.random();
-        drops.push({
+        cur.drops.push({
           x: px + (x - px) * alongF + Math.cos(perp) * off,
           y: py + (y - py) * alongF + Math.sin(perp) * off,
           r: w * (0.010 + rnd * rnd * 0.05),      // 제곱 — 큰 방울은 가끔만
@@ -240,7 +254,7 @@ run(() => {
           spin: perp,
         });
       }
-      if (drops.length > 70) drops.splice(0, drops.length - 70);
+      if (cur.drops.length > 70) cur.drops.splice(0, cur.drops.length - 70);
     }
 
     px = x; py = y; pt = now;
@@ -248,7 +262,7 @@ run(() => {
     if (!running) { running = true; lastFrame = 0; requestAnimationFrame(draw); }
   }, { passive: true });
 
-  addEventListener("blur", () => { marks = []; drops = []; });
+  addEventListener("blur", () => { strokes = []; cur = null; });
 });
 
 /* ── 4. 감쇠 스크롤 (데스크탑 전용) ──
