@@ -99,7 +99,7 @@ run(() => {
 
     // 가장자리를 살짝 번지게 — 종이에 스민 잉크의 젖은 경계 / wet, slightly bled edge
     const canBlur = "filter" in c;
-    if (canBlur) c.filter = "blur(2.5px)";
+    if (canBlur) c.filter = "blur(2px)";
     c.fillStyle = "#fff";
 
     /* 점을 직선으로 이으면 다각형이 된다. 이웃한 두 점의 중점을 지나는 2차 곡선으로 이으면
@@ -139,6 +139,15 @@ run(() => {
   hero.appendChild(canvas);
   const ctx = canvas.getContext("2d");
 
+  /* 스탬프는 먼저 이 오프스크린에 모아 그린 뒤, 합집합을 한 번 흐려서 얹는다.
+     스탬프를 하나씩 흐려봐야 소용없다 — 각져 보이는 것도, 구슬처럼 이어져 보이는 것도
+     개별 모양이 아니라 **겹침의 경계**에서 생기기 때문이다. 경계를 통째로 녹여야 액체가 된다.
+     Stamps go to an offscreen first and the union is blurred once. Blurring each stamp does
+     nothing: both the zigzag and the beading live in the union boundary, not in one mark. */
+  const layer = document.createElement("canvas");
+  const lctx = layer.getContext("2d");
+  const canBlurMain = "filter" in ctx;
+
   let dpr = 1, W = 0, H = 0;
   const resize = () => {
     const r = hero.getBoundingClientRect();
@@ -147,55 +156,67 @@ run(() => {
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    layer.width = canvas.width;
+    layer.height = canvas.height;
+    lctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   };
   resize();
   addEventListener("resize", resize, { passive: true });
 
-  const LIFE = 700;   // 자국이 남아 있는 시간(ms) / how long a mark lives
   const IDLE = 220;   // 이 시간 이상 안 움직이면 마르기 시작 / ink starts drying
+  const FADE = 620;   // 마르는 데 걸리는 시간 / how long the dry-out takes
   const STEP = 16;    // 스탬프가 커졌으므로 간격도 넓힌다 / wider spacing for a bigger stamp
-  const MAX = 90;
+  const MAX = 240;    // 획 하나가 통째로 남으므로 넉넉히 / a whole stroke persists at once
 
-  let marks = [], drops = [], lastMove = 0, running = false;
+  /* 마크마다 제 나이로 사라지면 꼬리부터 지워져 획이 갉아먹히는 것처럼 보인다.
+     스트로크 전체가 하나의 알파를 공유하고 통째로 걷힌다.
+     Per-mark ageing erodes the stroke from its tail; the whole stroke shares one alpha
+     and lifts off together instead. */
+  let marks = [], drops = [], lastMove = 0, running = false, alpha = 0;
 
   const draw = () => {
     const now = performance.now();
-    marks = marks.filter((m) => now - m.t < LIFE);
-    drops = drops.filter((d) => now - d.t < LIFE * 0.8);
-    if (!marks.length && !drops.length && now - lastMove > IDLE) {
+    const idleFor = now - lastMove;
+    alpha = idleFor <= IDLE ? 1 : Math.max(0, 1 - (idleFor - IDLE) / FADE);
+    if (alpha <= 0) {
+      marks = []; drops = [];
       ctx.clearRect(0, 0, W, H);
       running = false;
       return;
     }
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = "#fff";
+    lctx.clearRect(0, 0, W, H);
+    lctx.fillStyle = "#fff";
     for (const m of marks) {
-      const a = 1 - (now - m.t) / LIFE;
       const size = m.w * m.scale;
-      ctx.save();
-      ctx.translate(m.x, m.y);
-      ctx.rotate(m.angle + m.spin);
-      ctx.globalAlpha = Math.min(1, 0.6 + 0.4 * a);
-      ctx.drawImage(tip, -size * 0.5, -size * 0.5, size, size);
-      ctx.restore();
+      lctx.save();
+      lctx.translate(m.x, m.y);
+      lctx.rotate(m.angle + m.spin);
+      lctx.drawImage(tip, -size * 0.5, -size * 0.5, size, size);
+      lctx.restore();
     }
     // 방울도 같은 잉크 비트맵을 작게 찍는다 — 완벽한 원은 잉크가 아니라 물방울무늬로 보인다
     // Reuse the ink bitmap for droplets; perfect circles read as polka dots, not splatter
     for (const d of drops) {
-      const a = 1 - (now - d.t) / (LIFE * 0.8);
-      ctx.save();
-      ctx.translate(d.x, d.y);
-      ctx.rotate(d.spin);
-      ctx.globalAlpha = Math.min(1, 0.8 + 0.2 * a);
+      lctx.save();
+      lctx.translate(d.x, d.y);
+      lctx.rotate(d.spin);
       // 날아간 방향으로 늘어난다 / stretched along the direction it was flung
-      ctx.drawImage(tip, -d.r * d.stretch, -d.r, d.r * 2 * d.stretch, d.r * 2);
-      ctx.restore();
+      lctx.drawImage(tip, -d.r * d.stretch, -d.r, d.r * 2 * d.stretch, d.r * 2);
+      lctx.restore();
     }
-    ctx.globalAlpha = 1;
+
+    // 합집합을 한 번 흐려 경계를 녹인다. 페이드 알파도 여기서 한 번만 적용된다
+    // Blur the union once; the stroke's fade alpha is applied here, a single time
+    ctx.clearRect(0, 0, W, H);
+    ctx.save();
+    if (canBlurMain) ctx.filter = "blur(9px)";
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(layer, 0, 0, W, H);
+    ctx.restore();
     requestAnimationFrame(draw);
   };
 
-  let px = 0, py = 0, pt = 0, drawing = false;
+  let px = 0, py = 0, pt = 0, drawing = false, run_len = 0;
 
   addEventListener("pointermove", (e) => {
     const r = hero.getBoundingClientRect();
@@ -222,10 +243,16 @@ run(() => {
       const f = i / steps;
       // 스탬프마다 회전·크기를 흔들어야 같은 비트맵을 반복해도 균일해 보이지 않는다
       // Jitter each stamp or the repeated bitmap reads as a uniform tube
+      /* 스탬프마다 회전을 무작위로 주면 이웃끼리 각도가 크게 어긋나 합집합 경계가
+         지그재그로 튀고, 그게 "각졌다"로 읽힌다. 경로를 따라 서서히 도는 값을 쓰면
+         변화는 남으면서 봉투선이 매끈해진다. 크기 흔들림도 좁게.
+         Random per-stamp rotation makes the union boundary zigzag; drifting it along the
+         path keeps the variety without the corners. */
+      run_len += (dist / steps);
       marks.push({
-        x: px + (x - px) * f, y: py + (y - py) * f, t: now, w, angle,
-        spin: Math.random() * 6.2832,
-        scale: 0.82 + Math.random() * 0.36,
+        x: px + (x - px) * f, y: py + (y - py) * f, w, angle,
+        spin: run_len * 0.006,
+        scale: 0.96 + 0.06 * Math.sin(run_len * 0.035),
       });
     }
     while (marks.length > MAX) marks.shift();
