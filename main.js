@@ -77,39 +77,38 @@ run(() => {
   const hero = document.querySelector(".hero");
   if (!hero || !hero.querySelector(".display")) return;
 
-  /* 붓끝 텍스처 — 결이 x축을 따라 흐른다. 찍을 때 진행 방향으로 회전시키므로
-     결이 획을 따라 눕는다. 중간중간 끊긴 붓털이 마른 자국을 만든다.
-     Bristles run along x; the stamp is rotated to the direction of travel.
-     Gaps between bristles are what read as dry brush. */
-  const TIP = 128;
+  /* 잉크 덩어리 텍스처 — 각도마다 반지름을 흔든 닫힌 경로에 위성 방울을 얹는다.
+     평행한 붓털(빗질)이 아니라 불규칙한 잉크 자국이어야 "뿌려지는" 느낌이 난다.
+     An irregular blob rather than combed bristles; ink splashes, it does not rake.
+     크게 찍을 것이므로 비트맵 해상도도 올린다 / higher res since it is stamped large. */
+  const TIP = 256;
   const tip = document.createElement("canvas");
   tip.width = tip.height = TIP;
   (function paintTip(c) {
-    const BRISTLES = 34;
-    for (let i = 0; i < BRISTLES; i++) {
-      const y = ((i + 0.5) / BRISTLES) * TIP;
-      // 붓털마다 길이와 진하기가 다르다. 일부는 아예 짧아 빈 골을 남긴다
-      const len = TIP * (0.45 + Math.random() * 0.55);
-      const x0 = (TIP - len) * Math.random();
-      c.globalAlpha = 0.30 + Math.random() * 0.7;
-      c.lineWidth = (TIP / BRISTLES) * (0.5 + Math.random() * 0.9);
-      c.lineCap = "round";
-      c.strokeStyle = "#fff";
-      c.beginPath();
-      c.moveTo(x0, y + (Math.random() - 0.5) * 2);
-      c.lineTo(x0 + len, y + (Math.random() - 0.5) * 2);
-      c.stroke();
+    const cx = TIP / 2, cy = TIP / 2;
+    c.fillStyle = "#fff";
+    c.beginPath();
+    const N = 56;
+    for (let i = 0; i <= N; i++) {
+      const a = (i / N) * Math.PI * 2;
+      // 저주파 + 고주파를 겹쳐 가장자리를 찢는다 / low and high frequency wobble
+      const rr = TIP * (0.30 + 0.10 * Math.sin(a * 3 + 1.2) + 0.06 * Math.sin(a * 7 + 0.4)
+                        + 0.03 * Math.sin(a * 13) + Math.random() * 0.02);
+      const x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr;
+      i ? c.lineTo(x, y) : c.moveTo(x, y);
     }
-    // 가장자리를 타원으로 부드럽게 깎는다 / soften the outline into an oval
+    c.closePath();
+    c.fill();
+    // 본체에서 떨어져 나온 위성 방울 / satellites flung off the body
+    for (let i = 0; i < 16; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const d = TIP * (0.30 + Math.random() * 0.16);
+      c.globalAlpha = 0.35 + Math.random() * 0.65;
+      c.beginPath();
+      c.arc(cx + Math.cos(a) * d, cy + Math.sin(a) * d, TIP * (0.006 + Math.random() * 0.03), 0, 6.2832);
+      c.fill();
+    }
     c.globalAlpha = 1;
-    c.globalCompositeOperation = "destination-in";
-    const g = c.createRadialGradient(TIP / 2, TIP / 2, TIP * 0.1, TIP / 2, TIP / 2, TIP * 0.5);
-    g.addColorStop(0, "rgba(255,255,255,1)");
-    g.addColorStop(0.82, "rgba(255,255,255,0.95)");
-    g.addColorStop(1, "rgba(255,255,255,0)");
-    c.fillStyle = g;
-    c.fillRect(0, 0, TIP, TIP);
-    c.globalCompositeOperation = "source-over";
   })(tip.getContext("2d"));
 
   const canvas = document.createElement("canvas");
@@ -130,33 +129,47 @@ run(() => {
   resize();
   addEventListener("resize", resize, { passive: true });
 
-  const LIFE = 620;   // 자국이 남아 있는 시간(ms) / how long a mark lives
+  const LIFE = 700;   // 자국이 남아 있는 시간(ms) / how long a mark lives
   const IDLE = 220;   // 이 시간 이상 안 움직이면 마르기 시작 / ink starts drying
-  const STEP = 7;     // 이 거리마다 찍는다 / stamp spacing
-  const MAX = 190;   // 보간 후 마크가 촘촘해진다 / marks are dense once interpolated
+  const STEP = 16;    // 스탬프가 커졌으므로 간격도 넓힌다 / wider spacing for a bigger stamp
+  const MAX = 90;
 
-  let marks = [], lastMove = 0, running = false;
+  let marks = [], drops = [], lastMove = 0, running = false;
 
   const draw = () => {
     const now = performance.now();
     marks = marks.filter((m) => now - m.t < LIFE);
-    if (!marks.length && now - lastMove > IDLE) {
+    drops = drops.filter((d) => now - d.t < LIFE * 0.8);
+    if (!marks.length && !drops.length && now - lastMove > IDLE) {
       ctx.clearRect(0, 0, W, H);
       running = false;
       return;
     }
     ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#fff";
     for (const m of marks) {
       const a = 1 - (now - m.t) / LIFE;
-      const along = m.w * 0.85;     // 진행 방향 길이 / length along the stroke
-      const across = m.w;           // 획 폭 / width across it
+      const size = m.w * m.scale;
       ctx.save();
       ctx.translate(m.x, m.y);
-      ctx.rotate(m.angle);
-      ctx.globalAlpha = Math.min(1, 0.55 + 0.45 * a);
-      ctx.drawImage(tip, -along / 2, -across / 2, along, across);
+      ctx.rotate(m.angle + m.spin);
+      ctx.globalAlpha = Math.min(1, 0.6 + 0.4 * a);
+      ctx.drawImage(tip, -size * 0.5, -size * 0.5, size, size);
       ctx.restore();
     }
+    // 방울도 같은 잉크 비트맵을 작게 찍는다 — 완벽한 원은 잉크가 아니라 물방울무늬로 보인다
+    // Reuse the ink bitmap for droplets; perfect circles read as polka dots, not splatter
+    for (const d of drops) {
+      const a = 1 - (now - d.t) / (LIFE * 0.8);
+      ctx.save();
+      ctx.translate(d.x, d.y);
+      ctx.rotate(d.spin);
+      ctx.globalAlpha = Math.min(1, 0.8 + 0.2 * a);
+      // 날아간 방향으로 늘어난다 / stretched along the direction it was flung
+      ctx.drawImage(tip, -d.r * d.stretch, -d.r, d.r * 2 * d.stretch, d.r * 2);
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
     requestAnimationFrame(draw);
   };
 
@@ -176,22 +189,47 @@ run(() => {
     if (dist < STEP) return;
 
     /* 이벤트가 온 지점에만 찍으면 안 된다. 커서를 빠르게 휘두르면 pointermove 사이가
-       50~100px 씩 벌어져 자국이 낱개로 끊긴다. 직전 점과 새 점 사이를 STEP 간격으로
-       보간해 채워 찍어야 이벤트 밀도와 무관하게 획이 이어진다. 페인팅 앱의 표준 처리.
-       Stamping only where events land breaks the stroke apart on fast movement; interpolate
-       along the segment so the stroke is continuous regardless of event density. */
+       50~100px 씩 벌어져 자국이 낱개로 끊긴다. 구간을 STEP 간격으로 보간해 채워 찍는다.
+       Interpolate along the segment so the stroke is continuous regardless of event density. */
     const angle = Math.atan2(y - py, x - px);
     const dt = Math.max(1, Math.min(120, now - pt));
-    // 속도는 px/ms. 느리게 그으면 굵고 빠르게 그으면 가늘다 — 실제 붓의 성질
-    // Speed in px/ms: slow strokes lay down more pigment, fast ones thin out
-    const speed = dist / dt;
-    const w = 38 + 54 * (1 - Math.min(1, speed / 2));
+    const speed = dist / dt;                                  // px/ms
+    const w = 150 + 210 * (1 - Math.min(1, speed / 2));       // 느릴수록 굵게
     const steps = Math.min(48, Math.floor(dist / STEP));
     for (let i = 1; i <= steps; i++) {
       const f = i / steps;
-      marks.push({ x: px + (x - px) * f, y: py + (y - py) * f, t: now, w, angle });
+      // 스탬프마다 회전·크기를 흔들어야 같은 비트맵을 반복해도 균일해 보이지 않는다
+      // Jitter each stamp or the repeated bitmap reads as a uniform tube
+      marks.push({
+        x: px + (x - px) * f, y: py + (y - py) * f, t: now, w, angle,
+        spin: Math.random() * 6.2832,
+        scale: 0.82 + Math.random() * 0.36,
+      });
     }
     while (marks.length > MAX) marks.shift();
+
+    /* 빠르게 그으면 잉크가 튄다 — 획 옆으로 방울이 흩어진다
+       Fast strokes fling droplets sideways off the stroke */
+    if (speed > 0.9) {
+      const n = Math.min(4, Math.round(speed * 1.4));
+      for (let i = 0; i < n; i++) {
+        const side = Math.random() < 0.5 ? 1 : -1;
+        const perp = angle + (Math.PI / 2) * side * (0.55 + Math.random() * 0.45);
+        const off = w * (0.22 + Math.random() * 0.5);          // 획에 가깝게 / stay near the stroke
+        const alongF = Math.random();
+        const rnd = Math.random();
+        drops.push({
+          x: px + (x - px) * alongF + Math.cos(perp) * off,
+          y: py + (y - py) * alongF + Math.sin(perp) * off,
+          // 제곱으로 작은 쪽에 치우치게 — 큰 방울은 가끔만 / squared, so big drops are rare
+          r: w * (0.010 + rnd * rnd * 0.05),
+          stretch: 1 + Math.random() * 1.6,
+          spin: perp,
+          t: now,
+        });
+      }
+      if (drops.length > 70) drops.splice(0, drops.length - 70);
+    }
 
     px = x; py = y; pt = now;
     lastMove = now;
