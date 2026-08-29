@@ -5,6 +5,7 @@
   --fg: #0a0a0a;
   --muted: #8f8f8f;
   --line: #dedede;
+  --tint: #f4f4f4;                      /* 플레이스홀더·코드 배경 / placeholder & code fill */
   --pad: clamp(1.25rem, 4vw, 3.5rem);   /* 좌우 여백 / gutter */
 
   --grot: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -151,7 +152,7 @@ blockquote p:last-child { margin: 0; }
 .meta dt { color: var(--muted); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; }
 .meta dd { margin: 0; }
 
-.figure { aspect-ratio: 16 / 9; background: #f2f2f2; border: 1px solid var(--line); display: grid; place-items: center; color: var(--muted); margin: 2rem 0; }
+.figure { aspect-ratio: 16 / 9; background: var(--tint); border: 1px solid var(--line); display: grid; place-items: center; color: var(--muted); margin: 2rem 0; }
 
 .back { display: inline-block; margin: 3rem 0; }
 .back:hover { text-decoration: underline; text-underline-offset: 0.2em; }
@@ -166,6 +167,114 @@ footer {
   padding: 1.5rem var(--pad);
   border-top: 1px solid var(--fg);
 }
+
+/* ══ 케이스 스터디 / Case study ═══════════════════════════════
+   본문 폭과 타입 스케일은 위 .prose 가 그대로 나른다. 여기에는 케이스 스터디에만
+   필요한 블록만 더한다 — 지표, 결정 블록, 표, 코드, 이미지 자리.
+   .prose above still carries the measure; these are the blocks only cases need. */
+
+/* 큰 진술문 소제목. 섹션 사이 리듬은 h2(작은 라벨)가 이미 만들고 있으므로
+   여기서는 위 여백을 두지 않는다.
+   Statement subhead. h2 already sets the section rhythm, so no top margin here. */
+.prose h3 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.35rem, 3.2vw, 2.1rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  max-width: 30rem;
+}
+.prose h4 {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.prose ul, .prose ol { max-width: 38rem; margin: 0 0 1rem; padding-left: 1.15rem; }
+.prose li { margin-bottom: 0.4rem; }
+
+/* 역할 태그 / role tags */
+.tags { display: flex; flex-wrap: wrap; gap: 0.4rem; max-width: 38rem; margin: 1.25rem 0 0; padding: 0; list-style: none; }
+.tags li { margin: 0; padding: 0.3rem 0.6rem; border: 1px solid var(--line); color: var(--muted); }
+
+/* 지표 — 큰 숫자, 바로 아래 단서. 단서는 툴팁·아코디언에 숨기지 않는다
+   Metrics: big figures with the caveat directly beneath, never behind a disclosure */
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 3rem;
+  margin: 2rem 0 0.85rem;
+  padding: 1.5rem 0 0;
+  border-top: 1px solid var(--fg);
+  list-style: none;
+}
+.metrics li { margin: 0; }
+.metric-value {
+  display: block;
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.metric-label { display: block; padding-top: 0.4rem; }
+.caveat { max-width: 34rem; margin: 0 0 2.5rem; font-size: 0.85rem; line-height: 1.5; color: var(--muted); }
+
+/* 결정 블록 — 케이스의 기본 단위. 제목만 훑어도 논지가 따라오도록 분리한다
+   Decision blocks are the core unit: separated so the headings alone carry the argument */
+.decision { margin: 3rem 0 0; padding-top: 2rem; border-top: 1px solid var(--line); }
+.decision > .label { display: block; margin-bottom: 0.5rem; }
+
+/* 표 — 좁은 화면에서는 표만 가로로 스크롤한다 (페이지는 스크롤되지 않게)
+   Tables scroll on their own; the page never scrolls sideways */
+.table-wrap { max-width: 38rem; margin: 1.5rem 0; overflow-x: auto; }
+.table-wrap table { width: 100%; min-width: 22rem; border-collapse: collapse; font-size: 0.85rem; }
+.table-wrap th, .table-wrap td {
+  padding: 0.55rem 1rem 0.55rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+.table-wrap thead th {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  border-bottom-color: var(--fg);
+}
+
+/* 코드 / code */
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.9em; }
+pre {
+  max-width: 38rem;
+  margin: 1.5rem 0;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  background: var(--tint);
+  border: 1px solid var(--line);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+pre code { font-size: inherit; }
+
+/* 이미지 자리 — 실제 파일이 들어오기 전까지 자리와 경로를 그대로 보여준다.
+   <img> 가 들어오면 자리표시 상자는 사라지고 캡션만 남는다.
+   Placeholders stay visible, path and all, until a real file lands; adding an
+   <img> collapses the box and leaves the caption. */
+figure.figure { padding: 1rem; }
+.figure figcaption { max-width: 24rem; text-align: center; line-height: 1.7; }
+/* 경로는 파일명 그대로 읽혀야 한다 — .label 의 대문자 변환을 여기서만 되돌린다
+   The path must read as the actual filename, so undo .label's casing here */
+.figure figcaption code { text-transform: none; letter-spacing: 0; font-weight: 400; }
+.figure:has(img) {
+  display: block;
+  aspect-ratio: auto;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--muted);
+}
+.figure:has(img) figcaption { max-width: none; padding-top: 0.6rem; text-align: left; }
 
 /* ══ B 패스: 모션 / B pass: motion ══════════════════════════
    JS가 없거나 실패하면 아래 규칙이 하나도 적용되지 않아 전부 그냥 보인다

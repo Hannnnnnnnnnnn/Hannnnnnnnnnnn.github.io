@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KITS Black Friday — Han</title>
-<meta name="description" content="KITS Black Friday and Cyber Monday campaign design — hero banners, email and PLP merchandising.">
+<title>Pre-order Experience &mdash; Han</title>
+<meta name="description" content="A self-initiated system that turned stockouts into pre-orders &mdash; and taught me that measurement is part of the design.">
 <link rel="stylesheet" href="style.css">
 <script>document.documentElement.classList.add("js")</script>
 <script src="main.js" defer></script>
@@ -21,48 +21,135 @@
 
 <main class="section">
   <div class="prose">
-    <p class="label muted">03</p>
-    <h1>KITS Black Friday</h1>
-    <p class="lead">Campaign design for the most competitive retail week of the year &mdash; hero banners,
-      email and on-site merchandising built as one modular system.</p>
+
+    <p class="label muted">03 &middot; Pre-order Experience</p>
+    <h1>Designing an honest &ldquo;later&rdquo;</h1>
+    <p class="lead">Turning stockouts into pre-orders without losing customer trust.</p>
+
+    <ul class="tags label">
+      <li>Self-initiated</li>
+      <li>Systems Design</li>
+      <li>Interaction Design</li>
+      <li>UX Writing</li>
+      <li>Front-end Implementation</li>
+      <li>Lifecycle Comms</li>
+    </ul>
+
+    <p class="caveat">Shipped solo, from problem discovery to production. No clean before/after data &mdash; and that&rsquo;s part of the case.</p>
 
     <dl class="meta">
-      <dt>Role</dt><dd>Graphic Design</dd>
-      <dt>Period</dt><dd>Black Friday &amp; Cyber Monday 2025</dd>
-      <dt>Client</dt><dd>KITS</dd>
-      <dt>Tools</dt><dd>Photoshop, After Effects, Veo 3.1</dd>
+      <dt>Client</dt><dd>Atacz</dd>
+      <dt>Year</dt><dd>2026</dd>
+      <dt>Status</dt><dd>Shipped</dd>
+      <dt>Tools</dt><dd>Liquid, Shopify Flow, Klaviyo, Shopify metafields</dd>
     </dl>
 
-    <h2>Problem</h2>
-    <p>Black Friday is the week every eyewear brand shouts at once. The campaign had to cut through to
-      digital-native consumers while marketing spend stayed pinned at roughly 14.3% of revenue &mdash;
-      so the creative had to work across thousands of touchpoints without a budget to match.</p>
+    <figure class="figure">
+      <figcaption class="label muted">Pre-order button with delivery expectation beneath it<br><code>/images/03-preorder/01.jpg</code></figcaption>
+    </figure>
 
-    <h2>Approach</h2>
-    <p><strong>Cyberpunk motion instead of static imagery.</strong> Neon purple typography over floating
-      product layers, built to move rather than sit still, so the same idea carried across social and web.</p>
-    <p><strong>One modular system, three surfaces.</strong> Hero banners sized for desktop, tablet and
-      mobile; <em>&ldquo;The Trigger&rdquo;</em> mobile-first email designed for clarity and urgency,
-      carrying the neon motif into the inbox so the jump to the site felt seamless; and
-      <em>&ldquo;The Sustainer&rdquo;</em> PLP banners placed between product grids as visual breakers,
-      re-cut into horizontal layouts that highlight a category without interrupting browsing.</p>
-    <p><strong>Static assets turned into video.</strong> Motion was generated with Veo 3.1, tuned toward
-      natural head movement and blinking to keep it clear of the uncanny valley.</p>
+    <h2>2 &middot; The problem</h2>
+    <h3>Nobody assigned this.</h3>
+    <p>Months before I joined, a collection launch sold far beyond forecast and shipping slipped badly. I read the aftermath in my first weeks &mdash; support threads asking the same question in different words: <em>when is this actually arriving?</em></p>
+    <p>Store-wide reversals peaked at <strong>9.4% of gross sales in October 2025</strong>, the month after that launch, and the highest point in the twelve months I could see.</p>
 
-    <div class="figure label">campaign visuals</div>
+    <figure class="figure">
+      <figcaption class="label muted">Monthly sales reversal rate, September 2025 to August 2026<br><code>/images/03-preorder/02.jpg</code></figcaption>
+    </figure>
 
-    <h2>Result</h2>
-    <p>The campaign produced a record week: <strong>$5.8M in revenue</strong>, up
-      <strong>22% year over year</strong>, of which <strong>$1.2M</strong> came from glasses across
-      <strong>16,800 units</strong> &mdash; a <strong>35%</strong> year-over-year increase. November
-      glasses revenue grew <strong>56%</strong> year over year, and the business passed a
-      <strong>$300 million revenue run rate</strong> for the first time. Repeat customers accounted for
-      <strong>65%</strong> of revenue contribution.</p>
-    <blockquote>
-      <p>&ldquo;This was a breakthrough week for KITS and for our mission to build a leading consumer
-        eyecare brand in North America.&rdquo;</p>
-      <p class="label muted">Roger Hardy, Co-Founder and CEO, KITS</p>
-    </blockquote>
+    <h3>The store had no way to say &ldquo;later.&rdquo;</h3>
+    <p>When inventory hit zero the page offered two states: buy now, or nothing. There was no third option for a product that genuinely existed, was genuinely coming, and that customers were willing to wait for.</p>
+    <p>Demand arriving during a stockout simply disappeared. Demand arriving <em>before</em> one turned into weeks of silence, which customers read as bad news.</p>
+
+    <h2>3 &middot; What I found</h2>
+    <p><strong>The capability was already there.</strong> Shopify variants carry an inventory policy that allows selling past zero. Turning it on lets an out-of-stock item be purchased &mdash; but the storefront doesn&rsquo;t change. The button still says Add to Cart, the page still behaves like a normal purchase, and the customer finds out about the wait after paying, if at all.</p>
+    <p>The gap wasn&rsquo;t a missing feature. <strong>The backend already knew this was a pre-order. The front-end never said so.</strong></p>
+    <p>Which meant this could be built without an app &mdash; no subscription, no separate checkout, no data leaving Shopify. Just the theme reading state that already existed.</p>
+
+    <h2>4 &middot; Decisions</h2>
+
+    <section class="decision">
+      <span class="label muted">Decision 01</span>
+      <h3>Deciding what a promise is made of</h3>
+      <p>Three conditions have to agree before the page will promise anything:</p>
+<pre><code>if variant.inventory_policy == 'continue'
+  if market == CA and variant.metafields.custom.preorder_ca
+    &rarr; pre-order
+  elsif market == US and variant.metafields.custom.preorder_us
+    &rarr; pre-order</code></pre>
+      <p><strong>Two choices inside that are worth naming.</strong></p>
+      <p><strong>It&rsquo;s per variant, not per product.</strong> A bag might be pre-orderable in one colourway and simply sold out in another. Promising at the product level would have made the page lie about half its own options.</p>
+      <p><strong>It&rsquo;s per market.</strong> The same variant can be a pre-order in Canada and unavailable in the US, because fulfilment timelines differ by market. A delivery promise that ignores where the customer is standing isn&rsquo;t a promise; it&rsquo;s an average.</p>
+      <p><strong>Why the toggle stays in the middle.</strong> Selling past zero is necessary but not sufficient &mdash; someone still has to opt this variant in, for this market. That opt-in is the design: it keeps the decision with merchandising, per item, in Shopify admin, and it stops the page from making a promise about every discontinued product that happens to have inventory policy set loosely.</p>
+      <p><strong>Trade-off.</strong> A simpler rule &mdash; <em>out of stock means pre-order</em> &mdash; needs no configuration and no metafields. It also promises things nobody agreed to ship. Requiring an explicit opt-in is slower to operate and correct.</p>
+      <p><strong>Resulting states.</strong> Available and opted in &rarr; <strong>Pre-order</strong>. Available, not opted in &rarr; <strong>Add to Cart</strong>. Not available &rarr; <strong>Sold out</strong>, disabled.</p>
+      <figure class="figure">
+        <figcaption class="label muted">Button states and the conditions that resolve them<br><code>/images/03-preorder/03.jpg</code></figcaption>
+      </figure>
+    </section>
+
+    <section class="decision">
+      <span class="label muted">Decision 02</span>
+      <h3>Changing the button, not adding a note</h3>
+      <p><strong>The smaller change was available:</strong> leave the CTA as Add to Cart and put a line of explanation underneath.</p>
+      <p><strong>Why I didn&rsquo;t.</strong> The button is where the commitment happens. Someone who taps <em>Add to Cart</em> has understood they&rsquo;re buying something. Someone who taps <strong>Pre-order</strong> has understood they&rsquo;re agreeing to wait. Explanatory text below the button arrives after the decision it&rsquo;s meant to inform &mdash; and on mobile it&rsquo;s often below the fold entirely.</p>
+      <p>Changing the label changes the contract before the click, not after it. If the wait was going to become a complaint, this is where it gets prevented.</p>
+      <p><strong>Trade-off.</strong> A word other than &ldquo;Add to Cart&rdquo; costs some conversions; some people stop at the change. That&rsquo;s the intended cost. A purchase that happens because someone didn&rsquo;t realise they were waiting three weeks isn&rsquo;t a purchase worth keeping &mdash; it&rsquo;s a refund with a delay attached.</p>
+      <figure class="figure">
+        <figcaption class="label muted">Primary call to action before and after<br><code>/images/03-preorder/04.jpg</code></figcaption>
+      </figure>
+    </section>
+
+    <section class="decision">
+      <span class="label muted">Decision 03</span>
+      <h3>Three sentences under the button</h3>
+      <blockquote>
+        <p><strong>Pre-order today. Your order is reserved and will ship within 2&ndash;3 weeks.</strong></p>
+      </blockquote>
+      <p>Each sentence does one job: name the action, remove the fear, set the expectation.</p>
+      <p><strong>&ldquo;Reserved&rdquo; is the word doing the most work.</strong> It reframes the wait as something the customer has <em>secured</em> rather than something they&rsquo;re <em>missing</em>. The item isn&rsquo;t unavailable to them; it&rsquo;s held for them.</p>
+      <p><strong>A range, not a date.</strong> A specific date reads as more reassuring, and it would have been a promise made on top of a supply chain that had just proven unpredictable. A date that slips costs more trust than a range ever earns. So: a conservative window, deliberately wide enough to absorb ordinary variance &mdash; under-promising in the one place where over-promising had already been expensive.</p>
+      <p><strong>Trade-off.</strong> It&rsquo;s the same range on every product, regardless of what we actually know about that item. That&rsquo;s the honest limit of a static string, and it&rsquo;s the first thing I&rsquo;d replace.</p>
+      <figure class="figure">
+        <figcaption class="label muted">Delivery expectation copy beneath the button<br><code>/images/03-preorder/05.jpg</code></figcaption>
+      </figure>
+    </section>
+
+    <section class="decision">
+      <span class="label muted">Decision 04</span>
+      <h3>Saying it again, separately</h3>
+      <p>Shopify&rsquo;s own order confirmation fires automatically, so the pre-order email has one job: state again, in its own message, that this item is a pre-order and will take 2&ndash;3 weeks. It sends immediately after checkout, while the decision is still fresh. Silence is what turns a wait into a complaint, and the first silence starts the moment the confirmation arrives.</p>
+      <p><strong>How it fires.</strong> The theme writes a hidden line item property when a pre-order is added to cart. Shopify Flow reads that property, tags the order, and hands off to Klaviyo, which sends the email.</p>
+      <p><strong>Four systems, one signal</strong> &mdash; and that signal is the thing I didn&rsquo;t make durable. More on that below.</p>
+      <p><strong>One implementation note.</strong> The property is rendered conditionally rather than always-rendered-and-disabled, because <code>disabled</code> inputs still leak into the theme&rsquo;s JavaScript form collection. I found that the hard way, and left the reasoning in a comment for whoever reads it next.</p>
+    </section>
+
+    <h2>5 &middot; What shipped</h2>
+    <p>A pre-order state running through the existing PDP &mdash; no app, no separate checkout, no data leaving Shopify.</p>
+    <p><strong>The storefront</strong> resolves the CTA into one of three states from inventory policy, market, and a per-variant opt-in.<br>
+      <strong>The expectation</strong> sits directly beneath the button, before the commitment rather than after it.<br>
+      <strong>The email</strong> restates the window immediately after checkout.</p>
+
+    <figure class="figure">
+      <figcaption class="label muted">From product state to confirmation email<br><code>/images/03-preorder/06.jpg</code></figcaption>
+    </figure>
+    <figure class="figure">
+      <figcaption class="label muted">Liquid conditional that resolves the button state<br><code>/images/03-preorder/07.jpg</code></figcaption>
+    </figure>
+
+    <h2>6 &middot; What I can and can&rsquo;t claim</h2>
+    <p><strong>What I can say.</strong> After launch, the &ldquo;where is my order&rdquo; thread that prompted this work stopped being a recurring conversation. Pre-orders became something the store could sell rather than something it had to apologise for.</p>
+    <p><strong>What I can&rsquo;t say is how much.</strong></p>
+    <p>The flow shipped without a reliable way to identify a pre-order at the order level. The storefront logic and the email trigger both worked, so I stopped there. Months later, when I went back to ask what this had actually changed, I couldn&rsquo;t separate pre-order orders from the rest. Store-wide reversal rates did fall across the period, but that data covers a window including a holiday season and pre-orders were a small share of volume. Attributing that movement to this feature would be a claim I can&rsquo;t support, so I don&rsquo;t make it.</p>
+    <p><strong>Why it happened.</strong> This was one of the first features I built directly in the theme rather than specified for someone else, and I was measuring success by whether it worked. It didn&rsquo;t occur to me that <em>&ldquo;did this work?&rdquo;</em> is a question you have to build the answer to in advance &mdash; that instrumentation is part of the design, not a reporting task that comes later.</p>
+    <p><strong>What changed because of it.</strong> Order-level identification exists now, added months after launch. More usefully, the habit did: on the PLP redesign that followed, success criteria and measurement method were written into the proposal before anything shipped, and the report was judged against them rather than against whatever looked good afterwards.</p>
+
+    <h2>7 &middot; What&rsquo;s next</h2>
+    <p><strong>Per-product delivery windows.</strong> Replace the static 2&ndash;3 weeks with a metafield holding each item&rsquo;s expected arrival, so the page says what we actually know instead of the same hedge everywhere.</p>
+    <p><strong>Tell them when it slips.</strong> A delayed restock currently reaches nobody until they ask. Once the date is data, the notification should follow from it.</p>
+    <p><strong>Mixed carts.</strong> A cart holding one in-stock item and one pre-order has no stated behaviour &mdash; split the shipment, or hold everything? Either is defensible. Neither is decided, and that ambiguity currently belongs to the customer.</p>
+    <p><strong>Order status in the account area.</strong> Someone waiting three weeks should be able to check without emailing anyone.</p>
+    <p><strong>Consolidate the two code paths.</strong> An earlier per-product template approach still exists alongside the metafield logic. One implementation, one source of truth.</p>
 
     <a class="back label" href="index.html#work">&larr; Work</a>
   </div>

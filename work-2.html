@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Project Two — Han</title>
-<meta name="description" content="Project Two — case study.">
+<title>PLP Revamp &mdash; Han</title>
+<meta name="description" content="Half our paid visitors never see the homepage. Redesigning the page that greets them instead &mdash; and learning it was the wrong page to A/B test.">
 <link rel="stylesheet" href="style.css">
 <script>document.documentElement.classList.add("js")</script>
 <script src="main.js" defer></script>
@@ -21,27 +21,193 @@
 
 <main class="section">
   <div class="prose">
-    <p class="label muted">02</p>
-    <h1>Project Two</h1>
-    <p class="lead">한 줄 요약 &mdash; 이 프로젝트가 무엇이고 왜 했는지.</p>
+
+    <p class="label muted">02 &middot; PLP Revamp</p>
+    <h1>Making a product grid introduce the brand</h1>
+    <p class="lead">Redesigning a collection page for visitors who never see the homepage &mdash; and learning it was the wrong page to A/B test.</p>
+
+    <ul class="tags label">
+      <li>Product Strategy</li>
+      <li>UX Research</li>
+      <li>Information Architecture</li>
+      <li>UI Design</li>
+      <li>Front-end Implementation</li>
+      <li>Experimentation</li>
+    </ul>
+
+    <ul class="metrics">
+      <li><span class="metric-value">+8.2%</span><span class="metric-label label muted">product click-through</span></li>
+      <li><span class="metric-value">+9.4%</span><span class="metric-label label muted">actual scroll distance</span></li>
+      <li><span class="metric-value">0</span><span class="metric-label label muted">metrics worsened</span></li>
+    </ul>
+    <p class="caveat">43-day split test, 70,716 visits assigned. Result matches the target range but doesn&rsquo;t reach statistical proof &mdash; that&rsquo;s the finding.</p>
 
     <dl class="meta">
-      <dt>Role</dt><dd>맡은 역할</dd>
-      <dt>Period</dt><dd>2025</dd>
-      <dt>Stack</dt><dd>사용 기술</dd>
-      <dt>Links</dt><dd><a href="https://github.com/Hannnnnnnnnnnn">Repo</a></dd>
+      <dt>Client</dt><dd>Atacz</dd>
+      <dt>Year</dt><dd>2026</dd>
+      <dt>Status</dt><dd>Shipped</dd>
+      <dt>Tools</dt><dd>Shopify split testing, Microsoft Clarity, Shopify Analytics, Liquid, Figma</dd>
     </dl>
 
-    <h2>Problem</h2>
-    <p>무엇이 문제였는지. 배경보다 문제 정의를 앞에.</p>
+    <figure class="figure">
+      <figcaption class="label muted">Collection page before and after<br><code>/images/02-plp/01.jpg</code></figcaption>
+    </figure>
 
-    <h2>Approach</h2>
-    <p>어떻게 접근했는지. 선택과 트레이드오프를 적으면 읽는 사람이 판단할 수 있음.</p>
+    <h2>2 &middot; The problem</h2>
+    <h3>Half our paid visitors never see the homepage.</h3>
+    <p><strong>51% of paid-social sessions land directly on a collection page.</strong> Only 20% start at the homepage. For most of the people we pay to acquire, a product grid is doing the homepage&rsquo;s job &mdash; and it says nothing about who we are.</p>
+    <p><strong>57% of all traffic is cold paid social</strong>, converting at roughly 0.1%. They arrive knowing nothing about the brand, land on a grid of bags at a premium price point, and the page offers no reason for it.</p>
 
-    <div class="figure label">screenshot</div>
+    <figure class="figure">
+      <figcaption class="label muted">Paid social entry pages by type<br><code>/images/02-plp/02.jpg</code></figcaption>
+    </figure>
 
-    <h2>Result</h2>
-    <p>결과. 숫자가 있으면 숫자로.</p>
+    <p><strong>What the page was missing wasn&rsquo;t features. It was context.</strong> No upcycling story at the point of decision. No explanation of the premium. And mix-and-match &mdash; the brand&rsquo;s biggest differentiator and an AOV lever &mdash; invisible on a grid.</p>
+
+    <h2>3 &middot; What I found</h2>
+    <h3>First: ruling out the obvious answer</h3>
+    <p>Before proposing anything I checked whether the PLP was actually the conversion bottleneck. It wasn&rsquo;t.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">PLP metric</th><th scope="col">Paid social</th><th scope="col">Organic search</th></tr></thead>
+        <tbody>
+          <tr><td>Scroll depth (median)</td><td>56%</td><td>53%</td></tr>
+          <tr><td>PLP &rarr; PDP</td><td>27.3%</td><td>28.0%</td></tr>
+          <tr><td>Time on page (median)</td><td>14s</td><td>14s</td></tr>
+          <tr><td><strong>Purchase conversion</strong></td><td><strong>~0.1%</strong></td><td><strong>0.9%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Behaviour on the page is nearly identical across channels, yet conversion differs by 9&times;. <strong>The gap sits downstream, not here.</strong> So the proposal explicitly ruled conversion out of scope and committed to two things the PLP genuinely could move: brand presence, and click-through into products.</p>
+    <p>Writing that constraint down in the proposal is what kept the report honest later. When results came in, I couldn&rsquo;t quietly promote whichever metric happened to look good.</p>
+
+    <h3>Second: it isn&rsquo;t a filtering problem</h3>
+    <p>With 60 SKUs across already-categorized collections, scrolling the whole grid costs less than opening a filter panel. The page didn&rsquo;t need better browsing tools. It needed something to say.</p>
+
+    <h2>4 &middot; Decisions</h2>
+
+    <section class="decision">
+      <span class="label muted">Decision 01</span>
+      <h3>Taking space back before adding anything</h3>
+      <p><strong>Quick view was desktop-only, and this store is 97% mobile.</strong> Usage rounded to nothing &mdash; not because the feature was bad, but because almost nobody was on a device that could reach it. It occupied the top-right corner of every card plus a CTA inside every photo.</p>
+      <p>I removed it. The top-left corner it vacated is where the PET badge went.</p>
+      <p><strong>The filter button got smaller, not removed.</strong> Filtering wasn&rsquo;t the problem this page had, so the control shouldn&rsquo;t compete for attention as though it were. Shrinking it still serves people who want it, without implying the catalog is large enough to need it.</p>
+<pre><code>Before   hover &rarr; quick view (top-right) + CTA inside photo
+         swatch selected + hover &rarr; quick view + add to cart
+
+After    PET badge (top-left, always visible)
+         swatch selected + hover &rarr; add to cart</code></pre>
+      <figure class="figure">
+        <figcaption class="label muted">Product card before and after<br><code>/images/02-plp/03.jpg</code></figcaption>
+      </figure>
+    </section>
+
+    <section class="decision">
+      <span class="label muted">Decision 02</span>
+      <h3>One metafield, two surfaces</h3>
+      <p>Between the top banner and the product grid sits the brand slogan &mdash; <em>knit to care</em> &mdash; and a live count of every PET bottle the brand has upcycled to date.</p>
+      <p>Each product carries a <code>pet_bottle_count</code> metafield, and it drives both scales at once:</p>
+      <ul>
+        <li><strong>On a product card</strong>, it renders as a badge &mdash; <em>this bag = N bottles</em></li>
+        <li><strong>On the collection page</strong>, it feeds a running total, computed by reading orders across all channels and summing the count for every item sold</li>
+      </ul>
+      <p><strong>Nobody updates that number.</strong> It isn&rsquo;t a claim about the brand; it&rsquo;s an accumulating fact, and it goes up whether or not anyone remembers to maintain it. The same field powers the individual story and the cumulative one, so the two can never contradict each other.</p>
+      <p><strong>Placement.</strong> Between the banner and the grid is the one point every scrolling visitor passes before seeing a single product. Brand context arrives before the shopping starts, without a section anyone has to choose to read.</p>
+      <figure class="figure">
+        <figcaption class="label muted">Slogan and live PET bottle counter above the grid<br><code>/images/02-plp/04.jpg</code></figcaption>
+      </figure>
+      <figure class="figure">
+        <figcaption class="label muted">One metafield driving both the card badge and the page counter<br><code>/images/02-plp/05.jpg</code></figcaption>
+      </figure>
+    </section>
+
+    <section class="decision">
+      <span class="label muted">Decision 03</span>
+      <h3>Deliberately unclickable</h3>
+      <p>Every brand element on the page &mdash; badge, counter, slogan &mdash; is visible and leads nowhere.</p>
+      <p>That sounds like an oversight. It&rsquo;s the constraint the whole layer was designed around. Sales is this page&rsquo;s job, and a story link at the decision moment is just a well-designed exit. The proposal committed to a layer that gets <strong>seen, not clicked</strong>, and holding that line in execution meant refusing the obvious follow-up &mdash; a sustainability page, a &ldquo;learn more.&rdquo;</p>
+      <p><strong>The badge does take a click, though &mdash; it just doesn&rsquo;t navigate.</strong></p>
+<pre><code>Default    [ 🍶 &times; 2 ]
+Expanded   [ 2 bottles upcycled ]</code></pre>
+      <p>The compact form keeps the card layout intact; the expanded form serves the smaller group who want the detail. Progressive disclosure, resolved inside the card rather than on another page.</p>
+      <p><strong>What the test showed.</strong> I expected adding a non-navigating element to <em>raise</em> dead clicks &mdash; people tapping something that appears interactive and going nowhere. The opposite happened: dead clicks fell 14% and quick bounce-backs 9% on the redesigned page.</p>
+      <figure class="figure">
+        <figcaption class="label muted">PET badge in default and expanded states<br><code>/images/02-plp/06.jpg</code></figcaption>
+      </figure>
+    </section>
+
+    <section class="decision">
+      <span class="label muted">Decision 04</span>
+      <h3>The proposal assumed one kind of PLP. There were two.</h3>
+      <p>The June proposal called for combo banners that cross-sell accessories and straps. In execution the rule had to split:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">PLP type</th><th scope="col">Banner content</th></tr></thead>
+          <tbody>
+            <tr><td>Bag collection</td><td>Accessories, straps &rarr; cross-sell</td></tr>
+            <tr><td>Ad landing page (bags + accessories together)</td><td>Promotion, or best sellers</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>On a mixed collection, a cross-sell banner surfaces products already visible a few rows down. The page we ended up testing &mdash; a Miffy-only collection &mdash; was exactly that case: bags and straps already sat side by side, so the cross-sell version would have been redundant. We used steady sellers from outside the collection instead.</p>
+      <p><strong>Consequence, stated plainly.</strong> Combo banners were the proposal&rsquo;s AOV lever, targeting +16&ndash;24%. On this page that lever couldn&rsquo;t operate, so the AOV track dropped out of scope. That&rsquo;s a scoping consequence, not a measurement failure &mdash; but it does mean the AOV hypothesis remains untested rather than disproven.</p>
+      <figure class="figure">
+        <figcaption class="label muted">Two banner types: cross-sell and best sellers<br><code>/images/02-plp/07.jpg</code></figcaption>
+      </figure>
+    </section>
+
+    <h2>5 &middot; What shipped</h2>
+    <p>Top banner &rarr; <strong>slogan + live bottle counter</strong> &rarr; product grid with simplified cards and PET badges &rarr; up to 3 contextual banners, one per 2&ndash;3 rows</p>
+    <p>Configured 50/50 in Shopify&rsquo;s built-in rollout feature. Assignment came out 49.8 : 50.2 across 70,716 visits &mdash; matching the configuration, which I checked before trusting anything else in the test.</p>
+
+    <figure class="figure">
+      <figcaption class="label muted">Full redesigned collection page on mobile<br><code>/images/02-plp/08.jpg</code></figcaption>
+    </figure>
+
+    <h2>6 &middot; Outcome</h2>
+    <p><strong>Test window</strong> Jul 7 &ndash; Aug 18, 2026 (43 days). <strong>Decision market</strong> US mobile only &mdash; Canadian and desktop volume were too small to read (desktop: 7 sessions vs 11). 2,327 visitors saw the redesigned page.</p>
+
+    <h4>Primary metric: product click-through</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col"></th><th scope="col">Original</th><th scope="col">Redesign</th><th scope="col">Change</th></tr></thead>
+        <tbody>
+          <tr><td>PLP &rarr; PDP click-through (US)</td><td>9.05%</td><td>9.80%</td><td><strong>+8.2%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The June proposal predicted +5&ndash;15% relative. The result landed inside it &mdash; direction and magnitude both match.</p>
+    <p><strong>And it isn&rsquo;t proof.</strong> This page runs about 26 sessions a day per arm. Detecting a change this size at that volume would take six months or more; 43 days doesn&rsquo;t get there. The 95% confidence interval is <strong>[&minus;18%, +35%]</strong>. The baseline also halved between July and August for reasons I couldn&rsquo;t confirm, so the combined figure is indicative rather than precise.</p>
+    <p>What I can say is that nothing points the other way. The redesign never trailed in either period, and the friction metrics move in the same direction.</p>
+
+    <h4>Scroll: the one solid result</h4>
+    <p>Raw average scroll was effectively identical between versions &mdash; 37.74% vs 37.76%. That looks like nothing happened.</p>
+    <p><strong>But scroll depth is a percentage of page length, and the redesigned page is 9.5% longer</strong> with the counter and banners added. The same percentage of a longer page means more actual scrolling. Corrected for length, <strong>actual scroll distance rose 9.4%</strong>, at a 0.06% noise probability &mdash; the most statistically solid finding in the test.</p>
+    <p>Against the goal of exposing the brand story passively, deeper exploration means more exposure. We gained reach at the back of the page without losing anything at the front.</p>
+
+    <h4>Did the brand layer work as designed?</h4>
+    <p><strong>Seen.</strong> The counter sits on the first screen, reaching effectively everyone who loaded the page. Badges reached 58% exposure at the first product row.</p>
+    <p><strong>Not clicked.</strong> No exit path was created, and no friction was added &mdash; dead clicks and quick bounce-backs were both lower on the redesign.</p>
+
+    <h4>The banners performed normally. I recommended scaling them back anyway.</h4>
+    <p>Banner click-through came in at <strong>1.6%</strong>, inside the 0.5&ndash;3% benchmark for informational banners with no offer behind them. That&rsquo;s normal performance, not a failure.</p>
+    <p>But in the same screen space, product cards generate <strong>six times</strong> the clicks (9.8% vs 1.6%). And designing, producing and maintaining a banner set per collection costs more than a contribution that size justifies.</p>
+    <p><strong>So the recommendation is cost-versus-return, not performance.</strong> Banners earn their space when there&rsquo;s an offer behind them &mdash; a promotion or a launch clears that benchmark comfortably. Tie them to campaigns rather than running them evergreen.</p>
+
+    <h3>What I can&rsquo;t claim</h3>
+    <p><strong>The headline goal stayed unproven.</strong> Not disproven &mdash; unproven. The page is too small to prove it in 43 days, and I&rsquo;d rather say that than call +8.2% a win.</p>
+    <p><strong>AOV was never tested.</strong> The lever that would have moved it wasn&rsquo;t deployed on this page.</p>
+    <p><strong>Two of the friction metrics sit within chance individually</strong> (dead clicks and quick bounce-backs, at 64% and 49% noise probability). I cite them only as a consistent direction &mdash; the redesign led in all four measured periods &mdash; not as findings.</p>
+    <p><strong>Canada is a blank.</strong> 55 vs 57 clickers in July, 9 vs 14 in August. Nothing can be read from that.</p>
+
+    <h2>7 &middot; What&rsquo;s next</h2>
+    <p><strong>Shipped.</strong> The redesign went into the main deploy. Hero copy came down from nine lines to three, restoring first-screen product visibility across every collection.</p>
+    <p><strong>A bug the test found that the redesign didn&rsquo;t cause.</strong> Banner 1 used an absolute URL that sent Canadian visitors to the US site. Nothing in the test was designed to catch it &mdash; it surfaced because measuring the page meant looking at it closely. Fixed.</p>
+    <p><strong>Banners applied selectively</strong> &mdash; ad landing pages, collections with 20+ products, seasonal campaigns.</p>
+    <p><strong>And the real conclusion: change how we measure.</strong> For pages this size, A/B testing is the wrong instrument. At 26 sessions per arm per day, improvements small enough to be realistic can&rsquo;t reach significance before the page or the catalog changes underneath the test. Before/after comparison uses the full traffic over the same window and gets to an answer faster. The proposal had listed it as an option; the test is what convinced me it should be the default.</p>
+    <p>I&rsquo;d rather have a method that matches the traffic we actually have than a rigorous one that can&rsquo;t finish.</p>
 
     <a class="back label" href="index.html#work">&larr; Work</a>
   </div>

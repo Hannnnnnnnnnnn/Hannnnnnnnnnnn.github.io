@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ATACZ PLP Revamp — Han</title>
-<meta name="description" content="A collection page redesigned to carry the brand, and an A/B test judged against criteria fixed before it ran.">
+<title>PDP Revamp &mdash; Han</title>
+<meta name="description" content="A product page that search traffic reached and bounced off, rebuilt around what earns its space.">
 <link rel="stylesheet" href="style.css">
 <script>document.documentElement.classList.add("js")</script>
 <script src="main.js" defer></script>
@@ -21,70 +21,198 @@
 
 <main class="section">
   <div class="prose">
-    <p class="label muted">01</p>
-    <h1>ATACZ PLP Revamp</h1>
-    <p class="lead">A collection page redesigned to carry the brand &mdash; and an A/B test judged against
-      criteria that were fixed before it ran.</p>
+
+    <p class="label muted">01 &middot; PDP Revamp</p>
+    <h1>Rebuilding a product page around purchase confidence</h1>
+    <p class="lead">A product page that search traffic reached and bounced off, rebuilt around what earns its space.</p>
+
+    <ul class="tags label">
+      <li>UX Research</li>
+      <li>Product Design</li>
+      <li>UI Design</li>
+      <li>Front-end Implementation</li>
+      <li>Analytics</li>
+    </ul>
+
+    <ul class="metrics">
+      <li><span class="metric-value">+33%</span><span class="metric-label label muted">mobile search CTR</span></li>
+      <li><span class="metric-value">+51%</span><span class="metric-label label muted">scroll depth</span></li>
+      <li><span class="metric-value">+23%</span><span class="metric-label label muted">conversion rate</span></li>
+    </ul>
+    <p class="caveat">Pre/post comparison across two five-week windows. Not a controlled experiment &mdash; see Outcome.</p>
 
     <dl class="meta">
-      <dt>Role</dt><dd>Product Design &amp; A/B Analysis</dd>
-      <dt>Period</dt><dd>Jun &ndash; Aug 2026</dd>
-      <dt>Client</dt><dd>ATACZ</dd>
-      <dt>Tools</dt><dd>Figma, Shopify, GA4, Microsoft Clarity</dd>
+      <dt>Client</dt><dd>Atacz</dd>
+      <dt>Year</dt><dd>2026</dd>
+      <dt>Status</dt><dd>Shipped</dd>
+      <dt>Tools</dt><dd>Google Search Console, Microsoft Clarity, Shopify Analytics, Liquid, Figma</dd>
     </dl>
 
-    <h2>Problem</h2>
-    <p>Half of our paid visitors never see the homepage. Just over half of paid-social sessions land
-      straight on a collection page, while only a fifth start at the homepage. For those visitors a
-      product grid was doing the homepage's job &mdash; and saying nothing about who the brand is.</p>
-    <p>The proposal ruled one thing out at the start: <strong>the collection page is not the conversion
-      bottleneck.</strong> Behaviour on it is nearly identical across channels, yet conversion differs
-      about ninefold between paid social and search &mdash; so the gap sits downstream. No conversion
-      lift was promised, and the report never claimed one.</p>
+    <figure class="figure">
+      <figcaption class="label muted">Product page before and after, side by side<br><code>/images/01-pdp/01.jpg</code></figcaption>
+    </figure>
 
-    <h2>Approach</h2>
-    <p><strong>A passive brand layer.</strong> A recycled-bottle counter on the first screen and a bottle
-      badge on each product card, designed to be seen at the decision point without ever pulling
-      visitors off the sales path. Alongside it: simplified product cards and a lighter filter control.</p>
-    <p><strong>The direction shifted mid-flight, and the report says so.</strong> The proposal's combo
-      banners were meant to cross-sell straps and accessories, but on a single-collection page those
-      products are already on screen &mdash; so the three banners shipped as traffic-drivers to steady
-      sellers outside the collection instead. That moved the average-order-value target out of scope: a
-      scope decision, not a measurement failure. Adding things and removing things in one release also
-      means a flat result can hide two opposing forces, which the report flags rather than hides.</p>
-    <p><strong>The criteria were fixed before the test ran.</strong> The verdict was judged only against
-      the proposal's own success measures. Other metrics were watched during execution but excluded from
-      the verdict &mdash; which is what stops a verdict being assembled afterwards from whichever number
-      happens to look good. US mobile decided the call; Canada's sample was too small to be precise. No
-      early calls: the full 43-day window ran.</p>
+    <h2>2 &middot; The problem</h2>
+    <h3>Search was working. The page wasn&rsquo;t.</h3>
+    <p>Over four months, Atacz product pages pulled <strong>80,266 impressions</strong> from Google Search and converted <strong>5,170 clicks</strong>. The top three product pages sat between <strong>1.0% and 1.7% click-through</strong> &mdash; around half the 2&ndash;3% ecommerce benchmark.</p>
 
-    <div class="figure label">before / after</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">Product</th><th scope="col">Impressions</th><th scope="col">Clicks</th><th scope="col">CTR</th></tr></thead>
+        <tbody>
+          <tr><td>Miffy Statement Tote</td><td>22,889</td><td>351</td><td>1.53%</td></tr>
+          <tr><td>Miffy Twist</td><td>5,000</td><td>84</td><td>1.68%</td></tr>
+          <tr><td>Twist Bag</td><td>5,827</td><td>60</td><td>1.03%</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-    <h2>Result</h2>
-    <p><strong>Product click-through rose 8.2%</strong>, landing inside the 5&ndash;15% the proposal had
-      targeted &mdash; direction and magnitude both matching the prediction.</p>
-    <p><strong>Actual scroll distance rose 9.4%</strong>, the most statistically solid result of the test.
-      This one nearly went unnoticed: raw scroll depth was effectively identical between versions, but
-      depth is a percentage of page length, and the redesigned page was about 9.5% longer. The same
-      percentage of a longer page means people were travelling further. Corrected for length, the back of
-      the page got meaningfully more reach without losing anything at the front.</p>
-    <p><strong>Nothing worsened.</strong> Dead clicks and quick bounce-backs both ran lower on the
-      redesign, and the brand layer behaved as designed &mdash; seen by effectively everyone who loaded
-      the page, clicked by almost no one, creating no exit path.</p>
-    <p><strong>The banners were the interesting call.</strong> At 1.6% they sat inside the normal
-      0.5&ndash;3% range for informational banners with no offer behind them &mdash; not a failure. But in
-      the same screen space a product card earns roughly six times the clicks, and a banner set has to be
-      designed and maintained per collection. The recommendation was to tie banners to promotions rather
-      than run them evergreen: a cost-versus-return call, not a performance problem.</p>
+    <p>The traffic was there. People were finding us and choosing not to come in.</p>
+    <p><strong>74.3% of those clicks were mobile.</strong> The page had been built desktop-first.</p>
+
+    <h2>3 &middot; What I found</h2>
+    <p><strong>The listing didn&rsquo;t match the page.</strong> Meta descriptions ran up to <strong>1,387 characters</strong> where search engines crawl about 160, so the snippet Google displayed was a truncated fragment of boilerplate. Page titles followed no shared convention.</p>
+    <p><strong>The brand&rsquo;s two differentiators were invisible.</strong> Atacz is built on upcycling &mdash; two PET bottles per bag &mdash; and on mix-and-match: bags, straps and accessories designed to be combined. On the PDP, the upcycling story sat inside a collapsed tab below the fold, and there was no pairing prompt at all. Yet the Bind Strap, a pure accessory, had sold <strong>99 units unprompted</strong>, making it a top-five seller by volume. Demand for pairing existed. The page never mentioned it.</p>
+    <p><strong>The right content was in the wrong place.</strong> Clarity heatmaps showed engagement concentrated on the hero image and CTA, then collapsing. Everything of value sat below that point &mdash; while the space above it was occupied by elements that weren&rsquo;t earning it:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">Element</th><th scope="col">Evidence</th></tr></thead>
+        <tbody>
+          <tr><td>Shop Pay Installments</td><td>1% of payments (0.87% annual)</td></tr>
+          <tr><td>Afterpay</td><td>BNPL combined under 2%</td></tr>
+          <tr><td>Review section</td><td>3 clicks from 162 search impressions</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>A note on research.</strong> I didn&rsquo;t run formal usability sessions on this project. What I had was behavioural data at scale &mdash; Clarity heatmaps and session replays, Search Console, Shopify Analytics &mdash; plus informal walkthroughs with colleagues. That was enough to locate <em>where</em> people stopped, but not <em>why</em>. Formal testing is what I&rsquo;d add before the next iteration.</p>
+
+    <figure class="figure">
+      <figcaption class="label muted">Clarity scroll heatmap showing where engagement collapsed<br><code>/images/01-pdp/02.jpg</code></figcaption>
+    </figure>
+
+    <h2>4 &middot; Decisions</h2>
+
+    <section class="decision">
+      <span class="label muted">Decision 01</span>
+      <h3>Removing the review section, then putting it back differently</h3>
+      <p><strong>Context.</strong> Reviews are a default trust signal, so removing them looks reckless. Atacz was a young brand and reviews had pooled onto a handful of products. Most PDPs had none.</p>
+      <p><strong>The real problem was inconsistency, not performance.</strong> The same template rendered completely differently depending on the product &mdash; some pages showed a healthy review block, most showed an empty shell. A customer moving between two bags saw two different pages. And an empty review section doesn&rsquo;t read as &ldquo;new product.&rdquo; It reads as &ldquo;nobody bought this.&rdquo; The engagement data supported removal, but consistency is why I removed it.</p>
+      <p><strong>The pushback.</strong> Marketing&rsquo;s position was direct: reviews build trust, and we&rsquo;d removed trust.</p>
+      <p>They were right about the goal. The disagreement was about what an empty block communicates. Removing proof and displaying the absence of proof aren&rsquo;t the same thing.</p>
+      <p><strong>What I shipped instead of restoring it.</strong> A conditional section &mdash; products with reviews render it, products without don&rsquo;t render the block at all. Marketing&rsquo;s goal met, catalog consistency preserved. Review collection continued through email marketing the whole time.</p>
+      <p><strong>In hindsight, that&rsquo;s what should have shipped first.</strong> Removing it outright was the faster call and it stopped the inconsistency immediately, but it also discarded working signal on the products that had it.</p>
+      <figure class="figure">
+        <figcaption class="label muted">Conditional review section and the template it replaced<br><code>/images/01-pdp/03.jpg</code></figcaption>
+      </figure>
+    </section>
+
+    <section class="decision">
+      <span class="label muted">Decision 02</span>
+      <h3>Cutting the page down, and adding one thing back</h3>
+      <p>The same release removed more than it added. That was deliberate &mdash; the question wasn&rsquo;t &ldquo;what should we add&rdquo; but &ldquo;what has earned this space.&rdquo;</p>
+      <p><strong>Cutting.</strong> Clarity showed engagement collapsing after the hero and CTA. The instinct is to move the good content up. I cut the page to roughly <strong>a quarter of its length</strong> instead &mdash; the product description had grown into the longest block on the page, and almost nobody was reaching it.</p>
+      <p><strong>Adding.</strong> &ldquo;Pairs Well With&rdquo; went directly beneath the Add to Cart button, and was extended from a handful of products to every PDP. The moment right after a customer commits to a bag is the moment they&rsquo;re most open to &ldquo;what goes with it.&rdquo; Each pairing card carries its own add-to-cart, so a set can be assembled without leaving the page.</p>
+      <p><strong>The description became a collapsed accordion</strong> to make room. That risks hiding content from crawlers, so I kept it server-rendered in the DOM rather than injecting it on expand, and verified with Google Search Console&rsquo;s URL Inspection tool that it was still being crawled before shipping.</p>
+      <p><strong>Reading the scroll number honestly.</strong> Scroll depth is a percentage of page length, so a shorter page inflates it mechanically. The honest read is the pair: the page got about <strong>4&times; shorter</strong> <em>and</em> measured scroll depth rose <strong>51%</strong>. People were reaching proportionally further through a page that was already far shorter.</p>
+      <p><strong>Trade-off.</strong> Placing a cross-sell module directly under the primary CTA competes with it. I accepted that because the module points deeper into the catalog rather than away from it, and watched quick-back-click rate as the tripwire &mdash; it fell from 4.79% to 4.44%.</p>
+      <figure class="figure">
+        <figcaption class="label muted">Full page length before and after<br><code>/images/01-pdp/04.jpg</code></figcaption>
+      </figure>
+      <figure class="figure">
+        <figcaption class="label muted">Pairs Well With section with per-card add to cart<br><code>/images/01-pdp/05.jpg</code></figcaption>
+      </figure>
+    </section>
+
+    <section class="decision">
+      <span class="label muted">Decision 03</span>
+      <h3>Putting the brand on the product photo</h3>
+      <p><strong>Context.</strong> Most of our traffic comes from paid social, and it lands on a PDP or a PLP &mdash; almost never the homepage. For those visitors the product page <em>is</em> the brand introduction, and ours introduced nothing. The upcycling story was a line of text inside a collapsed tab.</p>
+      <p><strong>What I chose.</strong> A PET bottle count badge &mdash; &ldquo;this bag = N recycled bottles&rdquo; &mdash; overlaid on the top-left of the product media. Guaranteed exposure on the first screen, independent of scroll.</p>
+      <p><strong>Trade-off.</strong> Overlaying anything on product imagery is normally off-limits in fashion; it&rsquo;s the most expensive real estate on the page. It worked here because of what we sell: bags photographed centre-frame leave the top corners consistently empty across our catalog. This is a decision that depends on our specific photography, not a pattern I&rsquo;d port elsewhere without checking.</p>
+      <figure class="figure">
+        <figcaption class="label muted">PET bottle badge on product media, and the collapsed tab it replaced<br><code>/images/01-pdp/06.jpg</code></figcaption>
+      </figure>
+    </section>
+
+    <section class="decision">
+      <span class="label muted">Decision 04</span>
+      <h3>Making badges that can&rsquo;t become lies</h3>
+      <p>Two badges replaced the payment badges we removed. Both are designed so they stop being shown the moment they stop being true.</p>
+      <p><strong>Low stock at 2 units.</strong> Most stores set this threshold generously, because urgency sells. We couldn&rsquo;t: our stock genuinely runs thin, so calling a healthy quantity &ldquo;low&rdquo; would have been technically true and practically dishonest. Two units is where it&rsquo;s simply a fact. The threshold is <strong>configurable 1&ndash;10 in the section schema</strong>, so merchandising can tune it per collection without touching code.</p>
+      <p><strong>New expires by itself.</strong> The badge applies the moment a product is created and removes itself after three months, automated through Shopify Flow rather than left to someone&rsquo;s memory. A &ldquo;New&rdquo; badge that outlives its truth is worse than no badge.</p>
+      <figure class="figure">
+        <figcaption class="label muted">Badge states: PET count, low stock, new, none<br><code>/images/01-pdp/07.jpg</code></figcaption>
+      </figure>
+      <figure class="figure">
+        <figcaption class="label muted">Section schema settings for the low stock threshold<br><code>/images/01-pdp/08.jpg</code></figcaption>
+      </figure>
+    </section>
+
+    <h2>5 &middot; What shipped</h2>
+    <h4>New mobile hierarchy</h4>
+    <p>Product image + PET badge &rarr; Low Stock / New badge &rarr; Title &rarr; Price &rarr; Variants &rarr; <strong>Add to Cart</strong> &rarr; <strong>Pairs Well With</strong> &rarr; Description (collapsed) &rarr; You May Also Like &rarr; FAQ</p>
+    <p>Alongside the layout: standardized title conventions (<code>[Product Name] | Atacz</code>), meta descriptions rewritten inside the crawl limit, and JSON-LD product schema.</p>
+    <p><strong>Infrastructure.</strong> The store ran one theme template per product &mdash; a workaround for having no metafields, which meant every content change needed a developer. Extending &ldquo;Pairs Well With&rdquo; to every PDP would have meant hand-editing every template forever. I migrated to a single template driven by Shopify metafields, so pairings, bottle counts and badge states became data the merchandising team edits in Shopify admin. The redesign only holds up if someone other than a developer can keep it current.</p>
+
+    <figure class="figure">
+      <figcaption class="label muted">Responsive layouts at 320, 768 and 1440<br><code>/images/01-pdp/09.jpg</code></figcaption>
+    </figure>
+    <figure class="figure">
+      <figcaption class="label muted">Metafield structure in Shopify admin<br><code>/images/01-pdp/10.jpg</code></figcaption>
+    </figure>
+
     <blockquote>
-      <p>Roll out the redesign. Apply banners selectively.</p>
-      <p class="label muted">Verdict, A/B test report</p>
+      <p>There was no design system when I joined. I set up basic type and colour foundations to work from, but didn&rsquo;t build a component library &mdash; I was building the front-end as well, so components got defined directly in Shopify sections as we went, and Figma served as a working reference rather than a handoff artifact. On a product team with engineers I&rsquo;d expect Figma to carry much more weight, and I&rsquo;d want it to.</p>
     </blockquote>
-    <p>The honest limit is stated in the report itself. At this page's traffic, confirming a change of
-      this size to statistical significance would take six months or more, so 43 days matches the target
-      rather than proves it. Nothing pointed the other way &mdash; the redesign never trailed in either
-      period, and the scroll and friction measures moved with it. The recommendation that followed was to
-      stop A/B testing pages this small and use before/after comparison instead.</p>
+
+    <h2>6 &middot; Outcome</h2>
+    <p><strong>How I measured.</strong> Two five-week windows &mdash; Feb 25 to Mar 31 (before) and Apr 1 to May 5, 2026 (after). Sources: Google Search Console, Microsoft Clarity, Shopify Analytics. Pre/post comparison, not a controlled experiment.</p>
+
+    <h4>Search</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">Device</th><th scope="col">Before</th><th scope="col">After</th><th scope="col">Change</th></tr></thead>
+        <tbody>
+          <tr><td>Mobile (74% of traffic)</td><td>7.47%</td><td>9.97%</td><td><strong>+33%</strong></td></tr>
+          <tr><td>Desktop</td><td>5.43%</td><td>7.30%</td><td>+34%</td></tr>
+          <tr><td>Tablet</td><td>5.33%</td><td>7.54%</td><td>+41%</td></tr>
+          <tr><td>Product snippets</td><td>2.59%</td><td>3.27%</td><td>+26%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Average mobile position moved from 5.34 to 4.51.</p>
+
+    <h4>Engagement</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">Metric</th><th scope="col">Before</th><th scope="col">After</th><th scope="col">Change</th></tr></thead>
+        <tbody>
+          <tr><td>Scroll depth, all PDPs</td><td>24.2%</td><td>36.5%</td><td><strong>+51%</strong></td></tr>
+          <tr><td>Scroll depth, Twist Bag</td><td>21.7%</td><td>35.3%</td><td>+63%</td></tr>
+          <tr><td>Dead click rate</td><td>1.5%</td><td>0.7%</td><td><strong>&minus;53%</strong></td></tr>
+          <tr><td>Quick back-click rate</td><td>4.79%</td><td>4.44%</td><td>&minus;7%</td></tr>
+          <tr><td>&ldquo;Pairs Well With&rdquo; clicks</td><td>&mdash;</td><td>494 sessions</td><td>new</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Scroll depth tests the core hypothesis most directly: the content was already good, it was just past the point where people stopped. Dead clicks halving says the decluttering worked &mdash; fewer elements that looked interactive but weren&rsquo;t.</p>
+
+    <h4>Conversion</h4>
+    <p>Overall conversion rose from <strong>0.284% to 0.349%, +23%</strong>. The interesting part is where it came from.</p>
+    <p>Add-to-cart barely moved. What changed was <strong>completion</strong> &mdash; the share of cart sessions finishing checkout went from <strong>20.8% to 25.3%</strong>. The revamp didn&rsquo;t make more people add to cart. It made the people who added more likely to finish.</p>
+
+    <h3>What I can&rsquo;t claim</h3>
+    <p><strong>Add-to-cart is not a clean result.</strong> The same metric points three ways depending on the window: <strong>+26%</strong> on a tight post-launch window, <strong>+7%</strong> on the official windows, <strong>&minus;44%</strong> over eight weeks. All three are correctly calculated. The spread comes from product launch cycles, not page design &mdash; during a product drop, add-to-cart hit 10.6% against a 2&ndash;3% baseline, then fell straight back. The before period carried that momentum; the after period had no new drops. So I don&rsquo;t attribute add-to-cart movement to the redesign in either direction.</p>
+    <p><strong>AOV fell 9% while orders rose 9%.</strong> The likely cause is product mix shifting toward lower-priced accessories surfaced by &ldquo;Pairs Well With&rdquo; &mdash; bundle variety rose and the single dominant pairing dropped from 26% to 18% of all bundles, which is what a working cross-sell module should produce. I couldn&rsquo;t confirm it at the line-item level, so it stays a hypothesis.</p>
+    <p><strong>And the general caveat.</strong> Session volume differed between windows (66,512 vs 58,389), URL re-indexing was still in progress during measurement, and no traffic was held back as a control. These are directional results from a live store, not experimental findings.</p>
+
+    <h2>7 &middot; What&rsquo;s next</h2>
+    <p><strong>Measure completion, not volume.</strong> Add-to-cart is dominated by launch cadence and makes a poor success metric for page-level work. Cart completion is what I&rsquo;d hold future PDP iterations to.</p>
+    <p><strong>Re-test add-to-cart in a launch-neutral window</strong> &mdash; no product drops in either period &mdash; to isolate the page&rsquo;s actual effect.</p>
+    <p><strong>Confirm the cross-sell hypothesis</strong> with line-item attach analysis and Clarity custom events tracking a pairing click through to the specific item added. This is the missing piece of the AOV story.</p>
+    <p><strong>Phase 2: FAQ schema</strong> for snippet CTR and visibility in AI-generated search results.</p>
 
     <a class="back label" href="index.html#work">&larr; Work</a>
   </div>
