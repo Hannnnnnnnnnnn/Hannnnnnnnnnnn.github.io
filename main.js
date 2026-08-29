@@ -309,3 +309,72 @@ run(() => {
   // Non-wheel scrolling is never intercepted, only resynced, so keyboard and anchors work
   addEventListener("scroll", () => { if (!running) { target = current = scrollY; } }, { passive: true });
 });
+
+/* ── 5. 작업 행 호버 미리보기 (데스크탑 전용) ──
+   Work row hover preview, desktop only.
+
+   행에 마우스를 올리면 그 케이스의 히어로 이미지를 커서 오른쪽 아래에 띄운다.
+   소스는 마크업의 data-preview 에 선언돼 있고 여기서는 읽기만 한다.
+   Hovering a row floats that case's hero image below-right of the cursor.
+   The source is declared on the markup as data-preview; this only reads it.
+
+   따라오는 감쇠는 rAF 루프가 아니라 CSS transform 트랜지션이 만든다 —
+   목표 좌표만 바꾸면 이징이 알아서 늦게 따라온다.
+   The damped follow is a CSS transform transition rather than a rAF loop:
+   move the target and the easing lags for us. */
+run(() => {
+  if (reduce) return;                                                    // 모션 최소화 존중 / respect reduced motion
+  if (!matchMedia("(hover: hover) and (pointer: fine)").matches) return; // 터치에는 호버가 없다 / no hover on touch
+
+  const rows = document.querySelectorAll(".rows .row[data-preview]");
+  if (!rows.length) return;
+
+  const box = document.createElement("figure");
+  box.className = "row-preview";
+  box.setAttribute("aria-hidden", "true");   // 링크 텍스트가 이미 말하는 내용 / the link text already says this
+  const img = document.createElement("img");
+  img.alt = "";
+  const cap = document.createElement("figcaption");
+  cap.className = "label muted";
+  box.append(img, cap);
+  document.body.appendChild(box);
+
+  const GAP = 20;   // 커서에서 띄우는 거리 / distance from the cursor
+  let shown = "";
+
+  // 오른쪽·아래가 기본이지만 화면을 넘으면 안쪽으로 접는다
+  // Below-right by default, folded back inside when it would leave the viewport
+  const place = (e) => {
+    const w = box.offsetWidth, h = box.offsetHeight;
+    const x = Math.max(GAP, Math.min(e.clientX + GAP, innerWidth - w - GAP));
+    const y = Math.max(GAP, Math.min(e.clientY + GAP, innerHeight - h - GAP));
+    box.style.setProperty("--x", x + "px");
+    box.style.setProperty("--y", y + "px");
+  };
+
+  rows.forEach((row) => {
+    row.addEventListener("mouseenter", (e) => {
+      if (row.dataset.preview !== shown) {
+        shown = row.dataset.preview;
+        // 파일이 아직 없는 슬롯은 케이스 페이지와 같은 자리표시로 떨어진다
+        // A slot with no file yet falls back to the placeholder the case pages use
+        box.classList.remove("is-loaded");
+        cap.textContent = row.dataset.previewAlt || "";
+        img.onload = () => box.classList.add("is-loaded");
+        img.onerror = () => box.classList.remove("is-loaded");
+        img.src = shown;                       // 핸들러를 먼저 걸고 src / handlers first, then src
+      }
+      // 처음 뜰 때는 커서 자리에서 시작 — 아니면 직전 행 위치에서 날아온다
+      // Start at the cursor on first show, or it flies in from the previous row
+      if (!box.classList.contains("is-in")) {
+        box.classList.add("is-placing");
+        place(e);
+        void box.offsetWidth;                  // 리플로우 강제 / force the reflow
+        box.classList.remove("is-placing");
+      }
+      box.classList.add("is-in");
+    });
+    row.addEventListener("mousemove", place);
+    row.addEventListener("mouseleave", () => box.classList.remove("is-in"));
+  });
+});
