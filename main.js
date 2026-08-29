@@ -154,6 +154,21 @@ run(() => {
         const [nx, ny] = normal(i), h = halfW(i);
         outline.push([marks[i].x + nx * h, marks[i].y + ny * h]);
       }
+      /* 머리는 둥근 캡으로 닫는다. 양쪽 변을 직선으로 이어 버리면 붓끝이 가위로 잘린 것처럼
+         납작해지는데, 머리는 획이 가장 굵은 자리(head 보정 ×1.55)라 그 평평함이 제일 눈에
+         띈다. 법선각에서 접선 방향을 지나 반대편 법선까지 반원을 그려 넣으면 잉크를 머금은
+         붓끝처럼 앞으로 볼록해진다 — 반지름만큼 실제로 더 나아가므로 획이 길어 보이기도 한다.
+         Cap the head with an arc. Joining the two sides straight leaves a cut-off tip, and the
+         head is the widest point (the ×1.55 head boost), so that flatness is exactly where it
+         shows. Sweeping from the normal through the tangent to the opposite normal bulges the
+         tip forward by its own radius, like a loaded brush. */
+      const CAP = 12;
+      const [hx, hy] = normal(n - 1), hr = halfW(n - 1);
+      const a0 = Math.atan2(hy, hx);
+      for (let k = 1; k < CAP; k++) {
+        const a = a0 - Math.PI * (k / CAP);   // 접선을 지나는 쪽으로 / sweeping through the tangent
+        outline.push([marks[n - 1].x + Math.cos(a) * hr, marks[n - 1].y + Math.sin(a) * hr]);
+      }
       for (let i = n - 1; i >= 0; i--) {
         const [nx, ny] = normal(i), h = halfW(i);
         outline.push([marks[i].x - nx * h, marks[i].y - ny * h]);

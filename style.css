@@ -83,6 +83,13 @@ img { max-width: 100%; height: auto; display: block; }
   justify-content: space-between;
   padding: clamp(2rem, 6vh, 4rem) 0 clamp(3rem, 10vh, 6rem);
 }
+/* 태그라인은 화면 중앙에서 멈춘다 — 오른쪽 메타와 마주보는 두 칸 구조라 중앙을 넘으면
+   한 덩어리로 읽힌다. 두 칸이 나란히 설 때만 걸고, 좁아져서 줄이 쌓이면 전폭을 쓴다.
+   The tagline stops at the centre line: it faces the meta, and crossing the middle makes the
+   pair read as one block. Only while they sit side by side — once they stack, full width. */
+@media (min-width: 641px) {
+  .hero-caption > span:first-child { max-width: 50%; }
+}
 
 /* ── 섹션 / Sections ── */
 .section { padding: 0 var(--pad); }
