@@ -658,6 +658,90 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
   text-transform: uppercase;
 }
 
+/* ── Pairs Well With — 01 Dec 03 ──
+   이 결정의 논점은 "무엇을 넣었나"가 아니라 "어디에 넣었나"다. 그래서 위의 Add to Cart
+   버튼까지 같이 재현한다 — 레일만 떼어 놓으면 그냥 캐러셀이고, CTA 바로 밑이라는
+   판단이 보이지 않는다. (배지 때 배운 것과 같다: 맥락을 빼면 정확하면서 동시에 틀린다.)
+   The claim is placement, not contents, so the CTA above the rail is part of the
+   reproduction: on its own the rail is just a carousel and the decision vanishes.
+
+   가로 스크롤은 네이티브다 — JS 0줄. 레일이 스테이지 밖으로 나가지 않도록 min-width:0
+   을 걸어야 한다. 그리드 아이템의 기본 min-width:auto 는 내용만큼 늘어나서, 이게 없으면
+   페이지 전체가 가로로 스크롤된다. */
+.demo .pdp--pairs { gap: 1.25rem; }
+.demo .pairs__title { margin: 0; font-family: var(--shop); font-size: 15px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; }
+.demo .pairs__rail {
+  margin: 0;
+  padding: 0 0 0.75rem;
+  /* 이 세 줄이 없으면 레일이 칸을 넘어 페이지 전체를 가로로 밀어낸다. .pdp 가
+     justify-items:start 라 그리드 아이템이 내용 크기로 잡히고, .prose ul 의
+     max-width:38rem(608px) 에서 멈춘다 — 부모(370px)보다 넓다. 실측 173px 넘침.
+     Without these three the rail overflows the page: .pdp uses justify-items:start
+     so the item is content-sized, settling at the 38rem .prose ul cap. */
+  justify-self: stretch;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  list-style: none;
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;   /* 끝에서 페이지가 같이 밀리지 않게 / don't chain to the page at the ends */
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+.demo .pairs__rail:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
+.demo .pairs__card {
+  /* 걸치는 카드가 항상 하나 있어야 한다 — 그게 "옆에 더 있다"는 유일한 신호다.
+     고정 132px 로는 폭에 따라 딱 맞아떨어지는 지점이 생긴다: 390px(가장 흔한 폰 폭)
+     에서 정확히 카드 2개 + 간격이 되어 걸침이 0px 이었다. 비율로 잡아 그 우연을 없앤다.
+     데스크톱에서는 132px 로 수렴한다 — 그게 테마에서 읽어온 값이다.
+     A fixed 132px hit an exact fit at 390px — the most common phone width — leaving a
+     0px sliver and no sign the row scrolls. The ratio removes that coincidence while
+     still settling at the theme's 132px once there is room. */
+  flex: 0 0 clamp(108px, 40%, 132px);
+  scroll-snap-align: start;
+  display: grid;
+  gap: 0.35rem;
+  justify-items: start;
+}
+.demo .pairs__photo { width: 100%; aspect-ratio: 4 / 5; background: #f0f0f0; }
+.demo .pairs__photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.demo .pairs__name { font-size: 12px; line-height: 1.35; letter-spacing: 0.2px; }
+.demo .pairs__price { font-size: 13px; font-weight: 500; letter-spacing: 0.6px; }
+.demo .pairs__add {
+  width: 100%;
+  margin-top: 0.15rem;
+  padding: 0.5rem 0;
+  border: 1px solid #0c0c0c;
+  background: #fff;
+  color: #0c0c0c;
+  font-family: var(--shop);
+  font-size: 11px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+/* 좁은 화면에서는 레일만 .pdp 패딩 밖으로 흘려보낸다 — 320px 에서 카드가 1.3개밖에
+   안 보이면 "옆에 더 있다"가 전달되지 않는다. width:auto 로 되돌려야 justify-self:stretch
+   가 음수 마진만큼 실제로 넓혀준다 (width:100% 면 넓어지지 않고 옆으로 밀리기만 한다).
+   On narrow screens the rail bleeds past the column padding: at 320px only 1.3 cards
+   were visible, which reads as a cut-off card rather than a row. */
+@media (max-width: 749px) {
+  .demo .pairs__rail {
+    width: auto;
+    margin-inline: -1.75rem;
+    /* 오른쪽 패딩은 0 이다. 양쪽에 28px 를 주면 다음 카드가 레일 바깥 경계에서 정확히
+       시작해 걸치는 폭이 0px 이 되고, 스크롤된다는 유일한 신호가 사라진다 (390px 실측:
+       카드 2가 341 에서 끝나고 카드 3이 353 = 레일 오른쪽 끝에서 시작했다).
+       Right padding is 0: with 28px on both sides the next card starts exactly at the
+       rail's edge, the sliver becomes 0px and the row stops looking scrollable. */
+    padding-inline: 1.75rem 0;
+    scroll-padding-left: 1.75rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) { .demo .pairs__rail { scroll-behavior: auto; } }
+
 /* ── 데모 B′: 스크롤 착시 토글 (02 §6) ──
    막대는 트랙 바닥에 붙어 위로 자란다. 높이만 트랜지션한다 — 위치나 폭까지 움직이면
    "같은 데이터가 다시 그려졌다"가 아니라 "다른 차트로 갈아탔다"로 읽힌다.

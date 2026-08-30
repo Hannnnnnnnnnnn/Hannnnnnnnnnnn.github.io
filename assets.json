@@ -46,13 +46,6 @@
       "note": "읽히지 않아도 된다. 높이 차이만 보이면 됨"
     },
     {
-      "slot": "04",
-      "path": "/images/01-pdp/04.jpg",
-      "section": "4 · Decision 03",
-      "alt": "Pairs Well With, cropped to the section, with per-card add to cart",
-      "note": "이 케이스의 중심 결정. 카드별 add-to-cart 가 보이게"
-    },
-    {
       "slot": "05",
       "path": "/images/01-pdp/05.jpg",
       "section": "5 · What shipped",
@@ -142,6 +135,13 @@
       "note": "files6 는 이 자리를 정적 이미지 2장(임계값 2 / 3)으로 바꾸고 데모 B 를 02 스크롤 착시로 넘기라고 지시한다. 소유자 판단으로 일단 둘 다 두고 나중에 뺄지 정하기로 했다 — 그래서 지금 데모는 3개가 아니라 4개다."
     },
     {
+      "id": "D",
+      "where": "01 · Decision 03",
+      "what": "Pairs Well With — CTA + 가로 스크롤 레일, 카드마다 add to cart",
+      "js": 0,
+      "note": "가로 스크롤은 네이티브라 JS 0줄. 페어링 9개는 라이브 Twist Bag 의 shopify--discovery--product_recommendation.complementary_products 메타필드를 그 순서 그대로 읽은 것이다 — 고른 게 아니다. CTA 를 같이 재현하는 이유는 이 결정의 논점이 '무엇'이 아니라 '어디'이기 때문. BUILD-PLAN 은 이 섹션을 정적 이미지로 두라고 하지만 소유자 요청으로 인터랙티브가 됐고, 그래서 04.jpg 는 촬영 목록에서 빠졌다."
+    },
+    {
       "id": "B2",
       "where": "02 · 6 Outcome, Scroll",
       "what": "스크롤 착시 토글 — 같은 수치를 퍼센트 / 절대 거리로 다시 그린다",
@@ -167,6 +167,12 @@
       "used_by": "데모 B 스워치 2~5번 (01 Dec 04)",
       "alt": "",
       "note": "라이브 PDP의 컬러 스워치 순서 그대로 — Peach Jelly · Russian Green · Steel Blue · Coffee Bean · Forest Green. Shopify Admin API에서 variant.image를 position 순으로 읽어 받았고(product gid 9579976524080), 색 이름을 눈대중으로 고르지 않았다. 각 480x600 / 15~17KB. 스워치 박스는 76x101(3:4)이라 object-fit: cover로 자른다. 회색 블록이면 '컬러 스워치'라는 것 자체가 안 보인다."
+    },
+    {
+      "path": "/images/01-pdp/pairs-*.jpg (9장)",
+      "used_by": "Pairs Well With 레일 (01 Dec 03)",
+      "alt": "",
+      "note": "harness-strap · birthday-twist-pins · bind · bloom-beads-strap · utility-bind-2 · cord-trick · blue-plastic-letters · paneco-keychain · bind-proof-plus-eco. 메타필드 순서 그대로이며 각 300x375(4:5)로 받아 6~10KB, 합계 88KB. 전부 Atacz 자체 제품이라 미피 IP 문제는 없다."
     }
   ]
 }
