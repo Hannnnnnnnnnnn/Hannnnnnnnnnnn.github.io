@@ -130,8 +130,8 @@
     {
       "id": "B",
       "where": "01 · Decision 05",
-      "what": "상품 정보 칼럼 통째로 + 재고 슬라이더·임계값·New·Popular",
-      "js": "~24 lines",
+      "what": "상품 정보 칼럼 통째로 + 재고 슬라이더·임계값·New·Popular·다이내믹 체크아웃",
+      "js": "~25 lines",
       "note": "files6 는 이 자리를 정적 이미지 2장(임계값 2 / 3)으로 바꾸고 데모 B 를 02 스크롤 착시로 넘기라고 지시한다. 소유자 판단으로 일단 둘 다 두고 나중에 뺄지 정하기로 했다 — 그래서 지금 데모는 3개가 아니라 4개다."
     },
     {
@@ -158,15 +158,15 @@
   "demo_assets": [
     {
       "path": "/images/01-pdp/twist-bag-peach-jelly.jpg",
-      "used_by": "데모 A (01 Dec 03 · 02 Dec 03) · 데모 B 스워치 1번 (01 Dec 04)",
+      "used_by": "데모 A (01 Dec 04 · 02 Dec 03) · 데모 B 스워치 1번 (01 Dec 05)",
       "alt": "Twist Bag in peach jelly",
       "note": "PET 배지가 올라앉는 실물 상품 사진. 브랜드 자체 상품이라 넣었고, 미피는 라이선스 IP라 데모에 쓰지 않는다. 480x600으로 받아 16KB. 배지의 논점이 '가장 비싼 자리에 올린다'는 판단이라 회색 블록으로는 그 판단이 보이지 않는다."
     },
     {
-      "path": "/images/01-pdp/twist-bag-{russian-green,steel-blue,coffee-bean,forest-green}.jpg",
-      "used_by": "데모 B 스워치 2~5번 (01 Dec 04)",
+      "path": "/images/01-pdp/twist-bag-{russian-green,steel-blue,coffee-bean,forest-green,mist-grey}.jpg",
+      "used_by": "데모 B 스워치 2~6번 (01 Dec 05)",
       "alt": "",
-      "note": "라이브 PDP의 컬러 스워치 순서 그대로 — Peach Jelly · Russian Green · Steel Blue · Coffee Bean · Forest Green. Shopify Admin API에서 variant.image를 position 순으로 읽어 받았고(product gid 9579976524080), 색 이름을 눈대중으로 고르지 않았다. 각 480x600 / 15~17KB. 스워치 박스는 76x101(3:4)이라 object-fit: cover로 자른다. 회색 블록이면 '컬러 스워치'라는 것 자체가 안 보인다."
+      "note": "라이브 PDP 의 컬러 스워치 순서 그대로 — Peach Jelly · Russian Green · Steel Blue · Coffee Bean · Forest Green · Mist Grey. Shopify Admin API 에서 variant.image 를 position 순으로 읽어 받았고(product gid 9579976524080), 색 이름을 눈대중으로 고르지 않았다. 6개인 이유는 실물 칼럼(530px)이 한 줄에 6개를 담기 때문이다 — 5개면 줄 끝에 빈자리가 남아 실물과 다르게 보인다. 각 480x600 / 15~18KB."
     },
     {
       "path": "/images/01-pdp/pairs-*.jpg (9장)",

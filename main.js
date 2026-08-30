@@ -377,6 +377,8 @@ run(() => {
     $("[data-sold]").hidden = left > 0;
     $("[data-cta]").textContent = left > 0 ? "Add to cart" : "Sold out";
     $("[data-cta]").disabled = left === 0;
+    // 품절이면 실물도 다이내믹 체크아웃을 통째로 내린다 / the real page drops it at zero
+    $("[data-dynamic]").hidden = left === 0;
   };
   demo.addEventListener("input", render);
   demo.addEventListener("change", render);
