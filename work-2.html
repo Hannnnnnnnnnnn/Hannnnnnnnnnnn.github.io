@@ -253,6 +253,38 @@ After    PET badge (top-left, always visible)
     <h4>Scroll: the one solid result</h4>
     <p>Raw average scroll was effectively identical between versions &mdash; 37.74% vs 37.76%. That looks like nothing happened.</p>
     <p><strong>But scroll depth is a percentage of page length, and the redesigned page is 9.5% longer</strong> with the counter and banners added. The same percentage of a longer page means more actual scrolling. Corrected for length, <strong>actual scroll distance rose 9.4%</strong>, at a 0.06% noise probability &mdash; the most statistically solid finding in the test.</p>
+
+    <div class="demo" data-demo-scroll>
+      <span class="demo__label label">Try it</span>
+      <p class="demo__caption">Same number, two conclusions. Toggle the view.</p>
+      <div class="demo__stage">
+        <div class="bars">
+          <div class="bars__pair">
+            <div class="bars__col">
+              <span class="bars__track"><span class="bars__bar" data-bar-old style="height: 99.9%"></span></span>
+              <span class="bars__value" data-val-old>37.74%</span>
+              <span class="bars__name label muted">Original</span>
+            </div>
+            <div class="bars__col">
+              <span class="bars__track"><span class="bars__bar bars__bar--new" data-bar-new style="height: 100%"></span></span>
+              <span class="bars__value" data-val-new>37.76%</span>
+              <span class="bars__name label muted">Redesign<br>page 9.5% longer</span>
+            </div>
+          </div>
+          <p class="bars__note" data-note>Scroll depth is a share of page length. Nothing appears to have changed.</p>
+        </div>
+      </div>
+      <div class="demo__controls">
+        <p class="demo__field">
+          <span class="label">View as</span>
+          <span class="demo__seg">
+            <label><input type="radio" name="scrollview" value="pct" checked><span>Percentage</span></label>
+            <label><input type="radio" name="scrollview" value="abs"><span>Actual distance</span></label>
+          </span>
+        </p>
+      </div>
+    </div>
+    <p>The same trap runs the other way in the PDP case: that page got about 4&times; shorter, which inflates scroll depth mechanically. In both cases the number is only readable once you ask what the page length was doing underneath it.</p>
     <p>Against the goal of exposing the brand story passively, deeper exploration means more exposure. We gained reach at the back of the page without losing anything at the front.</p>
 
     <h4>Did the brand layer work as designed?</h4>

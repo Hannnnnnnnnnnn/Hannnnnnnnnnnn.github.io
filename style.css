@@ -658,6 +658,26 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
   text-transform: uppercase;
 }
 
+/* ── 데모 B′: 스크롤 착시 토글 (02 §6) ──
+   막대는 트랙 바닥에 붙어 위로 자란다. 높이만 트랜지션한다 — 위치나 폭까지 움직이면
+   "같은 데이터가 다시 그려졌다"가 아니라 "다른 차트로 갈아탔다"로 읽힌다.
+   The bars grow from the floor of the track and only height transitions: moving
+   anything else would read as a different chart rather than the same data redrawn. */
+.demo .bars { display: grid; gap: 1.25rem; justify-items: center; }
+/* 트랙·값·이름이 열마다 같은 줄에 놓여야 한다. flex + align-items:flex-end 로는
+   두 줄짜리 라벨이 그 열의 막대를 통째로 밀어올려 바닥선이 어긋난다.
+   Rows must line up across columns: with flex, the two-line label lifts its own
+   bar and the baseline the whole demo depends on stops being a baseline. */
+.demo .bars__pair { display: grid; grid-auto-flow: column; grid-template-rows: auto auto auto; justify-content: center; gap: 0.5rem 2.5rem; }
+.demo .bars__col { display: contents; }
+.demo .bars__track { width: 74px; height: 150px; display: flex; align-items: flex-end; background: var(--bg); border: 1px solid var(--line); }
+.demo .bars__bar { width: 100%; background: #d4d4d4; transition: height 0.35s ease; }
+.demo .bars__bar--new { background: var(--fg); }
+.demo .bars__value { font-family: var(--shop); font-size: 15px; font-weight: 500; letter-spacing: 0.4px; font-variant-numeric: tabular-nums; }
+.demo .bars__name { text-align: center; line-height: 1.4; }
+.demo .bars__note { margin: 0; max-width: 30rem; text-align: center; font-size: 0.9rem; line-height: 1.6; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .demo .bars__bar { transition: none; } }
+
 /* ── 데모 C: 프리오더 상태 리졸버 ──
    버튼 아래 한 줄로 "왜 이 상태인가"를 같이 렌더한다. 그게 없으면 데모가 논증이
    아니라 장난감이 된다.

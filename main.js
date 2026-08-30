@@ -416,6 +416,34 @@ run(() => {
   render();
 });
 
+/* ── 6b. 데모 B: 스크롤 착시 토글 (02 §6 Scroll) ──
+   같은 데이터가 보기에 따라 반대 결론이 된다는 것을 막대 높이로 보여준다. 퍼센트로 보면
+   두 막대가 같은 높이라 "아무 일도 없었다"로 읽히고, 절대 거리로 바꾸면 리디자인이
+   길어진다. 높이는 각 보기 안에서 큰 쪽을 100%로 정규화한 값이다 — 두 보기의 축이
+   다르다는 게 논점이므로 공통 축을 쓰면 안 된다.
+   The same data flips conclusion depending on the view. Heights are normalised
+   within each view on purpose: the two views not sharing an axis is the point. */
+run(() => {
+  const demo = document.querySelector("[data-demo-scroll]");
+  if (!demo) return;
+  const VIEW = {
+    pct: { old: [99.9, "37.74%"], new: [100, "37.76%"],
+      note: "Scroll depth is a share of page length. Nothing appears to have changed." },
+    abs: { old: [91.4, "baseline"], new: [100, "+9.4%"],
+      note: "The redesigned page is 9.5% longer. The same share is more scrolling." },
+  };
+  const render = () => {
+    const v = VIEW[demo.querySelector("[name='scrollview']:checked").value];
+    ["old", "new"].forEach((k) => {
+      demo.querySelector("[data-bar-" + k + "]").style.height = v[k][0] + "%";
+      demo.querySelector("[data-val-" + k + "]").textContent = v[k][1];
+    });
+    demo.querySelector("[data-note]").textContent = v.note;
+  };
+  demo.addEventListener("change", render);
+  render();
+});
+
 /* ── 7. 케이스 페이지 섹션 가이드 ──
    IntersectionObserver 하나. rootMargin 이 핵심이다 — 기본값이면 섹션이 화면에
    들어오는 즉시 활성화돼서 스크롤 내내 목차가 깜빡인다. 위아래를 잘라 화면 중앙을

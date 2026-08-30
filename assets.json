@@ -48,9 +48,9 @@
     {
       "slot": "04",
       "path": "/images/01-pdp/04.jpg",
-      "section": "4 · Decision 02",
+      "section": "4 · Decision 03",
       "alt": "Pairs Well With, cropped to the section, with per-card add to cart",
-      "note": "Dec 02 는 이미지 2장이 허용되는 유일한 자리"
+      "note": "이 케이스의 중심 결정. 카드별 add-to-cart 가 보이게"
     },
     {
       "slot": "05",
@@ -130,15 +130,23 @@
   "demos": [
     {
       "id": "A",
-      "where": "01 · Decision 03, 02 · Decision 03",
+      "where": "01 · Decision 04, 02 · Decision 03",
       "what": "PET 배지 확장 — 실물 상품 사진 위, 카드·미디어 두 크기",
       "js": 0
     },
     {
       "id": "B",
-      "where": "01 · Decision 04",
+      "where": "01 · Decision 05",
       "what": "상품 정보 칼럼 통째로 + 재고 슬라이더·임계값·New·Popular",
-      "js": "~24 lines"
+      "js": "~24 lines",
+      "note": "files6 는 이 자리를 정적 이미지 2장(임계값 2 / 3)으로 바꾸고 데모 B 를 02 스크롤 착시로 넘기라고 지시한다. 소유자 판단으로 일단 둘 다 두고 나중에 뺄지 정하기로 했다 — 그래서 지금 데모는 3개가 아니라 4개다."
+    },
+    {
+      "id": "B2",
+      "where": "02 · 6 Outcome, Scroll",
+      "what": "스크롤 착시 토글 — 같은 수치를 퍼센트 / 절대 거리로 다시 그린다",
+      "js": "~20 lines",
+      "note": "BUILD-PLAN.md §4. 퍼센트로 보면 37.74 vs 37.76 으로 두 막대가 같고, 절대 거리로 바꾸면 리디자인이 9.4% 길어진다. 높이는 보기마다 큰 쪽을 100%로 정규화한다 — 두 보기가 축을 공유하지 않는다는 게 논점이라 공통 축을 쓰면 데모가 무의미해진다."
     },
     {
       "id": "C",

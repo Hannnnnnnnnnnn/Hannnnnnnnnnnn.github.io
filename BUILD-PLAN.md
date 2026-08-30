@@ -25,8 +25,8 @@
 
 | | 데모 | 증명하는 것 | 들어갈 곳 |
 |---|---|---|---|
-| **A** | PET 배지 확장 | 인터랙션 디자인, progressive disclosure | 01 Dec 03 · 02 Dec 03 |
-| **B** | Low stock 임계값 | 임계값 판단의 근거 | 01 Dec 04 |
+| **A** | PET 배지 확장 | 인터랙션 디자인, progressive disclosure | 01 Dec 04 · 02 Dec 03 |
+| **B** | 스크롤 착시 토글 | 측정 해석 — 같은 숫자, 다른 결론 | 02 §6 Scroll |
 | **C** | 프리오더 상태 리졸버 | 시스템 로직, 조건 설계 | 03 Dec 01 |
 
 **인터랙티브로 만들지 말 것:** PDP/PLP 전체 페이지, Pairs Well With 섹션, 리뷰 조건부
@@ -66,7 +66,7 @@
 ## 3 · 데모 A — PET 배지 확장
 
 **들어갈 곳**
-`01-pdp-revamp.md` → `### 03 — Putting the brand on the product photo`
+`01-pdp-revamp.md` → `### 04 — Putting the brand on the product photo`
 → **The badge had to work at two sizes** 문단 바로 아래
 `02-plp-revamp.md` → `### 03 — Deliberately unclickable`
 → 코드 블록(`Default / Expanded`)을 이 데모로 **대체**
@@ -96,33 +96,42 @@ expanded   [ 2 bottles upcycled ]
 
 ---
 
-## 4 · 데모 B — Low stock 임계값
+## 4 · 데모 B — 스크롤 착시 토글 ⭐
 
 **들어갈 곳**
-`01-pdp-revamp.md` → `### 04 — Making badges that can't become lies`
-→ **Low stock at 2 units** 문단 바로 아래
+`02-plp-revamp.md` → `### Scroll: the one solid result`
+→ **Corrected for length** 문단 바로 아래
 
 **캡션**
-> Drag the stock count. The badge appears at 2 — the point where "low" is simply a fact.
+> Same number, two conclusions. Toggle the view.
 
-**동작**
+**컨트롤**
 
 ```
-Stock remaining   [====|=========]  2
-                  0              10
-
-        ● Low stock — only 2 left
+View as:   [ Percentage ]   [ Actual distance ]
 ```
 
-- `<input type="range" min="0" max="10">`
-- 값 ≤ 2 → 배지 표시 / 3 이상 → 사라짐 / 0 → `Sold out`
-- 임계값 자체도 조작 가능하게 (schema에서 1–10 설정 가능하다는 점을 반영)
-- JS 10줄 내외, 또는 CSS `:has()` 로도 가능
+**출력** — 막대 두 개, 원본 / 리디자인
 
-**왜 이게 효과적인지:** 임계값을 8~10으로 올려보면 "이건 거짓말 같다"는 감각이 직접
-생깁니다. 그게 2를 고른 근거고, 산문보다 빠르게 전달됩니다.
+| 보기 | 원본 | 리디자인 | 결론 |
+|---|---|---|---|
+| Percentage | 37.74% | 37.76% | 높이 동일 — "아무 변화 없음" |
+| Actual distance | 기준 | +9.4% | 리디자인이 눈에 띄게 길어짐 |
 
----
+리디자인 페이지가 **9.5% 더 길다**는 걸 막대 아래 라벨로 표시. 토글하면 같은 데이터가
+절대 거리로 다시 그려지면서 결론이 뒤집힙니다.
+
+**상태 아래 한 줄을 같이 렌더**하세요:
+- Percentage: *"Scroll depth is a share of page length. Nothing appears to have changed."*
+- Actual distance: *"The redesigned page is 9.5% longer. The same share is more scrolling."*
+
+**왜 이 데모가 중요한지:** 이 포트폴리오 전체의 주제가 "결과가 무엇을 증명하는지에
+신중하다"입니다(About 마지막 문장). 그런데 그 주제를 조작 가능하게 만든 데모가 없었습니다.
+이게 그 자리를 채웁니다. 그리고 01 PDP 에서는 같은 함정을 반대 방향으로 다뤘으므로
+(페이지가 4배 짧아져 스크롤 뎁스가 부풀 수 있음), 데모 아래 한 줄로 그 대비를 언급하면
+두 케이스가 방법론으로 묶입니다.
+
+CSS transition 으로 막대 높이만 전환. JS 10줄 내외.
 
 ## 5 · 데모 C — 프리오더 상태 리졸버 ⭐
 
@@ -193,7 +202,7 @@ JS 20–30줄. 상태 머신 하나면 충분합니다.
 | 1 | 공용 셸 `.demo` + 스코프 CSS | 45분 |
 | 2 | 데모 A (배지) — 두 크기 | 30분 |
 | 3 | 데모 C (리졸버) | 60분 |
-| 4 | 데모 B (슬라이더) | 30분 |
+| 4 | 데모 B (스크롤 착시) | 40분 |
 | 5 | 히어로 프레임 (01) | 60분 |
 
 셸을 먼저 완성하고 하나씩 채우세요. A를 먼저 하는 이유는 가장 쉽고, 되는 걸 눈으로
