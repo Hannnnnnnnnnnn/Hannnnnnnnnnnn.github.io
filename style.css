@@ -610,6 +610,7 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .demo .pdp__value { color: #6b6b6b; }
 .demo .pdp__swatches { display: flex; flex-wrap: wrap; gap: 8px; }
 .demo .pdp__swatch { width: 76px; height: 101px; background: #f0f0f0; outline: 2px solid transparent; outline-offset: 0; }
+.demo .pdp__swatch img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .demo .pdp__swatch--on { outline-color: #0c0c0c; }
 .demo .pdp__cta {
   width: 100%;
