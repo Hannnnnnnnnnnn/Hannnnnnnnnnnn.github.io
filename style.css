@@ -13,7 +13,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body {
   margin: 0;
   background: var(--bg);
@@ -237,6 +237,19 @@ footer {
 .metric-label { display: block; padding-top: 0.4rem; }
 .caveat { max-width: 34rem; margin: 0 0 2.5rem; font-size: 0.85rem; line-height: 1.5; color: var(--muted); }
 
+/* 히어로 타이포 — 보여줄 화면이 버튼 하나뿐인 케이스에서 목업 대신 결과물 자체를 쓴다.
+   본문 h3 의 약 1.5배. 03 에서만 등장한다.
+   Typographic hero: when the only screen is a button, show the artefact itself
+   rather than filling the slot with a mockup. About 1.5x the body h3; 03 only. */
+.hero-type {
+  max-width: 30rem;
+  margin: 2.5rem 0 3rem;
+  font-size: clamp(2rem, 4.8vw, 3.15rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
 /* 결정 블록 — 케이스의 기본 단위. 제목만 훑어도 논지가 따라오도록 분리한다
    Decision blocks are the core unit: separated so the headings alone carry the argument */
 .decision { margin: 3rem 0 0; padding-top: 2rem; border-top: 1px solid var(--line); }
@@ -382,4 +395,310 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
     transition: none;
   }
   .hero-brush, .row-preview { display: none; }
+}
+
+/* ══ 프레임 스냅샷 / Frame snapshots ══════════════════════════
+   히어로 전용. 세로로 긴 페이지를 통째로 줄여 보여주지 않고, 고정 높이 안에서
+   프레임만 스크롤시킨다 — 상단 한두 화면분이면 논지가 전달된다.
+   Hero only. A tall page is never scaled down whole; the frame scrolls inside a
+   fixed height, and the top screen or two is all the argument needs. */
+.frames { margin: 2.5rem 0 3rem; display: grid; gap: 1.25rem; }
+.frame { border: 1px solid var(--line); background: var(--tint); overflow: hidden; }
+.frame__scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.frame__scroll img { width: 100%; }
+/* 파일이 들어오기 전까지 경로를 그대로 보여준다 — .figure 와 같은 규칙
+   Until a file lands the path shows verbatim, same rule as .figure */
+.frame__slot { display: grid; place-items: center; min-height: 100%; padding: 1.5rem; text-align: center; line-height: 1.7; color: var(--muted); }
+.frame__slot code { text-transform: none; letter-spacing: 0; font-weight: 400; }
+/* 모바일 프레임은 본문 폭까지 벌어지면 안 된다 — 그러면 데스크톱 프레임으로 읽힌다
+   A mobile frame stretched to the measure just reads as a desktop frame */
+.frame--mobile { max-width: 22rem; }
+.frame--mobile .frame__scroll { height: 30rem; }
+.frame--desktop .frame__scroll { height: 22rem; }
+
+/* 데스크톱 폭에서만 겹친다. 모바일 프레임이 앞·크게, 데스크톱은 뒤 —
+   PDP 트래픽의 74%가 모바일이었다는 게 이 케이스의 전제라 순서가 뒤집히면 안 된다.
+   They overlap only at desktop widths, mobile in front: 74% of this page's
+   traffic was mobile, so the other order would contradict the case. */
+@media (min-width: 800px) {
+  /* flow-root 이 아니면 모바일 프레임의 margin-top 이 컨테이너와 상쇄돼 밖으로 새고,
+     두 프레임이 같은 높이에서 시작해 층이 사라진다
+     Without flow-root the mobile frame's margin-top collapses out of the
+     container, both frames start at the same line, and the layering is lost */
+  .frames--pair { position: relative; min-height: 32rem; display: flow-root; }
+  .frames--pair .frame--desktop { position: absolute; top: 0; right: 0; width: 68%; }
+  .frames--pair .frame--mobile { position: relative; z-index: 1; width: 40%; margin-top: 4rem; }
+}
+
+/* ══ 데모 / Interactive demos ═════════════════════════════════
+   세 케이스가 같은 껍데기를 쓴다. 안쪽 규칙은 전부 `.demo` 하위로 스코프해서
+   사이트 전역 스타일과 섞이지 않게 한다 — 데모는 페이지의 손님이지 주인이 아니다.
+   Three cases share one shell. Everything inside is scoped under `.demo` so it
+   never leaks into the site's own styles: a demo is a guest on the page.
+
+   데모의 목적은 컴포넌트를 보여주는 게 아니라 결정을 만지게 하는 것이다.
+   보여주기만 하는 것은 정적 이미지여야 한다.
+   A demo exists to let the reader operate a decision, not view a component;
+   anything that only shows what something looks like should be an image. */
+.demo { margin: 2.5rem 0; border: 1px solid var(--line); background: var(--bg); }
+.demo__label { display: block; padding: 0.9rem 1rem 0.15rem; }
+.demo__caption { margin: 0; padding: 0 1rem 0.9rem; max-width: 34rem; font-size: 0.9rem; line-height: 1.6; color: var(--muted); }
+.demo__stage { padding: 2rem 1rem; border-top: 1px solid var(--line); background: var(--tint); display: grid; justify-items: center; gap: 1.75rem; }
+.demo__stage--pair { grid-auto-flow: row; }
+@media (min-width: 560px) { .demo__stage--pair { grid-auto-flow: column; align-items: end; } }
+.demo__controls { padding: 1.1rem 1rem; border-top: 1px solid var(--line); display: grid; gap: 1rem; }
+/* 값은 슬라이더 폭 안에서 오른쪽 끝에 붙는다 — 필드 전체가 같은 폭을 가져야
+   숫자가 슬라이더에서 떨어져 나가지 않는다
+   The readout right-aligns within the slider's own width; letting the row run
+   wider strands the number away from the control it belongs to */
+.demo__field { display: grid; gap: 0.45rem; max-width: 22rem; }
+.demo__field > .label { display: flex; justify-content: space-between; gap: 1rem; }
+.demo__field input[type="range"] { width: 100%; accent-color: var(--fg); }
+.demo details { border-top: 1px solid var(--line); }
+.demo summary { padding: 0.8rem 1rem; cursor: pointer; }
+.demo summary::marker { color: var(--muted); }
+.demo details pre { max-width: none; margin: 0; border: 0; border-top: 1px solid var(--line); }
+/* 데모 안의 링크는 밖으로 나가지 않는다 / a demo never navigates away */
+.demo a { pointer-events: none; }
+/* 상품 이미지는 회색 블록. 미피는 라이선스 IP라 이 저장소에 들어오지 않는다
+   Product shots stay grey blocks; the licensed character never enters this repo */
+.demo__photo { background: #e5e5e5; position: relative; width: 100%; }
+
+/* 세그먼트 토글 — 라디오/체크박스를 감춰 두고 라벨만 보이게 한다.
+   input 은 display:none 이 아니라 투명하게 겹쳐 둔다 — 키보드 도달이 남아야 한다.
+   Segmented toggles: the input stays focusable (transparent, not display:none). */
+/* grid 자식은 기본으로 늘어난다 — 칩 두 개짜리 컨트롤이 필드 폭까지 벌어지면
+   테두리만 남은 빈 상자로 보인다 / grid stretches children by default, which
+   leaves a two-chip control as a mostly empty bordered box */
+.demo__seg { display: inline-flex; justify-self: start; border: 1px solid var(--line); background: var(--bg); }
+.demo__seg label { position: relative; padding: 0.45rem 0.8rem; cursor: pointer; }
+.demo__seg label + label { border-left: 1px solid var(--line); }
+.demo__seg input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.demo__seg label:has(input:checked) { background: var(--fg); color: var(--bg); }
+.demo__seg label:has(input:focus-visible) { outline: 2px solid var(--fg); outline-offset: 2px; }
+
+/* ── 데모 A: PET 배지 확장 (JS 0줄) ──
+   같은 컴포넌트를 카드 크기와 미디어 크기로 나란히 놓는다. 두 맥락에서 같은 규칙이
+   성립한다는 것이 이 데모의 논점이라, 한 크기만 보여주면 논점이 사라진다.
+   The same component at card and media size: that it holds in both contexts is
+   the point, so one size alone would not make it.
+
+   값은 라이브 테마의 pet_bottles_badge 블록에서 그대로 옮겼다 —
+   #54d583, 접힘 알파 50% / 펼침 불투명, radius 30, padding 6/12, 12px weight 600,
+   아이콘 24px(미디어)·18px(카드), 전환 0.5s.
+   Copied from the live theme's pet_bottles_badge block. Note the collapsed state
+   is the colour at 50% alpha while the hover layer is the same colour solid,
+   which is why it deepens as it opens. */
+.demo .pet { margin: 0; display: grid; gap: 0.7rem; justify-items: center; }
+.demo .pet__photo { aspect-ratio: 4 / 5; padding: 12px; display: flex; align-items: flex-start; }
+.demo .pet--card .pet__photo { width: 170px; }   /* 테마의 실제 카드 폭 / the theme's own card width */
+.demo .pet--media .pet__photo { width: 13rem; }
+
+.demo .pet-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 30px;
+  background: rgba(84, 213, 131, 0.5);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  /* 테마는 개수가 상품마다 달라 JS로 폭을 재지만, 데모는 내용이 고정이라 값이 곧 답이다
+     The theme measures these with JS because the count varies per product; the
+     demo's content is fixed, so the numbers are the honest answer here */
+  width: var(--pet-w);
+  transition: width 0.5s ease;
+}
+.demo .pet--media .pet-badge { --pet-w: 71px; --pet-w-open: 132px; --pet-icon: 24px; }
+.demo .pet--card .pet-badge { --pet-w: 55px; --pet-w-open: 132px; --pet-icon: 18px; }
+
+.demo .pet-badge__toggle { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.demo .pet-badge:has(.pet-badge__toggle:focus-visible) { outline: 2px solid var(--fg); outline-offset: 2px; }
+.demo .pet-badge__default { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 6px; }
+.demo .pet-badge__icon { flex-shrink: 0; width: var(--pet-icon); height: var(--pet-icon); }
+
+/* 펼침은 페이드가 아니라 마스크가 왼쪽에서 오른쪽으로 닦아내는 방식이다.
+   배경 레이어(::before)와 글자 레이어가 같은 마스크로 함께 움직인다.
+   It opens as a left-to-right mask wipe, not a fade: the background layer and
+   the text layer travel on the same mask. */
+.demo .pet-badge::before,
+.demo .pet-badge__hover {
+  -webkit-mask-image: linear-gradient(to right, #000 33.33%, transparent calc(33.33% + 40px));
+  mask-image: linear-gradient(to right, #000 33.33%, transparent calc(33.33% + 40px));
+  -webkit-mask-size: 300% 100%;
+  mask-size: 300% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+  transition: -webkit-mask-position 0.5s ease, mask-position 0.5s ease;
+}
+.demo .pet-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  background: #54d583;          /* 호버 배경은 알파 없이 / the hover layer is solid */
+  pointer-events: none;
+}
+.demo .pet-badge__hover {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.demo .pet-badge:hover,
+.demo .pet-badge:has(.pet-badge__toggle:checked) { width: var(--pet-w-open); }
+.demo .pet-badge:hover::before,
+.demo .pet-badge:hover .pet-badge__hover,
+.demo .pet-badge:has(.pet-badge__toggle:checked)::before,
+.demo .pet-badge:has(.pet-badge__toggle:checked) .pet-badge__hover {
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+}
+
+/* ── 데모 B: 재고 임계값 ──
+   배지 스펙은 눈대중이 아니라 라이브 테마의 product_badge 블록 설정에서 그대로 옮겼다:
+   show_background:false, 텍스트 #dc2626 / #16a34a, 14px(모바일 12), weight 600,
+   letter-spacing .04em, uppercase. 라이브가 배경을 끄고 있어서 색 글자만 나온다.
+   Values copied from the live theme's product_badge block rather than eyeballed.
+   The live setting turns the background off, so it renders as coloured text only.
+
+   서체만 사이트 것을 쓴다 — 테마는 Poppins지만 이 저장소는 웹폰트를 싣지 않는다.
+   한 배지 때문에 폰트 의존성을 들이면 사이트의 규칙을 데모가 어기는 셈이다.
+   Only the typeface differs: the theme uses Poppins, this site ships no webfont,
+   and adding one for a single badge would break the site's own rule. */
+.demo .product-badge {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--badge-text);
+  background: transparent;      /* show_background: false */
+}
+.demo .product-badge--low { --badge-text: #dc2626; }
+.demo .product-badge--new { --badge-text: #16a34a; }
+@media (max-width: 749px) { .demo .product-badge { font-size: 12px; } }
+
+/* 품절은 다른 컴포넌트다 — 가격 옆에 뜨는 테마 기본 .badge (테두리 상자, 11px)
+   Sold out is a different component: the theme's bordered .badge beside the price */
+.demo .theme-badge {
+  display: inline-block;
+  padding: 7px 10px 5px;
+  border: 1px solid #0c0c0c;
+  background: rgba(255, 255, 255, 0.95);
+  color: #0c0c0c;
+  font-size: 11px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.demo [data-stock-badge][hidden] { visibility: hidden; display: inline-block; }
+
+/* 배지가 실제로 앉는 자리 — 상품 사진 위가 아니라 정보 칼럼의 제목 위다
+   (블록 순서: pet_bottles_badge → product_badge → title → price)
+   Where the badge actually sits: above the title in the info column, not on the
+   photo — the PET badge is the one overlaid on the media. */
+.demo .pdp-mock-figure { margin: 0; display: grid; gap: 0.8rem; justify-items: center; }
+.demo .pdp-mock { display: grid; gap: 0.7rem; justify-items: start; width: 11rem; }
+.demo .pdp-mock__slot { min-height: 1.6rem; display: flex; align-items: center; }
+.demo .pdp-mock__line { display: block; height: 0.7rem; background: #e5e5e5; }
+.demo .pdp-mock__line--title { width: 100%; }
+.demo .pdp-mock__line--price { width: 45%; }
+
+/* ── 데모 C: 프리오더 상태 리졸버 ──
+   버튼 아래 한 줄로 "왜 이 상태인가"를 같이 렌더한다. 그게 없으면 데모가 논증이
+   아니라 장난감이 된다.
+   The why-line under the button is what makes this an argument, not a toy. */
+.demo .resolver { display: grid; gap: 0.9rem; justify-items: center; max-width: 24rem; text-align: center; }
+.demo .resolver__cta {
+  width: 100%; padding: 0.9rem 1.5rem;
+  background: var(--fg); color: var(--bg);
+  border: 1px solid var(--fg); font: inherit; font-weight: 500; letter-spacing: 0.02em;
+}
+.demo .resolver__cta[disabled] { background: var(--tint); color: var(--muted); border-color: var(--line); cursor: not-allowed; }
+.demo .resolver__copy { margin: 0; font-size: 0.9rem; line-height: 1.6; }
+.demo .resolver__copy[hidden] { display: none; }
+.demo .resolver__why { margin: 0; font-size: 0.8rem; line-height: 1.6; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .demo .pet-badge, .demo .pet-badge::before, .demo .pet-badge__hover { transition: none; }
+}
+
+/* ══ 케이스 페이지 섹션 가이드 / Case page section nav ═══════════
+   케이스 하나가 6~8스크린이다. 지금 어디쯤인지, 무엇이 남았는지 알기 위한 장치이지
+   장식이 아니다 — 그 기준을 넘는 기능은 넣지 않는다.
+   A case runs six to eight screens. This exists so the reader knows where they
+   are and what is left; anything past that bar does not belong in it.
+   `work-1..3.html` 전용. index·about 에는 넣지 않는다 / case pages only. */
+
+/* 좌측이지 우측이 아니다 — 스크롤바와 클릭 타깃이 겹치지 않고, 좌→우 읽기에서
+   시선이 이미 지나가는 자리다.
+   Left, not right: no collision with the scrollbar, and it sits where the eye
+   already passes on the way into each line. */
+.toc { display: none; }
+.toc ol { margin: 0; padding: 0; list-style: none; }
+.toc a {
+  display: block;
+  padding: 0.4rem 0 0.4rem calc(0.8rem + 2px);
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+}
+.toc a:hover { color: var(--fg); }   /* 색만. 크기·위치는 그대로 / colour only, never size or position */
+/* 현재 항목: 라벨 진하게 + 마커 굵게. 패딩으로 굵기를 상쇄해 글자가 밀리지 않는다
+   Current: bolder label and a thicker marker, with the padding compensating so
+   the text never shifts as the active item moves */
+.toc a[aria-current="location"] {
+  padding-left: 0.8rem;
+  border-left-width: 3px;
+  border-left-color: var(--fg);
+  color: var(--fg);
+  font-weight: 700;
+}
+
+/* 결정 번호는 Decisions 구간 안에서만 펼쳐진다. 제목은 넣지 않는다 — 사이드바 폭에
+   들어가지 않는다. 높이는 즉시 바뀌고 opacity 만 전환한다: 스크롤 중에 목차가
+   높이 애니메이션으로 흔들리면 읽기를 방해한다.
+   Numbers only, and only while the reader is inside Decisions. Height changes
+   instantly and only opacity transitions — an animating height would shake the
+   column mid-scroll, which is the opposite of what this is for. */
+.toc__nums {
+  padding-left: 1.1rem;
+  height: 0;                  /* 즉시 바뀐다 — 애니메이션하지 않는다 / changes instantly, never animates */
+  overflow: hidden;
+  visibility: hidden;         /* 접힌 동안 탭 순서에서 빠진다 / out of the tab order while collapsed */
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.toc.is-decisions .toc__nums { height: auto; visibility: visible; opacity: 1; }
+.toc__num { font-size: 0.65rem; }
+.toc__num.is-on { color: var(--fg); border-left-color: var(--fg); }
+
+/* 앵커로 뛰었을 때 제목이 sticky 헤더 밑에 깔리지 않게 / clear the sticky header */
+.prose h2[id], .decision[id] { scroll-margin-top: 5rem; }
+
+@media (min-width: 1200px) {
+  .case { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 3rem; }
+  .toc { display: block; position: sticky; top: 5rem; align-self: start; padding-top: clamp(2rem, 6vh, 4rem); }
+}
+
+/* 1200px 미만에서는 사이드 목차가 어디에 놓여도 본문을 방해한다. 진행률만 남긴다
+   Below 1200px a side index gets in the way wherever it goes, so only progress remains */
+.progress { position: fixed; top: 0; left: 0; right: 0; z-index: 11; height: 3px; pointer-events: none; }
+.progress span { display: block; height: 100%; background: var(--fg); transform: scaleX(0); transform-origin: 0 50%; }
+@media (min-width: 1200px) { .progress { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .toc__nums { transition: none; }
 }

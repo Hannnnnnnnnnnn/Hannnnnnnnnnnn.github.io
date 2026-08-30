@@ -393,3 +393,122 @@ run(() => {
     row.addEventListener("mouseleave", () => box.classList.remove("is-in"));
   });
 });
+
+/* ── 6. 데모 B: 재고 임계값 (01 Decision 04) ──
+   임계값을 8~10으로 올려 보면 "이건 거짓말 같다"는 감각이 직접 생긴다. 그게 2를
+   고른 근거고, 산문으로 설명하는 것보다 빠르다.
+   Drag the threshold up to 8 and the badge starts to feel like a lie. That
+   feeling is the argument for 2, and it lands faster than a paragraph. */
+run(() => {
+  const demo = document.querySelector("[data-demo-stock]");
+  if (!demo) return;
+  const $ = (s) => demo.querySelector(s);
+  const stock = $("[data-stock]"), limit = $("[data-threshold]"), badge = $("[data-stock-badge]");
+  const render = () => {
+    const n = +stock.value, t = +limit.value;
+    $("[data-out-stock]").textContent = n;
+    $("[data-out-threshold]").textContent = t;
+    // 품절은 배지 블록이 아니라 가격 옆 테마 기본 배지가 맡는다 — 컴포넌트가 다르므로
+    // 클래스도 바꾼다 / Sold out is the theme's own badge beside the price, a
+    // different component, so the class swaps with it
+    const sold = n === 0;
+    badge.hidden = !sold && n > t;
+    badge.textContent = sold ? "Sold out" : "Low Stock";
+    badge.classList.toggle("theme-badge", sold);
+    badge.classList.toggle("product-badge", !sold);
+    badge.classList.toggle("product-badge--low", !sold);
+  };
+  demo.addEventListener("input", render);
+  render();
+});
+
+/* ── 7. 데모 C: 프리오더 상태 리졸버 (03 Decision 01) ──
+   opt-in 을 시장별로 들고 있는 게 핵심이다. CA↔US 를 바꾸면 같은 variant 가 다른
+   상태가 되고, "약속은 시장마다 다르다"는 논점이 조작 한 번으로 전달된다.
+   The opt-in is held per market on purpose: flipping CA↔US turns the same
+   variant into a different state, which is the whole claim of that decision. */
+run(() => {
+  const demo = document.querySelector("[data-demo-resolver]");
+  if (!demo) return;
+  const $ = (s) => demo.querySelector(s);
+  const optedIn = { CA: true, US: false };
+  const val = (name) => demo.querySelector("[name='" + name + "']:checked").value;
+  const render = (e) => {
+    const market = val("market");
+    const optin = $("[name='optin']");
+    if (e && e.target === optin) optedIn[market] = optin.checked;
+    optin.checked = optedIn[market];
+    const policy = val("policy"), n = +val("stock");
+    const preorder = n === 0 && policy === "continue" && optedIn[market];
+    $("[data-cta]").textContent = n > 0 ? "Add to cart" : preorder ? "Pre-order now" : "Sold out";
+    $("[data-cta]").disabled = n === 0 && !preorder;
+    $("[data-copy]").hidden = !preorder;
+    $("[data-why]").textContent = n > 0
+      ? n + " in stock, so the promise never comes up."
+      : policy === "deny"
+        ? "Selling past zero is turned off for this variant."
+        : preorder
+          ? "Opted in for " + market + ", so the page can name a wait."
+          : "Selling past zero is allowed, but this variant hasn't been opted in for " + market + ".";
+  };
+  demo.addEventListener("change", render);
+  render();
+});
+
+/* ── 8. 케이스 페이지 섹션 가이드 ──
+   IntersectionObserver 하나. rootMargin 이 핵심이다 — 기본값이면 섹션이 화면에
+   들어오는 즉시 활성화돼서 스크롤 내내 목차가 깜빡인다. 위아래를 잘라 화면 중앙을
+   지날 때만 전환시킨다. 스크롤 이벤트 + getBoundingClientRect 는 매 프레임 레이아웃을
+   읽어 스크롤을 버벅이게 하므로 쓰지 않는다.
+   One observer. The rootMargin is the whole trick: at its default a section goes
+   active the moment it enters the viewport and the index flickers the entire way
+   down, so the band is cropped to the middle of the screen. */
+run(() => {
+  const nav = document.querySelector(".toc");
+  if (!nav) return;
+  const links = [...nav.querySelectorAll("a")];
+  const setActive = (id) => {
+    const inDecision = id.indexOf("decision-") === 0;
+    nav.classList.toggle("is-decisions", inDecision || id === "decisions");
+    // 결정 안에 있어도 '현재 섹션'은 Decisions 다 / inside a decision the section is still Decisions
+    const current = "#" + (inDecision ? "decisions" : id);
+    links.forEach((a) => {
+      a.classList.toggle("is-on", a.hash === "#" + id);
+      if (a.hash === current) a.setAttribute("aria-current", "location");
+      else a.removeAttribute("aria-current");
+    });
+  };
+  const spy = new IntersectionObserver(
+    (entries) => entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id); }),
+    { rootMargin: "-40% 0px -55% 0px" }
+  );
+  links.forEach((a) => {
+    const target = document.getElementById(a.hash.slice(1));
+    if (target) spy.observe(target);
+  });
+  // 앵커로 바로 들어오면 그 섹션은 이미 관찰 밴드 위에 있어서 관찰자가 한 번도 발화하지
+  // 않는다 — 목차가 아무것도 가리키지 않은 채로 남는다. 클릭도 같은 이유로 먼저 반영한다.
+  // Arriving on an anchor lands the section above the band, so the observer never
+  // fires and the index sits blank; a click has the same problem, so both lead.
+  nav.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (link) setActive(link.hash.slice(1));
+  });
+  if (location.hash) setActive(location.hash.slice(1));
+});
+
+/* ── 9. 스크롤 진행 바 (1200px 미만에서 사이드바를 대신한다) ──
+   scrollTop 하나만 읽는다 — 섹션 판정에 쓰는 레이아웃 측정과는 비용이 다르다.
+   Reads scrollTop and nothing else; this is not the per-frame layout read that
+   section detection must avoid. */
+run(() => {
+  const bar = document.querySelector(".progress span");
+  if (!bar) return;
+  const doc = document.documentElement;
+  const draw = () => {
+    const done = doc.scrollTop / (doc.scrollHeight - doc.clientHeight) || 0;
+    bar.style.transform = "scaleX(" + done + ")";
+  };
+  addEventListener("scroll", draw, { passive: true });
+  draw();
+});

@@ -19,7 +19,25 @@
   </nav>
 </header>
 
-<main class="section">
+<div class="progress" aria-hidden="true"><span></span></div>
+
+<main class="section case">
+  <nav class="toc label" aria-label="On this page">
+    <ol>
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#decisions">Decisions</a>
+        <ol class="toc__nums">
+          <li><a class="toc__num" href="#decision-1">01</a></li>
+          <li><a class="toc__num" href="#decision-2">02</a></li>
+          <li><a class="toc__num" href="#decision-3">03</a></li>
+          <li><a class="toc__num" href="#decision-4">04</a></li>
+        </ol>
+      </li>
+      <li><a href="#outcome">Outcome</a></li>
+      <li><a href="#next">Next</a></li>
+    </ol>
+  </nav>
   <div class="prose">
 
     <p class="label muted">01 &middot; PDP Revamp</p>
@@ -48,11 +66,20 @@
       <dt>Tools</dt><dd>Google Search Console, Microsoft Clarity, Shopify Analytics, Liquid, Figma</dd>
     </dl>
 
-    <figure class="figure">
-      <figcaption class="label muted">Product page before and after, side by side<br><code>/images/01-pdp/01.jpg</code></figcaption>
-    </figure>
+    <div class="frames frames--pair">
+      <figure class="frame frame--mobile">
+        <div class="frame__scroll">
+          <p class="frame__slot label muted">Redesigned product page on mobile, top of the page<br><code>/images/01-pdp/hero-mobile.jpg</code></p>
+        </div>
+      </figure>
+      <figure class="frame frame--desktop">
+        <div class="frame__scroll">
+          <p class="frame__slot label muted">The same page on desktop<br><code>/images/01-pdp/hero-desktop.jpg</code></p>
+        </div>
+      </figure>
+    </div>
 
-    <h2>2 &middot; The problem</h2>
+    <h2 id="problem">2 &middot; The problem</h2>
     <h3>Search was working. The page wasn&rsquo;t.</h3>
     <p>Over four months, Atacz product pages pulled <strong>80,266 impressions</strong> from Google Search and converted <strong>5,170 clicks</strong>. The top three product pages sat between <strong>1.0% and 1.7% click-through</strong> &mdash; around half the 2&ndash;3% ecommerce benchmark.</p>
 
@@ -70,7 +97,7 @@
     <p>The traffic was there. People were finding us and choosing not to come in.</p>
     <p><strong>74.3% of those clicks were mobile.</strong> The page had been built desktop-first.</p>
 
-    <h2>3 &middot; What I found</h2>
+    <h2 id="research">3 &middot; What I found</h2>
     <p><strong>The listing didn&rsquo;t match the page.</strong> Meta descriptions ran up to <strong>1,387 characters</strong> where search engines crawl about 160, so the snippet Google displayed was a truncated fragment of boilerplate. Page titles followed no shared convention.</p>
     <p><strong>The brand&rsquo;s two differentiators were invisible.</strong> Atacz is built on upcycling &mdash; two PET bottles per bag &mdash; and on mix-and-match: bags, straps and accessories designed to be combined. On the PDP, the upcycling story sat inside a collapsed tab below the fold, and there was no pairing prompt at all. Yet the Bind Strap, a pure accessory, had sold <strong>99 units unprompted</strong>, making it a top-five seller by volume. Demand for pairing existed. The page never mentioned it.</p>
     <p><strong>The right content was in the wrong place.</strong> Clarity heatmaps showed engagement concentrated on the hero image and CTA, then collapsing. Everything of value sat below that point &mdash; while the space above it was occupied by elements that weren&rsquo;t earning it:</p>
@@ -89,12 +116,12 @@
     <p><strong>A note on research.</strong> I didn&rsquo;t run formal usability sessions on this project. What I had was behavioural data at scale &mdash; Clarity heatmaps and session replays, Search Console, Shopify Analytics &mdash; plus informal walkthroughs with colleagues. That was enough to locate <em>where</em> people stopped, but not <em>why</em>. Formal testing is what I&rsquo;d add before the next iteration.</p>
 
     <figure class="figure">
-      <figcaption class="label muted">Clarity scroll heatmap showing where engagement collapsed<br><code>/images/01-pdp/02.jpg</code></figcaption>
+      <figcaption class="label muted">Clarity scroll heatmap, cropped to where engagement collapsed<br><code>/images/01-pdp/01.jpg</code></figcaption>
     </figure>
 
-    <h2>4 &middot; Decisions</h2>
+    <h2 id="decisions">4 &middot; Decisions</h2>
 
-    <section class="decision">
+    <section class="decision" id="decision-1">
       <span class="label muted">Decision 01</span>
       <h3>Removing the review section, then putting it back differently</h3>
       <p><strong>Context.</strong> Reviews are a default trust signal, so removing them looks reckless. Atacz was a young brand and reviews had pooled onto a handful of products. Most PDPs had none.</p>
@@ -104,11 +131,11 @@
       <p><strong>What I shipped instead of restoring it.</strong> A conditional section &mdash; products with reviews render it, products without don&rsquo;t render the block at all. Marketing&rsquo;s goal met, catalog consistency preserved. Review collection continued through email marketing the whole time.</p>
       <p><strong>In hindsight, that&rsquo;s what should have shipped first.</strong> Removing it outright was the faster call and it stopped the inconsistency immediately, but it also discarded working signal on the products that had it.</p>
       <figure class="figure">
-        <figcaption class="label muted">Conditional review section and the template it replaced<br><code>/images/01-pdp/03.jpg</code></figcaption>
+        <figcaption class="label muted">The review slot before and after, at the section it occupies<br><code>/images/01-pdp/02.jpg</code></figcaption>
       </figure>
     </section>
 
-    <section class="decision">
+    <section class="decision" id="decision-2">
       <span class="label muted">Decision 02</span>
       <h3>Cutting the page down, and adding one thing back</h3>
       <p>The same release removed more than it added. That was deliberate &mdash; the question wasn&rsquo;t &ldquo;what should we add&rdquo; but &ldquo;what has earned this space.&rdquo;</p>
@@ -118,36 +145,120 @@
       <p><strong>Reading the scroll number honestly.</strong> Scroll depth is a percentage of page length, so a shorter page inflates it mechanically. The honest read is the pair: the page got about <strong>4&times; shorter</strong> <em>and</em> measured scroll depth rose <strong>51%</strong>. People were reaching proportionally further through a page that was already far shorter.</p>
       <p><strong>Trade-off.</strong> Placing a cross-sell module directly under the primary CTA competes with it. I accepted that because the module points deeper into the catalog rather than away from it, and watched quick-back-click rate as the tripwire &mdash; it fell from 4.79% to 4.44%.</p>
       <figure class="figure">
-        <figcaption class="label muted">Full page length before and after<br><code>/images/01-pdp/04.jpg</code></figcaption>
+        <figcaption class="label muted">Full page length before and after, scaled down to show the height difference<br><code>/images/01-pdp/03.jpg</code></figcaption>
       </figure>
       <figure class="figure">
-        <figcaption class="label muted">Pairs Well With section with per-card add to cart<br><code>/images/01-pdp/05.jpg</code></figcaption>
+        <figcaption class="label muted">Pairs Well With, cropped to the section, with per-card add to cart<br><code>/images/01-pdp/04.jpg</code></figcaption>
       </figure>
     </section>
 
-    <section class="decision">
+    <section class="decision" id="decision-3">
       <span class="label muted">Decision 03</span>
       <h3>Putting the brand on the product photo</h3>
       <p><strong>Context.</strong> Most of our traffic comes from paid social, and it lands on a PDP or a PLP &mdash; almost never the homepage. For those visitors the product page <em>is</em> the brand introduction, and ours introduced nothing. The upcycling story was a line of text inside a collapsed tab.</p>
       <p><strong>What I chose.</strong> A PET bottle count badge &mdash; &ldquo;this bag = N recycled bottles&rdquo; &mdash; overlaid on the top-left of the product media. Guaranteed exposure on the first screen, independent of scroll.</p>
       <p><strong>Trade-off.</strong> Overlaying anything on product imagery is normally off-limits in fashion; it&rsquo;s the most expensive real estate on the page. It worked here because of what we sell: bags photographed centre-frame leave the top corners consistently empty across our catalog. This is a decision that depends on our specific photography, not a pattern I&rsquo;d port elsewhere without checking.</p>
-      <figure class="figure">
-        <figcaption class="label muted">PET bottle badge on product media, and the collapsed tab it replaced<br><code>/images/01-pdp/06.jpg</code></figcaption>
-      </figure>
+      <div class="demo">
+        <span class="demo__label label">Try it</span>
+        <p class="demo__caption">Hover or tap the badge. It expands in place and never navigates.</p>
+        <div class="demo__stage demo__stage--pair">
+          <figure class="pet pet--card">
+            <div class="pet__photo demo__photo">
+              <label class="pet-badge">
+                <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge, card size">
+                <span class="pet-badge__default">
+                  <svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg>
+                  <span class="pet-badge__count">2</span>
+                </span>
+                <span class="pet-badge__hover" aria-hidden="true">2 Bottles Upcycled</span>
+              </label>
+            </div>
+            <figcaption class="label muted">On a card</figcaption>
+          </figure>
+          <figure class="pet pet--media">
+            <div class="pet__photo demo__photo">
+              <label class="pet-badge">
+                <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge, product media size">
+                <span class="pet-badge__default">
+                  <svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg>
+                  <span class="pet-badge__count">&times; 2</span>
+                </span>
+                <span class="pet-badge__hover" aria-hidden="true">2 Bottles Upcycled</span>
+              </label>
+            </div>
+            <figcaption class="label muted">On product media</figcaption>
+          </figure>
+        </div>
+        <details>
+          <summary class="label">The badge in Liquid</summary>
+<pre><code>{%- assign bottles = product.metafields.custom.pet_bottle_count.value -%}
+{%- if bottles &gt; 0 -%}
+  &lt;pet-bottles-badge class="pet-bottles-badge pet-bottles-badge--top-left"
+    style="--pet-badge-bg: {{ s.pet_badge_bg | color_modify: 'alpha', 0.5 }};
+           --pet-badge-bg-hover: {{ s.pet_badge_bg_hover }};"&gt;
+    &lt;span class="pet-bottles-badge__default"&gt;
+      {{ s.pet_badge_icon | image_url: width: 96 | image_tag }}
+      &lt;span&gt;&amp;times; {{ bottles }}&lt;/span&gt;
+    &lt;/span&gt;
+    &lt;span class="pet-bottles-badge__hover"&gt;
+      {{ bottles }} {{ s.pet_badge_hover_text }}
+    &lt;/span&gt;
+  &lt;/pet-bottles-badge&gt;
+{%- endif -%}</code></pre>
+        </details>
+      </div>
     </section>
 
-    <section class="decision">
+    <section class="decision" id="decision-4">
       <span class="label muted">Decision 04</span>
       <h3>Making badges that can&rsquo;t become lies</h3>
       <p>Two badges replaced the payment badges we removed. Both are designed so they stop being shown the moment they stop being true.</p>
       <p><strong>Low stock at 2 units.</strong> Most stores set this threshold generously, because urgency sells. We couldn&rsquo;t: our stock genuinely runs thin, so calling a healthy quantity &ldquo;low&rdquo; would have been technically true and practically dishonest. Two units is where it&rsquo;s simply a fact. The threshold is <strong>configurable 1&ndash;10 in the section schema</strong>, so merchandising can tune it per collection without touching code.</p>
       <p><strong>New expires by itself.</strong> The badge applies the moment a product is created and removes itself after three months, automated through Shopify Flow rather than left to someone&rsquo;s memory. A &ldquo;New&rdquo; badge that outlives its truth is worse than no badge.</p>
-      <figure class="figure">
-        <figcaption class="label muted">Badge states: PET count, low stock, new, none<br><code>/images/01-pdp/07.jpg</code></figcaption>
-      </figure>
-      <figure class="figure">
-        <figcaption class="label muted">Section schema settings for the low stock threshold<br><code>/images/01-pdp/08.jpg</code></figcaption>
-      </figure>
+      <div class="demo" data-demo-stock>
+        <span class="demo__label label">Try it</span>
+        <p class="demo__caption">Drag the stock count. The badge appears at 2 &mdash; the point where &ldquo;low&rdquo; is simply a fact. Then drag the threshold up and watch it start to read like a sales tactic.</p>
+        <div class="demo__stage demo__stage--pair">
+          <figure class="pdp-mock-figure">
+            <div class="pdp-mock">
+              <span class="pdp-mock__slot"><span class="product-badge product-badge--low" data-stock-badge>Low Stock</span></span>
+              <span class="pdp-mock__line pdp-mock__line--title"></span>
+              <span class="pdp-mock__line pdp-mock__line--price"></span>
+            </div>
+            <figcaption class="label muted">Tied to stock</figcaption>
+          </figure>
+          <figure class="pdp-mock-figure">
+            <div class="pdp-mock">
+              <span class="pdp-mock__slot"><span class="product-badge product-badge--new">New</span></span>
+              <span class="pdp-mock__line pdp-mock__line--title"></span>
+              <span class="pdp-mock__line pdp-mock__line--price"></span>
+            </div>
+            <figcaption class="label muted">Removes itself after three months</figcaption>
+          </figure>
+        </div>
+        <div class="demo__controls">
+          <p class="demo__field">
+            <label class="label" for="stock-count">Stock remaining <output data-out-stock for="stock-count">5</output></label>
+            <input id="stock-count" type="range" min="0" max="10" value="5" data-stock>
+          </p>
+          <p class="demo__field">
+            <label class="label" for="stock-threshold">Low stock threshold <output data-out-threshold for="stock-threshold">2</output></label>
+            <input id="stock-threshold" type="range" min="1" max="10" value="2" data-threshold>
+          </p>
+        </div>
+        <details>
+          <summary class="label">The threshold in Liquid</summary>
+<pre><code>{%- assign limit = block.settings.low_stock_threshold | default: 2 -%}
+{%- assign left = variant.inventory_quantity -%}
+
+{%- if left &gt; 0 and left &lt;= limit -%}
+  &lt;span class="product-badge product-badge--low-stock"
+        style="--badge-text: {{ block.settings.color_low_stock_text }};"&gt;
+    {{ 'products.product.low_stock' | t }}
+  &lt;/span&gt;
+{%- endif -%}</code></pre>
+        </details>
+      </div>
     </section>
 
     <h2>5 &middot; What shipped</h2>
@@ -157,17 +268,14 @@
     <p><strong>Infrastructure.</strong> The store ran one theme template per product &mdash; a workaround for having no metafields, which meant every content change needed a developer. Extending &ldquo;Pairs Well With&rdquo; to every PDP would have meant hand-editing every template forever. I migrated to a single template driven by Shopify metafields, so pairings, bottle counts and badge states became data the merchandising team edits in Shopify admin. The redesign only holds up if someone other than a developer can keep it current.</p>
 
     <figure class="figure">
-      <figcaption class="label muted">Responsive layouts at 320, 768 and 1440<br><code>/images/01-pdp/09.jpg</code></figcaption>
-    </figure>
-    <figure class="figure">
-      <figcaption class="label muted">Metafield structure in Shopify admin<br><code>/images/01-pdp/10.jpg</code></figcaption>
+      <figcaption class="label muted">One metafield set rendering into the PDP: pairings, bottle count, badge states<br><code>/images/01-pdp/05.jpg</code></figcaption>
     </figure>
 
     <blockquote>
       <p>There was no design system when I joined. I set up basic type and colour foundations to work from, but didn&rsquo;t build a component library &mdash; I was building the front-end as well, so components got defined directly in Shopify sections as we went, and Figma served as a working reference rather than a handoff artifact. On a product team with engineers I&rsquo;d expect Figma to carry much more weight, and I&rsquo;d want it to.</p>
     </blockquote>
 
-    <h2>6 &middot; Outcome</h2>
+    <h2 id="outcome">6 &middot; Outcome</h2>
     <p><strong>How I measured.</strong> Two five-week windows &mdash; Feb 25 to Mar 31 (before) and Apr 1 to May 5, 2026 (after). Sources: Google Search Console, Microsoft Clarity, Shopify Analytics. Pre/post comparison, not a controlled experiment.</p>
 
     <h4>Search</h4>
@@ -208,7 +316,7 @@
     <p><strong>AOV fell 9% while orders rose 9%.</strong> The likely cause is product mix shifting toward lower-priced accessories surfaced by &ldquo;Pairs Well With&rdquo; &mdash; bundle variety rose and the single dominant pairing dropped from 26% to 18% of all bundles, which is what a working cross-sell module should produce. I couldn&rsquo;t confirm it at the line-item level, so it stays a hypothesis.</p>
     <p><strong>And the general caveat.</strong> Session volume differed between windows (66,512 vs 58,389), URL re-indexing was still in progress during measurement, and no traffic was held back as a control. These are directional results from a live store, not experimental findings.</p>
 
-    <h2>7 &middot; What&rsquo;s next</h2>
+    <h2 id="next">7 &middot; What&rsquo;s next</h2>
     <p><strong>Measure completion, not volume.</strong> Add-to-cart is dominated by launch cadence and makes a poor success metric for page-level work. Cart completion is what I&rsquo;d hold future PDP iterations to.</p>
     <p><strong>Re-test add-to-cart in a launch-neutral window</strong> &mdash; no product drops in either period &mdash; to isolate the page&rsquo;s actual effect.</p>
     <p><strong>Confirm the cross-sell hypothesis</strong> with line-item attach analysis and Clarity custom events tracking a pairing click through to the specific item added. This is the missing piece of the AOV story.</p>
