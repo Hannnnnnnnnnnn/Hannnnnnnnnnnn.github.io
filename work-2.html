@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PLP Revamp &mdash; Hanbyoul Kim</title>
 <meta name="description" content="Half our paid visitors never see the homepage. Redesigning the page that greets them instead &mdash; and learning it was the wrong page to A/B test.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="style.css">
 <script>document.documentElement.classList.add("js")</script>
 <script src="main.js" defer></script>
@@ -152,28 +154,30 @@ After    PET badge (top-left, always visible)
         <span class="demo__label label">Try it</span>
         <p class="demo__caption">Hover or tap the badge. It expands in place and never navigates &mdash; the same component the product page uses.</p>
         <div class="demo__stage demo__stage--pair">
-          <figure class="pet pet--card">
-            <div class="pet__photo demo__photo">
-              <label class="pet-badge">
-                <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge, card size">
-                <span class="pet-badge__default">
-                  <svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg>
-                  <span class="pet-badge__count">2</span>
-                </span>
-                <span class="pet-badge__hover" aria-hidden="true">2 Bottles Upcycled</span>
+          <figure class="pet">
+            <div class="pet__photo">
+              <img src="images/01-pdp/twist-bag-peach-jelly.jpg" alt="Twist Bag in peach jelly" width="480" height="600" loading="lazy">
+              <label class="pet-badge pet-badge--card">
+              <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge, card size">
+              <span class="pet-badge__default">
+                <svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg>
+                <span>6</span>
+              </span>
+              <span class="pet-badge__hover" aria-hidden="true">6 Bottles Upcycled</span>
               </label>
             </div>
-            <figcaption class="label muted">On a card</figcaption>
+            <figcaption class="label muted">On a product card</figcaption>
           </figure>
-          <figure class="pet pet--media">
-            <div class="pet__photo demo__photo">
-              <label class="pet-badge">
-                <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge, product media size">
-                <span class="pet-badge__default">
-                  <svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg>
-                  <span class="pet-badge__count">&times; 2</span>
-                </span>
-                <span class="pet-badge__hover" aria-hidden="true">2 Bottles Upcycled</span>
+          <figure class="pet">
+            <div class="pet__photo">
+              <img src="images/01-pdp/twist-bag-peach-jelly.jpg" alt="Twist Bag in peach jelly" width="480" height="600" loading="lazy">
+              <label class="pet-badge pet-badge--media">
+              <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge, product media size">
+              <span class="pet-badge__default">
+                <svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg>
+                <span>&times; 6</span>
+              </span>
+              <span class="pet-badge__hover" aria-hidden="true">6 Bottles Upcycled</span>
               </label>
             </div>
             <figcaption class="label muted">On product media</figcaption>

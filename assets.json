@@ -131,20 +131,28 @@
     {
       "id": "A",
       "where": "01 · Decision 03, 02 · Decision 03",
-      "what": "PET 배지 확장 (카드·미디어 두 크기)",
+      "what": "PET 배지 확장 — 실물 상품 사진 위, 카드·미디어 두 크기",
       "js": 0
     },
     {
       "id": "B",
       "where": "01 · Decision 04",
-      "what": "재고 슬라이더와 임계값",
-      "js": "~14 lines"
+      "what": "상품 정보 칼럼 통째로 + 재고 슬라이더·임계값·New·Popular",
+      "js": "~24 lines"
     },
     {
       "id": "C",
       "where": "03 · Decision 01",
       "what": "프리오더 상태 리졸버 (시장별 opt-in)",
       "js": "~26 lines"
+    }
+  ],
+  "demo_assets": [
+    {
+      "path": "/images/01-pdp/twist-bag-peach-jelly.jpg",
+      "used_by": "데모 A (01 Dec 03 · 02 Dec 03)",
+      "alt": "Twist Bag in peach jelly",
+      "note": "PET 배지가 올라앉는 실물 상품 사진. 브랜드 자체 상품이라 넣었고, 미피는 라이선스 IP라 데모에 쓰지 않는다. 480x600으로 받아 16KB. 배지의 논점이 '가장 비싼 자리에 올린다'는 판단이라 회색 블록으로는 그 판단이 보이지 않는다."
     }
   ]
 }

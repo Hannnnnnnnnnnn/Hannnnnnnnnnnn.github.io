@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PDP Revamp &mdash; Hanbyoul Kim</title>
 <meta name="description" content="A product page that search traffic reached and bounced off, rebuilt around what earns its space.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="style.css">
 <script>document.documentElement.classList.add("js")</script>
 <script src="main.js" defer></script>
@@ -162,28 +164,30 @@
         <span class="demo__label label">Try it</span>
         <p class="demo__caption">Hover or tap the badge. It expands in place and never navigates.</p>
         <div class="demo__stage demo__stage--pair">
-          <figure class="pet pet--card">
-            <div class="pet__photo demo__photo">
-              <label class="pet-badge">
-                <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge, card size">
-                <span class="pet-badge__default">
-                  <svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg>
-                  <span class="pet-badge__count">2</span>
-                </span>
-                <span class="pet-badge__hover" aria-hidden="true">2 Bottles Upcycled</span>
+          <figure class="pet">
+            <div class="pet__photo">
+              <img src="images/01-pdp/twist-bag-peach-jelly.jpg" alt="Twist Bag in peach jelly" width="480" height="600" loading="lazy">
+              <label class="pet-badge pet-badge--card">
+              <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge, card size">
+              <span class="pet-badge__default">
+                <svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg>
+                <span>6</span>
+              </span>
+              <span class="pet-badge__hover" aria-hidden="true">6 Bottles Upcycled</span>
               </label>
             </div>
-            <figcaption class="label muted">On a card</figcaption>
+            <figcaption class="label muted">On a product card</figcaption>
           </figure>
-          <figure class="pet pet--media">
-            <div class="pet__photo demo__photo">
-              <label class="pet-badge">
-                <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge, product media size">
-                <span class="pet-badge__default">
-                  <svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg>
-                  <span class="pet-badge__count">&times; 2</span>
-                </span>
-                <span class="pet-badge__hover" aria-hidden="true">2 Bottles Upcycled</span>
+          <figure class="pet">
+            <div class="pet__photo">
+              <img src="images/01-pdp/twist-bag-peach-jelly.jpg" alt="Twist Bag in peach jelly" width="480" height="600" loading="lazy">
+              <label class="pet-badge pet-badge--media">
+              <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge, product media size">
+              <span class="pet-badge__default">
+                <svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg>
+                <span>&times; 6</span>
+              </span>
+              <span class="pet-badge__hover" aria-hidden="true">6 Bottles Upcycled</span>
               </label>
             </div>
             <figcaption class="label muted">On product media</figcaption>
@@ -217,24 +221,25 @@
       <p><strong>New expires by itself.</strong> The badge applies the moment a product is created and removes itself after three months, automated through Shopify Flow rather than left to someone&rsquo;s memory. A &ldquo;New&rdquo; badge that outlives its truth is worse than no badge.</p>
       <div class="demo" data-demo-stock>
         <span class="demo__label label">Try it</span>
-        <p class="demo__caption">Drag the stock count. The badge appears at 2 &mdash; the point where &ldquo;low&rdquo; is simply a fact. Then drag the threshold up and watch it start to read like a sales tactic.</p>
-        <div class="demo__stage demo__stage--pair">
-          <figure class="pdp-mock-figure">
-            <div class="pdp-mock">
-              <span class="pdp-mock__slot"><span class="product-badge product-badge--low" data-stock-badge>Low Stock</span></span>
-              <span class="pdp-mock__line pdp-mock__line--title"></span>
-              <span class="pdp-mock__line pdp-mock__line--price"></span>
+        <p class="demo__caption">The product information column as it ships. Drag the stock down and the badge appears at 2 &mdash; the point where &ldquo;low&rdquo; is simply a fact. Turn the other two rules on and watch which one the page is willing to show.</p>
+        <div class="demo__stage">
+          <div class="pdp">
+            <p class="pdp__badge"><span class="product-badge" data-badge hidden></span></p>
+            <h4 class="pdp__title">Twist Bag</h4>
+            <p class="pdp__price">
+              <span><span class="pdp__cur">$</span>163<span class="pdp__cents">.00</span></span>
+              <span class="pdp__sold" data-sold hidden>Sold out</span>
+            </p>
+            <p class="pdp__option">Color <span class="pdp__value">&mdash; Peach Jelly</span></p>
+            <div class="pdp__swatches" aria-hidden="true">
+              <span class="pdp__swatch  pdp__swatch--on"></span>
+              <span class="pdp__swatch"></span>
+              <span class="pdp__swatch"></span>
+              <span class="pdp__swatch"></span>
+              <span class="pdp__swatch"></span>
             </div>
-            <figcaption class="label muted">Tied to stock</figcaption>
-          </figure>
-          <figure class="pdp-mock-figure">
-            <div class="pdp-mock">
-              <span class="pdp-mock__slot"><span class="product-badge product-badge--new">New</span></span>
-              <span class="pdp-mock__line pdp-mock__line--title"></span>
-              <span class="pdp-mock__line pdp-mock__line--price"></span>
-            </div>
-            <figcaption class="label muted">Removes itself after three months</figcaption>
-          </figure>
+            <button class="pdp__cta" type="button" data-cta>Add to cart</button>
+          </div>
         </div>
         <div class="demo__controls">
           <p class="demo__field">
@@ -245,18 +250,29 @@
             <label class="label" for="stock-threshold">Low stock threshold <output data-out-threshold for="stock-threshold">2</output></label>
             <input id="stock-threshold" type="range" min="1" max="10" value="2" data-threshold>
           </p>
+          <p class="demo__field">
+            <span class="label">The other two rules</span>
+            <span class="demo__seg">
+              <label><input type="checkbox" data-new><span>New</span></label>
+              <label><input type="checkbox" data-popular><span>Popular</span></label>
+            </span>
+          </p>
         </div>
         <details>
-          <summary class="label">The threshold in Liquid</summary>
-<pre><code>{%- assign limit = block.settings.low_stock_threshold | default: 2 -%}
-{%- assign left = variant.inventory_quantity -%}
+          <summary class="label">The badge in Liquid</summary>
+<pre><code>{%- liquid
+  assign limit = block.settings.low_stock_threshold | default: 2
+  assign left = variant.inventory_quantity
 
-{%- if left &gt; 0 and left &lt;= limit -%}
-  &lt;span class="product-badge product-badge--low-stock"
-        style="--badge-text: {{ block.settings.color_low_stock_text }};"&gt;
-    {{ 'products.product.low_stock' | t }}
-  &lt;/span&gt;
-{%- endif -%}</code></pre>
+  # 자리는 하나. 먼저 맞는 규칙이 이긴다 / one slot, first rule wins
+  if left &gt; 0 and left &lt;= limit
+    assign badge = 'Low Stock'
+  elsif product.metafields.custom.is_new
+    assign badge = 'New'
+  elsif product.metafields.custom.best_seller_rank &gt; 0
+    assign badge = 'Popular'
+  endif
+-%}</code></pre>
         </details>
       </div>
     </section>

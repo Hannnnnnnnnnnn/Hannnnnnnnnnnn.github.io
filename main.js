@@ -1,5 +1,5 @@
-/* 스크롤 리빌 + 히어로 글자 등장 + 커서 리빌 + 감쇠 스크롤
-   Scroll reveal, hero letter entrance, cursor reveal, damped scroll
+/* 스크롤 리빌 + 히어로 글자 등장 + 커서 리빌 + 데모 + 섹션 가이드
+   Scroll reveal, hero letter entrance, cursor reveal, demos, section guide
    라이브러리 없음 / no libraries */
 
 /* CSS가 콘텐츠를 숨기고 이 파일이 되돌리는 구조라, 여기서 예외가 나면 페이지가
@@ -280,52 +280,7 @@ run(() => {
   addEventListener("blur", () => { strokes = []; cur = null; });
 });
 
-/* ── 4. 감쇠 스크롤 (데스크탑 전용) ──
-   Damped scroll, desktop only.
-
-   실제 스크롤 위치(window.scrollTo)를 움직인다. 콘텐츠를 transform 으로 미는 방식이
-   더 흔하지만 그러면 position: sticky 헤더가 죽는다.
-   Moves the real scroll position. The commoner transform-based approach would kill the
-   sticky header.
-
-   ⚠️ 이 블록은 접근성 비용을 알고 넣은 것이다 — 스크롤이 입력을 즉시 따라가지 않으므로
-   빠르게 훑는 사용자에게는 반응이 굼뜨게 느껴질 수 있다. 빼려면 이 run(...) 하나를 지우면
-   되고 나머지 동작에는 영향이 없다.
-   Deliberate accessibility cost. Delete this one run(...) to remove it; nothing else
-   depends on it. */
-run(() => {
-  if (reduce) return;                                                  // 모션 최소화 존중
-  if (!matchMedia("(hover: hover) and (pointer: fine)").matches) return; // 터치는 네이티브 관성 유지
-
-  const EASE = 0.12;
-  let target = scrollY, current = scrollY, running = false;
-  const maxScroll = () => document.documentElement.scrollHeight - innerHeight;
-
-  const tick = () => {
-    current += (target - current) * EASE;
-    if (Math.abs(target - current) < 0.5) { current = target; running = false; }
-    else requestAnimationFrame(tick);
-    window.scrollTo(0, current);
-  };
-
-  // deltaMode 정규화 — 휠 마우스는 줄(1), 일부는 페이지(2) 단위로 보고한다
-  // Normalise deltaMode: wheel mice report lines (1), some report pages (2)
-  const px = (e) => e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
-
-  addEventListener("wheel", (e) => {
-    if (e.ctrlKey) return;              // 핀치 확대는 건드리지 않음 / leave pinch-zoom alone
-    e.preventDefault();
-    target = Math.max(0, Math.min(maxScroll(), target + px(e)));
-    if (!running) { running = true; requestAnimationFrame(tick); }
-  }, { passive: false });
-
-  // 휠이 아닌 스크롤(키보드, 스크롤바 드래그, 앵커 이동, 포커스 이동)은 가로채지 않고
-  // 목표값만 재동기화한다 — 그래야 Space/PageDown/Tab 이 평소대로 동작한다
-  // Non-wheel scrolling is never intercepted, only resynced, so keyboard and anchors work
-  addEventListener("scroll", () => { if (!running) { target = current = scrollY; } }, { passive: true });
-});
-
-/* ── 5. 작업 행 호버 미리보기 (데스크탑 전용) ──
+/* ── 4. 작업 행 호버 미리보기 (데스크탑 전용) ──
    Work row hover preview, desktop only.
 
    행에 마우스를 올리면 그 케이스의 히어로 이미지를 커서 오른쪽 아래에 띄운다.
@@ -394,7 +349,7 @@ run(() => {
   });
 });
 
-/* ── 6. 데모 B: 재고 임계값 (01 Decision 04) ──
+/* ── 5. 데모 B: 상품 정보 칼럼의 배지 ──
    임계값을 8~10으로 올려 보면 "이건 거짓말 같다"는 감각이 직접 생긴다. 그게 2를
    고른 근거고, 산문으로 설명하는 것보다 빠르다.
    Drag the threshold up to 8 and the badge starts to feel like a lie. That
@@ -402,27 +357,33 @@ run(() => {
 run(() => {
   const demo = document.querySelector("[data-demo-stock]");
   if (!demo) return;
-  const $ = (s) => demo.querySelector(s);
-  const stock = $("[data-stock]"), limit = $("[data-threshold]"), badge = $("[data-stock-badge]");
+  const $ = (sel) => demo.querySelector(sel);
+  const LABEL = { low: "Low Stock", new: "New", popular: "Popular" };
   const render = () => {
-    const n = +stock.value, t = +limit.value;
-    $("[data-out-stock]").textContent = n;
-    $("[data-out-threshold]").textContent = t;
-    // 품절은 배지 블록이 아니라 가격 옆 테마 기본 배지가 맡는다 — 컴포넌트가 다르므로
-    // 클래스도 바꾼다 / Sold out is the theme's own badge beside the price, a
-    // different component, so the class swaps with it
-    const sold = n === 0;
-    badge.hidden = !sold && n > t;
-    badge.textContent = sold ? "Sold out" : "Low Stock";
-    badge.classList.toggle("theme-badge", sold);
-    badge.classList.toggle("product-badge", !sold);
-    badge.classList.toggle("product-badge--low", !sold);
+    const left = +$("[data-stock]").value, limit = +$("[data-threshold]").value;
+    $("[data-out-stock]").textContent = left;
+    $("[data-out-threshold]").textContent = limit;
+    // 배지 자리는 하나뿐이고 Low Stock > New > Popular 순으로 먼저 맞는 규칙이 이긴다.
+    // 재고가 0이면 low stock 규칙 자체가 틀리므로 그 아래가 올라온다.
+    // One slot, and the first matching rule wins. At zero the low stock rule is
+    // false, so the next one takes the place rather than nothing showing.
+    const type = left > 0 && left <= limit ? "low"
+      : $("[data-new]").checked ? "new"
+      : $("[data-popular]").checked ? "popular" : "";
+    const badge = $("[data-badge]");
+    badge.hidden = !type;
+    badge.textContent = LABEL[type] || "";
+    badge.className = "product-badge" + (type ? " product-badge--" + type : "");
+    $("[data-sold]").hidden = left > 0;
+    $("[data-cta]").textContent = left > 0 ? "Add to cart" : "Sold out";
+    $("[data-cta]").disabled = left === 0;
   };
   demo.addEventListener("input", render);
+  demo.addEventListener("change", render);
   render();
 });
 
-/* ── 7. 데모 C: 프리오더 상태 리졸버 (03 Decision 01) ──
+/* ── 6. 데모 C: 프리오더 상태 리졸버 (03 Decision 01) ──
    opt-in 을 시장별로 들고 있는 게 핵심이다. CA↔US 를 바꾸면 같은 variant 가 다른
    상태가 되고, "약속은 시장마다 다르다"는 논점이 조작 한 번으로 전달된다.
    The opt-in is held per market on purpose: flipping CA↔US turns the same
@@ -455,7 +416,7 @@ run(() => {
   render();
 });
 
-/* ── 8. 케이스 페이지 섹션 가이드 ──
+/* ── 7. 케이스 페이지 섹션 가이드 ──
    IntersectionObserver 하나. rootMargin 이 핵심이다 — 기본값이면 섹션이 화면에
    들어오는 즉시 활성화돼서 스크롤 내내 목차가 깜빡인다. 위아래를 잘라 화면 중앙을
    지날 때만 전환시킨다. 스크롤 이벤트 + getBoundingClientRect 는 매 프레임 레이아웃을
@@ -495,9 +456,19 @@ run(() => {
     if (link) setActive(link.hash.slice(1));
   });
   if (location.hash) setActive(location.hash.slice(1));
+  // 히어로에서는 목차가 제목과 나란히 서서 경쟁한다 — 제목이 화면을 뜬 뒤에 들인다
+  // At the hero it stands level with the H1 and competes; let it in once the
+  // title has left the screen
+  const hero = document.querySelector(".prose h1");
+  if (hero) {
+    new IntersectionObserver(
+      ([e]) => nav.classList.toggle("is-live", !e.isIntersecting),
+      { rootMargin: "-64px 0px 0px 0px" }
+    ).observe(hero);
+  }
 });
 
-/* ── 9. 스크롤 진행 바 (1200px 미만에서 사이드바를 대신한다) ──
+/* ── 8. 스크롤 진행 바 (1200px 미만에서 사이드바를 대신한다) ──
    scrollTop 하나만 읽는다 — 섹션 판정에 쓰는 레이아웃 측정과는 비용이 다르다.
    Reads scrollTop and nothing else; this is not the per-frame layout read that
    section detection must avoid. */
