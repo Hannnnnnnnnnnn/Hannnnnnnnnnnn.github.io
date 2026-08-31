@@ -405,6 +405,27 @@ figure.figure--diagram { display: block; aspect-ratio: auto; padding: 0; backgro
 .dist--months { gap: 0.5rem; }
 .dist--months .dist__track { height: 8px; }
 
+/* ── 문구 주석 (03 Dec 03) ──
+   내용이 100% 텍스트라 사진으로 자르면 320px 에서 제일 먼저 죽는다. 게다가 같은 문장이
+   히어로에도 데모 C 에도 이미 있어서, 네 번째 복제는 증거가 아니라 반복이다. 대신 한 줄을
+   세 절로 쪼개고 각 절이 하는 일을 붙여 "each clause does one job" 을 주장에서 구조로 바꾼다.
+   Copy annotation (03 Dec 03): the content is entirely text, so a crop dies first at 320px,
+   and the same sentence already appears in the hero and in demo C. Splitting the line into
+   its three clauses and labelling each turns "each clause does one job" from a claim into
+   structure. */
+.anno { border: 1px solid var(--line); padding: 1.4rem 1.15rem; }
+/* row-gap 이 핵심이다. 0 이면 라벨이 제 절보다 다음 절에 더 가까이 붙어, 아래 절의 제목처럼
+   읽힌다 — 근접성이 소속을 정한다. 절↔제 라벨(0.9rem)보다 절↔다음 절이 확실히 멀어야 한다.
+   The row gap carries the meaning: at 0 each label sits as close to the next clause as to its
+   own and reads as that clause's heading. Proximity assigns ownership, so the gap between
+   segments must clearly exceed the 0.9rem between a clause and its own label. */
+.anno__line { margin: 0; display: flex; flex-wrap: wrap; gap: 1.7rem 0.4em; }
+.anno__seg { display: block; }
+.anno__text { font-size: 1.2rem; line-height: 1.4; }
+/* 절 구분은 라벨 위 1px 선 하나로. 밑줄·대괄호 같은 장식을 더하지 않는다.
+   The rule above the label is the only separator; no brackets or underlines. */
+.anno__job { display: block; margin-top: 0.5rem; padding-top: 0.4rem; border-top: 1px solid var(--line); color: var(--muted); }
+
 /* ══ B 패스: 모션 / B pass: motion ══════════════════════════
    JS가 없거나 실패하면 아래 규칙이 하나도 적용되지 않아 전부 그냥 보인다
    Without JS none of this applies and everything simply shows */
