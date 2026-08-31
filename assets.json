@@ -62,7 +62,7 @@
       "slot": "03",
       "path": "— (HTML `.mfd` 도식이 대체)",
       "section": "4 · Decision 02",
-      "alt": "One pet_bottle_count metafield driving both the card badge and the page counter",
+      "alt": "One pet_bottle_badge2 metafield driving both the card badge and the page counter",
       "note": "메타필드 → 배지/카운터 구조도는 HTML 로 만들었다. 촬영/캡처 불필요.",
       "status": "불필요"
     },
@@ -86,10 +86,11 @@
   "03-preorder-experience": [
     {
       "slot": "01",
-      "path": "/images/03-preorder/01.jpg",
+      "path": "— (HTML `.dist--months` 차트가 대체)",
       "section": "2 · The problem",
       "alt": "Monthly sales reversal rate, September 2025 to August 2026, peaking at 9.4% in October",
-      "note": "차트. 문제의 근거로만 쓴다 — 결과 섹션으로 옮기지 말 것"
+      "note": "월별 reversal 차트는 HTML 로 만들었다(2026-08-31). 촬영/캡처 불필요. 값은 ShopifyQL `FROM sales SHOW gross_sales, sales_reversals TIMESERIES month SINCE 2025-09-01 UNTIL 2026-08-31` 에서 읽은 12개월 실측이고, 10월 9.357% 가 최댓값이라 본문의 9.4% 와 일치한다. 막대 폭은 최댓값을 100% 로 정규화했다 — 9.4% 를 폭 9.4% 로 그리면 나머지 열한 달이 1px 이 되어 봉우리가 안 보인다. 캡션은 원값을 말한다. 문제의 근거로만 쓴다 — 결과 섹션으로 옮기지 말 것",
+      "status": "불필요"
     },
     {
       "slot": "02",
@@ -100,17 +101,18 @@
     },
     {
       "slot": "03",
-      "path": "/images/03-preorder/03.jpg",
+      "path": "— (HTML `.anno` 컴포넌트가 대체)",
       "section": "4 · Decision 03",
-      "alt": "Button and copy, cropped large enough that all three sentences read",
-      "note": "UX writing 증거. 세 문장이 읽힐 만큼 크게"
+      "alt": "The shipped line split into its three clauses, each labelled with the job it does",
+      "note": "문구 주석 도식은 HTML 로 만들었다(2026-08-31). 촬영/캡처 불필요. 내용이 100% 텍스트라 크롭하면 320px 에서 먼저 죽고, 같은 문장이 이미 히어로·Dec 03 blockquote·데모 C 에 세 번 있었다 — blockquote 는 이때 지웠다. 같이 고친 것: 제목 \"Three sentences under the button\" → \"Three jobs, one line\" (실제 문구는 두 문장이고 셋으로 나뉘는 것은 절이다).",
+      "status": "불필요"
     },
     {
       "slot": "04",
-      "path": "/images/03-preorder/04.jpg",
+      "path": "/images/03-preorder/04-email.jpg",
       "section": "4 · Decision 04",
-      "alt": "The confirmation email and the chain that fires it: theme line item property, Shopify Flow, Klaviyo",
-      "note": "이메일과 트리거 체인을 한 장에 합칠 것"
+      "alt": "The pre-order confirmation email as it arrives, at mobile width",
+      "note": "**체인은 사진에서 분리했다(2026-08-31)** — 트리거 체인은 상자-라벨 도식이라 HTML `.mfd--chain` 이고, 사진은 이메일만 남는다. 합치면 도식이 320px 에서 죽는다. 촬영 시 모바일 폭 크롭, 주문번호·이름·이메일 주소는 가릴 것. 인코딩 폭은 320~1280 을 훑어 최대 렌더 폭을 실측한 뒤 ×2."
     }
   ],
   "demos": [

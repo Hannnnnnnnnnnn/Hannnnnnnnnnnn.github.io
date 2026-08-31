@@ -201,7 +201,7 @@ After    PET badge (top-left, always visible)
       <span class="label muted">Decision 02</span>
       <h3>One metafield, two surfaces</h3>
       <p>Between the top banner and the product grid sits the brand slogan &mdash; <em>knit to care</em> &mdash; and a live count of every PET bottle the brand has upcycled to date.</p>
-      <p>Each product carries a <code>pet_bottle_count</code> metafield, and it drives both scales at once:</p>
+      <p>Each product carries a <code>pet_bottle_badge2</code> metafield, and it drives both scales at once:</p>
       <ul>
         <li><strong>On a product card</strong>, it renders as a badge &mdash; <em>this bag = N bottles</em></li>
         <li><strong>On the collection page</strong>, it feeds a running total, computed by reading orders across all channels and summing the count for every item sold</li>
@@ -213,7 +213,7 @@ After    PET badge (top-left, always visible)
           <div class="mfd__col">
             <p class="mfd__head label">In Shopify admin</p>
             <ul class="mfd__list">
-              <li><code>custom.pet_bottle_count</code><span class="mfd__type">number_decimal</span></li>
+              <li><code>custom.pet_bottle_badge2</code><span class="mfd__type">number_decimal</span></li>
             </ul>
             <p class="mfd__was">Set once, on the product. There is no second field for the total.</p>
           </div>
@@ -231,7 +231,7 @@ After    PET badge (top-left, always visible)
           </div>
         </div>
         <p class="mfd__note">The total is derived, not stored: it is read from orders across all channels and summed. Nobody updates it, so it cannot fall out of date.</p>
-        <figcaption class="label muted">One <code>pet_bottle_count</code> metafield driving both the card badge and the page counter</figcaption>
+        <figcaption class="label muted">One <code>pet_bottle_badge2</code> metafield driving both the card badge and the page counter</figcaption>
       </figure>
     </section>
 
@@ -285,7 +285,7 @@ After    PET badge (top-left, always visible)
         </div>
         <details>
           <summary class="label">The badge in Liquid</summary>
-<pre><code>{%- assign bottles = card_product.metafields.custom.pet_bottle_count.value -%}
+<pre><code>{%- assign bottles = card_product.metafields.custom.pet_bottle_badge2.value -%}
 {%- if bottles &gt; 0 -%}
   &lt;pet-bottles-badge class="pet-bottles-badge pet-bottles-badge--top-left"
     style="--pet-badge-bg: {{ s.pet_badge_bg | color_modify: 'alpha', 0.5 }};
