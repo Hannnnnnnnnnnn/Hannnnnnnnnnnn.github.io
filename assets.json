@@ -162,9 +162,9 @@
     },
     {
       "path": "/images/01-pdp/hero-{mobile,desktop}.mp4 (+ -poster.jpg)",
-      "used_by": "01 §1 HERO 프레임 두 개",
+      "used_by": "01 §1 HERO 프레임 두 개 · index 의 01 행 커서 미리보기(모바일 클립)",
       "alt": "",
-      "note": "정적 스냅샷 대신 실제 화면 녹화가 들어갔다. 소유자 원본은 .mov 120fps (모바일 778x1494 19.6초 18.9MB / 데스크톱 3024x1628 49.2초 234MB) 였고, 30fps H.264 faststart 로 다시 인코딩해 1.4MB / 2.5MB 가 됐다. 모바일 720x1382 crf28, 데스크톱 1280x690 crf31. **폭은 프레임이 실제 렌더되는 최대치(데스크톱 ~625px CSS)의 2배에 맞춘다** — 1440 으로 뽑았다가 표시 크기에서 구분되지 않는 900KB 를 더 실을 뻔했다. autoplay muted loop playsinline + poster, preload=metadata. prefers-reduced-motion 이면 재생하지 않고 컨트롤을 켠다(main.js §6c). 프레임 안에서 스크롤하지 않는다 — 스크롤이 녹화 안에 있다."
+      "note": "정적 스냅샷 대신 실제 화면 녹화가 들어갔다. 소유자 원본은 .mov 120fps (모바일 778x1494 19.6초 18.9MB / 데스크톱 3024x1628 49.2초 234MB) 였고, 30fps H.264 faststart 로 다시 인코딩해 1.4MB / 2.5MB 가 됐다. 모바일 720x1382 crf28, 데스크톱 1280x690 crf31. **폭은 프레임이 실제 렌더되는 최대치(데스크톱 ~625px CSS)의 2배에 맞춘다** — 1440 으로 뽑았다가 표시 크기에서 구분되지 않는 900KB 를 더 실을 뻔했다. autoplay muted loop playsinline + poster, preload=metadata. prefers-reduced-motion 이면 재생하지 않고 컨트롤을 켠다(main.js §6c). 프레임 안에서 스크롤하지 않는다 — 스크롤이 녹화 안에 있다. 모바일 클립은 index 의 Work 행 호버 미리보기에도 쓴다 — `data-preview` 가 .mp4 면 상자가 4:3 대신 클립 비율(720/1382)의 세로로 바뀌고 폭도 좁아진다. 호버 중에만 재생하고 벗어나면 멈춘다."
     }
   ]
 }

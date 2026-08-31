@@ -304,9 +304,17 @@ run(() => {
   box.setAttribute("aria-hidden", "true");   // 링크 텍스트가 이미 말하는 내용 / the link text already says this
   const img = document.createElement("img");
   img.alt = "";
+  // 영상 미리보기는 호버 중에만 돈다. preload="metadata" 라 인덱스를 여는 것만으로
+  // 1.4MB 를 받지는 않는다 / it plays only while hovered, and metadata-only preload keeps
+  // the index page from pulling 1.4MB just to render
+  const vid = document.createElement("video");
+  vid.muted = true;
+  vid.loop = true;
+  vid.playsInline = true;
+  vid.preload = "metadata";
   const cap = document.createElement("figcaption");
   cap.className = "label muted";
-  box.append(img, cap);
+  box.append(img, vid, cap);
   document.body.appendChild(box);
 
   const GAP = 20;   // 커서에서 띄우는 거리 / distance from the cursor
@@ -324,16 +332,28 @@ run(() => {
 
   rows.forEach((row) => {
     row.addEventListener("mouseenter", (e) => {
-      if (row.dataset.preview !== shown) {
-        shown = row.dataset.preview;
+      const src = row.dataset.preview;
+      const isVideo = /\.mp4$/i.test(src);
+      if (src !== shown) {
+        shown = src;
         // 파일이 아직 없는 슬롯은 케이스 페이지와 같은 자리표시로 떨어진다
         // A slot with no file yet falls back to the placeholder the case pages use
         box.classList.remove("is-loaded");
+        // 세로 녹화를 4:3 상자에 cover 로 넣으면 화면이 거의 다 잘린다 — 비율을 바꾼다
+        // A portrait recording covered into a 4:3 box is almost entirely cropped away
+        box.classList.toggle("is-video", isVideo);
         cap.textContent = row.dataset.previewAlt || "";
-        img.onload = () => box.classList.add("is-loaded");
-        img.onerror = () => box.classList.remove("is-loaded");
-        img.src = shown;                       // 핸들러를 먼저 걸고 src / handlers first, then src
+        const media = isVideo ? vid : img;
+        media.onerror = () => box.classList.remove("is-loaded");
+        if (isVideo) {
+          vid.onloadeddata = () => box.classList.add("is-loaded");
+          vid.poster = row.dataset.previewPoster || "";
+        } else {
+          img.onload = () => box.classList.add("is-loaded");
+        }
+        media.src = src;                       // 핸들러를 먼저 걸고 src / handlers first, then src
       }
+      if (isVideo) vid.play().catch(() => {}); // 막히면 포스터가 남는다 / poster stays if blocked
       // 처음 뜰 때는 커서 자리에서 시작 — 아니면 직전 행 위치에서 날아온다
       // Start at the cursor on first show, or it flies in from the previous row
       if (!box.classList.contains("is-in")) {
@@ -345,7 +365,10 @@ run(() => {
       box.classList.add("is-in");
     });
     row.addEventListener("mousemove", place);
-    row.addEventListener("mouseleave", () => box.classList.remove("is-in"));
+    row.addEventListener("mouseleave", () => {
+      box.classList.remove("is-in");
+      vid.pause();                             // 안 보이는 동안 돌릴 이유가 없다 / no reason to run unseen
+    });
   });
 });
 
