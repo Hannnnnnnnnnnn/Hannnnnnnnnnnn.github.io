@@ -537,11 +537,13 @@ run(() => {
   const demo = document.querySelector("[data-demo-card]");
   if (!demo) return;
   const photo = demo.querySelector("[data-card-photo]");
+  const photoHover = demo.querySelector("[data-card-photo-hover]");
   const swatches = [...demo.querySelectorAll(".pcard__swatch")];
 
   const card = demo.querySelector(".pcard");
   const pick = (sw) => {
     photo.src = sw.dataset.photo;
+    photoHover.src = sw.dataset.photoHover;   // 호버 사진도 그 색의 두 번째 컷으로 / hover shot follows the colour
     swatches.forEach((o) => {
       o.classList.toggle("is-active", o === sw);
       o.setAttribute("aria-pressed", String(o === sw));

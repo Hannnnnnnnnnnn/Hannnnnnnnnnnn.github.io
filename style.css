@@ -619,8 +619,17 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
    Every dimension here was read off the live theme rather than eyeballed; the swatch
    scale trick is the theme's own. */
 .demo .pcard { margin: 0; width: min(367px, 100%); font-family: var(--shop); }
-.demo .pcard__media { position: relative; aspect-ratio: 4 / 5; background: #f0f0f0; padding: 12px; display: flex; align-items: flex-start; }
-.demo .pcard__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* overflow: hidden 은 라이브 .media 와 같다 — 호버에서 두 번째 사진이 scale(1.03) 되므로
+   이게 없으면 사진이 카드 밖으로 삐져나온다 / the hover shot scales, so the box must clip */
+.demo .pcard__media { position: relative; aspect-ratio: 4 / 5; background: #f0f0f0; padding: 12px; display: flex; align-items: flex-start; overflow: hidden; }
+.demo .pcard__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* 두 번째 사진은 위에 겹쳐 두고 사진에 호버할 때만 페이드인한다 — 라이브 규칙 그대로:
+   .card:hover .media--hover-effect > picture + picture { opacity:1; transform:scale(1.03) }
+   (.card 는 사진 영역만 감싸므로 카드 전체가 아니라 사진 호버다. duration 은 테마의 .5s)
+   The second shot is stacked on top and fades in on photo hover, matching the live rule —
+   .card wraps only the media, so this is photo hover, not whole-card hover. */
+.demo .pcard__photo--hover { opacity: 0; pointer-events: none; transition: opacity 0.5s ease, transform 0.5s ease; }
+.demo .pcard__media:hover .pcard__photo--hover { opacity: 1; transform: scale(1.03); }
 .demo .pcard__title { margin: 8px 0 0; font-size: 12px; font-weight: 400; line-height: 1.3; }
 .demo .pcard__price { margin: 2px 0 0; display: flex; align-items: baseline; font-size: 14px; font-weight: 500; letter-spacing: 0.5px; }
 .demo .pcard__cur { font-size: 0.72em; margin-right: 3px; }
@@ -668,6 +677,13 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .demo .pcard.is-picked:hover .pcard__atc,
 .demo .pcard.is-picked:focus-within .pcard__atc { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .demo .pcard__atc:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+
+/* 모션을 줄이라고 했으면 전환만 끈다 — 바뀌는 것 자체는 정보라서 남긴다
+   Reduced motion drops the transitions, not the swap: the change itself is information */
+@media (prefers-reduced-motion: reduce) {
+  .demo .pcard__photo--hover, .demo .pcard__atc { transition: none; }
+  .demo .pcard__media:hover .pcard__photo--hover { transform: none; }
+}
 
 /* 비워진 오른쪽 위 모서리 — 기본은 아무것도 없다. 그게 이 결정의 결과물이라
    토글로 켤 때만 자리를 표시한다.
