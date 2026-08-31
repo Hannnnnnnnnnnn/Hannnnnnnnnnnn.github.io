@@ -30,7 +30,8 @@
       "path": "/images/01-pdp/03.jpg",
       "section": "4 · Decision 02",
       "alt": "Full page length before and after, scaled down to show the height difference",
-      "note": "읽히지 않아도 된다. 높이 차이만 보이면 됨"
+      "note": "Frame 9.png 4860x7878 RGBA → 흰 배경 합성 후 1600x2594 JPEG 312KB (원본 7.3MB). Before/After 각각 모바일+데스크톱을 같은 폭으로 세워 높이 차이가 그대로 비교가 된다 — 캡션이 약속하는 것과 일치한다. 데스크톱 1280 에서 736x1193 로 렌더된다.",
+      "status": "들어옴"
     },
     {
       "slot": "05",
