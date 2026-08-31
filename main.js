@@ -489,6 +489,42 @@ run(() => {
   render();
 });
 
+/* ── 6d. 데모 A′: 임팩트 카운터가 화면에 들어오면 센다 (02 Dec 03) ──
+   최종값은 HTML 에 그대로 들어 있다. JS 가 없거나 모션을 줄이라고 했으면 그 숫자가 그냥
+   보이고, 그게 맞는 값이다 — 세는 동작은 그 위에 얹을 뿐 값을 만들어내지 않는다.
+   The final number lives in the HTML. Without JS, or with reduced motion, it simply shows
+   and it is already correct; the counting is layered on top and never sources the value.
+   라이브 블록과 같은 2000ms. 한 번 세고 나면 observer 를 끊는다 — 스크롤할 때마다
+   0 으로 되돌아가면 값이 아니라 장식으로 읽힌다.
+   Same 2000ms as the live block, and it runs once: resetting to zero on every scroll pass
+   would make it read as decoration rather than as a number.
+   2번 리빌과 달리 여기서는 IO 하나로 충분하다. 숨은 탭에서 콜백이 안 와도 최종값이 이미
+   화면에 있기 때문이다 — 리빌은 콘텐츠를 숨겨 두고 IO 로 되돌리는 구조라 콜백이 없으면
+   영영 안 보이지만, 이쪽은 콜백이 없으면 애니메이션만 없다.
+   Unlike the reveal in 2, IO alone is enough here: a hidden tab delivers no callback, but
+   the final value is already on screen. The reveal hides content and needs IO to undo that;
+   this only ever adds motion on top of a number that is already correct. */
+run(() => {
+  const el = document.querySelector("[data-icount-value]");
+  if (!el || reduce) return;
+  const target = Number(el.textContent.replace(/,/g, ""));
+  if (!Number.isFinite(target)) return;
+  const fmt = (n) => n.toLocaleString("en-US");
+  const io = new IntersectionObserver((entries) => {
+    if (!entries.some((e) => e.isIntersecting)) return;
+    io.disconnect();
+    const t0 = performance.now();
+    const tick = (now) => {
+      const p = Math.min((now - t0) / 2000, 1);
+      el.textContent = fmt(Math.round(target * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    el.textContent = fmt(0);
+    requestAnimationFrame(tick);
+  }, { threshold: 0.6 });
+  io.observe(el);
+});
+
 /* ── 6c. 히어로 영상: 모션을 줄이라고 했으면 재생하지 않는다 ──
    autoplay 는 CSS 로 못 끈다. 대신 컨트롤을 켜서 원하면 직접 볼 수 있게 남긴다.
    Autoplay cannot be disabled from CSS; hand the reader controls instead of motion. */

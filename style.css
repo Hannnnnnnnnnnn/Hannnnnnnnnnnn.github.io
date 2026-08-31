@@ -683,6 +683,35 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
   mask-position: 0 0;
 }
 
+/* ── 데모 A′: 임팩트 카운터 (02 Dec 03) ──
+   배지와 같은 metafield 를 반대쪽 스케일에서 읽는다 — 카드 한 장이 아니라 그리드 전체다.
+   Decision 03 은 "보이되 눌리지 않는다"를 주장하는데 배지만 두면 그 주장의 절반이 빈다.
+   배지는 그나마 눌리기라도 하고, 카운터와 슬로건은 정말로 아무 동작이 없다.
+   The same metafield read at the other scale: the whole grid, not one card. Decision 03
+   argues "seen, not clicked", and the badge alone shows half of it — the badge at least
+   takes a click, while the counter and slogan genuinely do nothing.
+
+   라이브 블록에서 잰 값이다: Poppins, 숫자 20px/700 #f15a29, 단위 20px/600 #0c0c0c,
+   둘 사이 6px 베이스라인 정렬, 숫자 아래 12px, 설명 12px/16.8px, 컨테이너 400px, 흰 바탕.
+   무대가 tint 라 배경은 이 띠가 직접 들고 있어야 실제와 같아진다.
+   Measured off the live block, not invented. The stage is tinted, so the band carries the
+   white it actually sits on. */
+.demo .icount { width: 100%; max-width: 400px; padding: 15px; background: #fff; font-family: var(--shop); color: #0c0c0c; text-align: center; }
+/* 320px 에서는 숫자와 단위가 한 줄에 못 들어간다. wrap 이 없으면 "bottles upcycled" 만
+   두 줄로 쪼개져 숫자 옆에 걸치는데, wrap 을 주면 숫자 한 줄 · 단위 한 줄로 가운데 정렬돼
+   끊기는 자리가 문구 그대로 남는다.
+   At 320px the number and unit cannot share a line. Without wrap the unit alone breaks in
+   two and hangs beside the number; with it they stack as two centred lines and the phrase
+   breaks where it reads. */
+.demo .icount__num { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 4px 6px; margin: 0 0 12px; font-size: 20px; line-height: 1; }
+/* 세는 동안 자릿수가 바뀌어도 폭이 흔들리지 않게 한다 — 라이브는 이걸 안 걸어서 숫자가
+   미세하게 떨린다. 이 띠가 라이브보다 작아 그 떨림이 더 눈에 띈다.
+   Tabular figures so the width holds while it counts. The live block omits this and
+   jitters; at this size the jitter reads worse than the deviation. */
+.demo .icount__value { font-weight: 700; color: #f15a29; font-variant-numeric: tabular-nums; }
+.demo .icount__suffix { font-weight: 600; }
+.demo .icount__desc { margin: 0; font-size: 12px; line-height: 1.4; }
+
 /* ── 비포/애프터 나란히 (01 Dec 01) ──
    좁은 화면에서 위아래로 쌓으면 "나란히 놓고 비교한다"는 성립이 안 되므로, 모바일에서는
    두 칸을 그대로 두고 가로로 스크롤한다. 비포는 세로로 매우 긴 스크린샷이라 히어로
