@@ -49,10 +49,10 @@ Dec 03 을 정적 1장, Dec 05 를 정적 2장으로 두라고 하지만 셋 다
 
 | 파일 | 섹션 | 무엇 |
 |---|---|---|
-| `02-plp/01.jpg` | 2 The problem | 유입 페이지 분포 차트 (PLP 51% / Home 20% / …) |
+| ~~`02-plp/01.jpg`~~ | 2 The problem | **불필요.** HTML `.dist` 막대 차트가 대체 |
 | `02-plp/twist-bag-*-2.jpg` (6장) | 4 Dec 01 | **들어옴.** 데모 F 의 호버 사진 — 색마다 그 바리언트의 두 번째 컷. `#color_<handle>` 그룹의 2번째 미디어를 480x600 으로 받았다(13~20KB). 첫 컷은 `01-pdp/twist-bag-*.jpg` 재사용 |
 | ~~`02-plp/02.jpg`~~ | 4 Dec 01 | **불필요.** 데모 F(현재 카드 Try it)가 대체 — before 는 보여주지 않기로 했다(2026-08-31) |
-| `02-plp/03.jpg` | 4 Dec 02 | 메타필드 → 배지 / 카운터 구조도 |
+| ~~`02-plp/03.jpg`~~ | 4 Dec 02 | **불필요.** HTML `.mfd` 도식이 대체 |
 | `02-plp/04-cross-sell.jpg` | 4 Dec 04 | **들어옴.** 백 컬렉션용 크로스셀 배너(Miffy studio mixed) |
 | `02-plp/04-promotion.jpg` | 4 Dec 04 | **들어옴.** 광고 랜딩용 프로모션 배너(Nami). 표의 'Promotion, or best sellers' 중 프로모션 쪽 |
 | `02-plp/05.jpg` | 6 Outcome | **들어옴.** Clarity 신·구 스크롤 히트맵. 소유자 `Frame 18.png` 652x4252 RGBA → 흰 배경 합성 후 JPEG 222KB(원본 1.57MB). 한 장 안에 신·구 두 컬럼이 이미 나란히 들어 있다 |

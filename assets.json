@@ -1,5 +1,5 @@
 {
-  "_note": "MEDIA-MAP.md 기준으로 재생성. 슬롯 25개 -> 14장 + 히어로 녹화 4개. 표에서 '없음'인 섹션에는 이미지를 새로 만들어 넣지 않는다. / Regenerated from MEDIA-MAP.md: 25 slots down to 14 images plus 4 hero recordings. Sections marked 'none' there stay empty on purpose.",
+  "_note": "MEDIA-MAP.md 기준으로 재생성. 슬롯 25개 -> 14장 + 히어로 녹화 4개. 표에서 '없음'인 섹션에는 이미지를 새로 만들어 넣지 않는다. / Regenerated from MEDIA-MAP.md: 25 slots down to 14 images plus 4 hero recordings. Sections marked 'none' there stay empty on purpose. **02 케이스는 2026-08-31 로 도판 자리가 전부 닫혔다** — 01·03 은 HTML 컴포넌트, 02 는 데모 F, 04·05 는 실제 이미지.",
   "frames": [
     {
       "path": "/images/01-pdp/hero-{mobile,desktop}.mp4",
@@ -45,10 +45,11 @@
   "02-plp-revamp": [
     {
       "slot": "01",
-      "path": "/images/02-plp/01.jpg",
+      "path": "— (HTML `.dist` 막대 차트가 대체)",
       "section": "2 · The problem",
       "alt": "Where paid social sessions land: collection 51%, home 20%, the rest elsewhere",
-      "note": "차트. 이 케이스 전체의 근거이자 문제 섹션의 유일한 이미지"
+      "note": "유입 페이지 분포는 2026-08-30 에 HTML 컴포넌트로 만들었다. 촬영/캡처 불필요.",
+      "status": "불필요"
     },
     {
       "slot": "02",
@@ -59,10 +60,11 @@
     },
     {
       "slot": "03",
-      "path": "/images/02-plp/03.jpg",
+      "path": "— (HTML `.mfd` 도식이 대체)",
       "section": "4 · Decision 02",
       "alt": "One pet_bottle_count metafield driving both the card badge and the page counter",
-      "note": "구조도. 카운터 화면 사진이 아니라 구조도가 논점"
+      "note": "메타필드 → 배지/카운터 구조도는 HTML 로 만들었다. 촬영/캡처 불필요.",
+      "status": "불필요"
     },
     {
       "slot": "04",
