@@ -1,12 +1,19 @@
 {
-  "_note": "MEDIA-MAP.md 기준으로 재생성. 슬롯 25개 -> 14장 + 프레임 3장. 표에서 '없음'인 섹션에는 이미지를 새로 만들어 넣지 않는다. / Regenerated from MEDIA-MAP.md: 25 slots down to 14 images plus 3 frame snapshots. Sections marked 'none' there stay empty on purpose.",
+  "_note": "MEDIA-MAP.md 기준으로 재생성. 슬롯 25개 -> 14장 + 히어로 녹화 4개. 표에서 '없음'인 섹션에는 이미지를 새로 만들어 넣지 않는다. / Regenerated from MEDIA-MAP.md: 25 slots down to 14 images plus 4 hero recordings. Sections marked 'none' there stay empty on purpose.",
   "frames": [
     {
-      "path": "/images/02-plp/hero-mobile.jpg",
+      "path": "/images/01-pdp/hero-{mobile,desktop}.mp4",
+      "case": "01-pdp-revamp",
+      "section": "1 · Hero",
+      "alt": "Redesigned product page, mobile in front and desktop behind",
+      "note": "인코딩 값은 demo_assets 의 히어로 항목 참조"
+    },
+    {
+      "path": "/images/02-plp/hero-{mobile,desktop}.mp4",
       "case": "02-plp-revamp",
       "section": "1 · Hero",
-      "alt": "Redesigned collection page on mobile, top of the page",
-      "note": "프레임 스냅샷 하나만. 97% 모바일이고 데스크톱은 7 vs 11 세션이라 데스크톱을 넣으면 케이스와 모순된다"
+      "alt": "Redesigned collection page, mobile in front and desktop behind",
+      "note": "원래는 모바일 스냅샷 하나였다 — 97% 모바일이고 데스크톱은 7 vs 11 세션이라 데스크톱을 넣으면 케이스와 모순된다는 판단. 2026-08-31 소유자가 01 과 같은 형태(데스크톱+모바일 녹화)로 지정해 교체했고, 그 긴장은 그대로 남아 있다"
     }
   ],
   "01-pdp-revamp": [
@@ -164,10 +171,10 @@
       "note": "harness-strap · birthday-twist-pins · bind · bloom-beads-strap · utility-bind-2 · cord-trick · blue-plastic-letters · paneco-keychain · bind-proof-plus-eco. 메타필드 순서 그대로이며 각 300x375(4:5)로 받아 6~10KB, 합계 88KB. 전부 Atacz 자체 제품이라 미피 IP 문제는 없다."
     },
     {
-      "path": "/images/01-pdp/hero-{mobile,desktop}.mp4 (+ -poster.jpg)",
-      "used_by": "01 §1 HERO 프레임 두 개 · index 의 01 행 커서 미리보기(모바일 클립)",
+      "path": "/images/{01-pdp,02-plp}/hero-{mobile,desktop}.mp4 (+ -poster.jpg)",
+      "used_by": "01·02 §1 HERO 프레임 두 개 · index 의 01·02 행 커서 미리보기(모바일 클립)",
       "alt": "",
-      "note": "정적 스냅샷 대신 실제 화면 녹화가 들어갔다. 소유자 원본은 .mov 120fps (모바일 778x1494 19.6초 18.9MB / 데스크톱 3024x1628 49.2초 234MB) 였고, 30fps H.264 faststart 로 다시 인코딩해 1.4MB / 2.5MB 가 됐다. 모바일 720x1382 crf28, 데스크톱 1280x690 crf31. **폭은 프레임이 실제 렌더되는 최대치(데스크톱 ~625px CSS)의 2배에 맞춘다** — 1440 으로 뽑았다가 표시 크기에서 구분되지 않는 900KB 를 더 실을 뻔했다. autoplay muted loop playsinline + poster, preload=metadata. prefers-reduced-motion 이면 재생하지 않고 컨트롤을 켠다(main.js §6c). 프레임 안에서 스크롤하지 않는다 — 스크롤이 녹화 안에 있다. 모바일 클립은 index 의 Work 행 호버 미리보기에도 쓴다 — `data-preview` 가 .mp4 면 상자가 4:3 대신 클립 비율(720/1382)의 세로로 바뀌고 폭도 좁아진다. 호버 중에만 재생하고 벗어나면 멈춘다."
+      "note": "정적 스냅샷 대신 실제 화면 녹화가 들어갔다. 소유자 원본은 .mov 120fps (모바일 778x1494 19.6초 18.9MB / 데스크톱 3024x1628 49.2초 234MB) 였고, 30fps H.264 faststart 로 다시 인코딩해 1.4MB / 2.5MB 가 됐다. 모바일 720x1382 crf28, 데스크톱 1280x690 crf31. **폭은 프레임이 실제 렌더되는 최대치(데스크톱 ~625px CSS)의 2배에 맞춘다** — 1440 으로 뽑았다가 표시 크기에서 구분되지 않는 900KB 를 더 실을 뻔했다. autoplay muted loop playsinline + poster, preload=metadata. prefers-reduced-motion 이면 재생하지 않고 컨트롤을 켠다(main.js §6c). 프레임 안에서 스크롤하지 않는다 — 스크롤이 녹화 안에 있다. 모바일 클립은 index 의 Work 행 호버 미리보기에도 쓴다 — `data-preview` 가 .mp4 면 상자가 4:3 대신 클립 비율(720/1382)의 세로로 바뀌고 폭도 좁아진다. 호버 중에만 재생하고 벗어나면 멈춘다. 02(PLP)도 2026-08-31 같은 방식으로 추가했다: 원본 .mov 60fps(데스크톱 3140x1734 30.0초 101MB — GitHub 파일 100MB 한도를 넘어 재인코딩이 선택이 아니라 필수였다 / 모바일 778x1590 27.4초 22MB), 30fps H.264 faststart 로 데스크톱 1280x706 crf31 1.7MB, 모바일 720x1472 crf28 2.2MB. 01 과 같은 폭·crf 를 그대로 따랐고 렌더 상자도 같다(데스크톱 498x275, 모바일 292x598 @1572px)."
     }
   ]
 }
