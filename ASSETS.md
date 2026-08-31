@@ -63,14 +63,19 @@ Dec 03 은 **데모 A**. 히트맵이 히어로가 아니라 결과 섹션에 �
 "같은 수치, 다른 결론"이 성립한다. 아주 세로로 긴 이미지라 `.cmp__window`(absolute 스크롤러)가
 행 높이를 먹지 않는 게 핵심이다.
 
-## 03 · Pre-order Experience (4)
+## 03 · Pre-order Experience (2)
 
 | 파일 | 섹션 | 무엇 |
 |---|---|---|
-| `03-preorder/01.jpg` | 2 The problem | 월별 reversal rate 차트 (10월 9.4% 피크) |
+| ~~`03-preorder/01.jpg`~~ | 2 The problem | **불필요.** HTML `.dist--months` 차트가 대체 — 이 케이스의 첫 근거라 320px 에서 읽혀야 한다 |
 | `03-preorder/02.jpg` | 4 Dec 02 | Add to Cart → Pre-order 전/후 |
-| `03-preorder/03.jpg` | 4 Dec 03 | 버튼 + 문구 영역 확대. 세 문장이 읽힐 만큼 크게 |
-| `03-preorder/04.jpg` | 4 Dec 04 | 이메일 + 트리거 체인(테마 → Flow → Klaviyo)을 한 장에 |
+| ~~`03-preorder/03.jpg`~~ | 4 Dec 03 | **불필요.** 내용이 100% 텍스트고 같은 문장이 이미 페이지에 세 번 있다 — HTML `.anno` 가 대체 |
+| `03-preorder/04-email.jpg` | 4 Dec 04 | 프리오더 확인 이메일 (모바일 폭 크롭, 주문번호·이름·이메일 가릴 것) |
+
+트리거 체인은 상자-라벨 도식이라 **사진이 아니라 HTML `.mfd--chain`** 이다. 원래 계획은
+이메일과 한 장에 합치는 것이었지만, 합치면 도식 쪽이 320px 에서 먼저 죽는다. 컴포넌트는
+이미지가 아니므로 규칙 3("한 결정에 이미지 하나")과 충돌하지 않는다 — 01 Dec 01 에 이미
+같은 짝(사진 + 데모)이 있다.
 
 히어로는 이미지가 없다 — 문구 자체를 크게 쓴 타이포. Dec 01 은 **데모 C**.
 
