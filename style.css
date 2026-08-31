@@ -406,6 +406,7 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .frame { border: 1px solid var(--line); background: var(--tint); overflow: hidden; }
 .frame__scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .frame__scroll img { width: 100%; }
+.frame__video { display: block; width: 100%; height: auto; background: var(--tint); }
 /* 파일이 들어오기 전까지 경로를 그대로 보여준다 — .figure 와 같은 규칙
    Until a file lands the path shows verbatim, same rule as .figure */
 .frame__slot { display: grid; place-items: center; min-height: 100%; padding: 1.5rem; text-align: center; line-height: 1.7; color: var(--muted); }
@@ -415,6 +416,15 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .frame--mobile { max-width: 22rem; }
 .frame--mobile .frame__scroll { height: 30rem; }
 .frame--desktop .frame__scroll { height: 22rem; }
+/* 영상이 들어간 프레임은 안에서 스크롤하지 않는다 — 스크롤 자체가 녹화 안에 들어 있다.
+   높이는 클립 비율이 정한다. 고정 높이로 자르면 이 히어로가 보여주려는 "위에서 아래까지"
+   자체가 사라진다.
+   **위 두 줄보다 뒤에 있어야 한다.** `.frame--mobile .frame__scroll` 은 클래스 2개라
+   `.frame__scroll--video` 하나로는 못 이긴다 — 앞에 뒀더니 높이가 480px 로 남은 채
+   영상만 삐져나왔다(실측 350x672 안에 부모 480).
+   A video frame does not scroll; the recording already does. This must sit after the
+   two fixed heights above: they are two-class selectors and outspecify a single class. */
+.frame .frame__scroll--video { height: auto; overflow: visible; }
 
 /* 데스크톱 폭에서만 겹친다. 모바일 프레임이 앞·크게, 데스크톱은 뒤 —
    PDP 트래픽의 74%가 모바일이었다는 게 이 케이스의 전제라 순서가 뒤집히면 안 된다.

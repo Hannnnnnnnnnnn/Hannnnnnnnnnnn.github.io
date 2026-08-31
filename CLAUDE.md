@@ -223,6 +223,11 @@ Liquid 없음, 밑줄 파일 없음) 그 빌드 단계는 실패 지점만 만�
 
 - **`.demo` 안의 CSS 는 전부 `.demo` 하위로 스코프한다.** 전역 스타일과 섞이면 잘못 만든 것이다
 - 데모 안의 링크는 `pointer-events: none` — 클릭해서 밖으로 나가면 안 된다
+- **히어로 영상은 원본 그대로 올리지 마라.** 소유자가 주는 화면 녹화는 120fps 라 모바일
+  한 개가 18.9MB 다. `-vf scale=720:-2,fps=30 -crf 28 -movflags +faststart -an` 으로
+  1.4MB 가 된다(데스크톱은 1440 폭 / crf 27 → 130KB). 글자가 읽히는지는 중간 프레임을
+  뽑아 눈으로 확인할 것. `autoplay muted loop playsinline` + `poster` 가 세트이고,
+  `prefers-reduced-motion` 이면 재생을 끄고 컨트롤을 켠다 — autoplay 는 CSS 로 못 끈다.
 - 상품 이미지는 회색 블록(`#e5e5e5`)이 기본이다. 실물 사진을 쓸 땐 **Atacz 자체 제품만** —
   미피는 라이선스 IP라 이 저장소에 들어오지 않는다
 - Liquid 발췌는 `<details>` 안, 10~15줄. 전체 파일을 붙이지 마라

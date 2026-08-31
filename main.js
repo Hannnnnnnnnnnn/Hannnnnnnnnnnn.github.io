@@ -446,6 +446,18 @@ run(() => {
   render();
 });
 
+/* ── 6c. 히어로 영상: 모션을 줄이라고 했으면 재생하지 않는다 ──
+   autoplay 는 CSS 로 못 끈다. 대신 컨트롤을 켜서 원하면 직접 볼 수 있게 남긴다.
+   Autoplay cannot be disabled from CSS; hand the reader controls instead of motion. */
+run(() => {
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  document.querySelectorAll("video[autoplay]").forEach((v) => {
+    v.autoplay = false;
+    v.controls = true;
+    v.pause();
+  });
+});
+
 /* ── 7. 케이스 페이지 섹션 가이드 ──
    IntersectionObserver 하나. rootMargin 이 핵심이다 — 기본값이면 섹션이 화면에
    들어오는 즉시 활성화돼서 스크롤 내내 목차가 깜빡인다. 위아래를 잘라 화면 중앙을

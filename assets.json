@@ -2,20 +2,6 @@
   "_note": "MEDIA-MAP.md 기준으로 재생성. 슬롯 25개 -> 14장 + 프레임 3장. 표에서 '없음'인 섹션에는 이미지를 새로 만들어 넣지 않는다. / Regenerated from MEDIA-MAP.md: 25 slots down to 14 images plus 3 frame snapshots. Sections marked 'none' there stay empty on purpose.",
   "frames": [
     {
-      "path": "/images/01-pdp/hero-mobile.jpg",
-      "case": "01-pdp-revamp",
-      "section": "1 · Hero",
-      "alt": "Redesigned product page on mobile, top of the page",
-      "note": "프레임 스냅샷. 상단 1~2화면분이면 충분하다 — 프레임이 고정 높이 안에서 스크롤한다. 모바일이 앞·크게 (트래픽 74%가 모바일)"
-    },
-    {
-      "path": "/images/01-pdp/hero-desktop.jpg",
-      "case": "01-pdp-revamp",
-      "section": "1 · Hero",
-      "alt": "The same page on desktop",
-      "note": "프레임 스냅샷. 모바일 프레임 뒤에 깔린다"
-    },
-    {
       "path": "/images/02-plp/hero-mobile.jpg",
       "case": "02-plp-revamp",
       "section": "1 · Hero",
@@ -173,6 +159,12 @@
       "used_by": "Pairs Well With 레일 (01 Dec 03)",
       "alt": "",
       "note": "harness-strap · birthday-twist-pins · bind · bloom-beads-strap · utility-bind-2 · cord-trick · blue-plastic-letters · paneco-keychain · bind-proof-plus-eco. 메타필드 순서 그대로이며 각 300x375(4:5)로 받아 6~10KB, 합계 88KB. 전부 Atacz 자체 제품이라 미피 IP 문제는 없다."
+    },
+    {
+      "path": "/images/01-pdp/hero-{mobile,desktop}.mp4 (+ -poster.jpg)",
+      "used_by": "01 §1 HERO 프레임 두 개",
+      "alt": "",
+      "note": "정적 스냅샷 대신 실제 화면 녹화가 들어갔다. 소유자 원본은 .mov 120fps (모바일 18.9MB / 데스크톱 4.0MB) 였고, 30fps·H.264·faststart 로 다시 인코딩해 1.4MB / 130KB 가 됐다. 모바일 720x1382, 데스크톱 1440x776. autoplay muted loop playsinline + poster, preload=metadata. prefers-reduced-motion 이면 재생하지 않고 컨트롤을 켠다(main.js §6c). 프레임 안에서 스크롤하지 않는다 — 스크롤이 녹화 안에 있다."
     }
   ]
 }
