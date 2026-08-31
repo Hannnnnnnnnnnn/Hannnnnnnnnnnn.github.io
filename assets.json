@@ -32,13 +32,6 @@
       "alt": "Full page length before and after, scaled down to show the height difference",
       "note": "Frame 9.png 4860x7878 RGBA → 흰 배경 합성 후 1600x2594 JPEG 312KB (원본 7.3MB). Before/After 각각 모바일+데스크톱을 같은 폭으로 세워 높이 차이가 그대로 비교가 된다 — 캡션이 약속하는 것과 일치한다. 데스크톱 1280 에서 736x1193 로 렌더된다.",
       "status": "들어옴"
-    },
-    {
-      "slot": "05",
-      "path": "/images/01-pdp/05.jpg",
-      "section": "5 · What shipped",
-      "alt": "One metafield set rendering into the PDP: pairings, bottle count, badge states",
-      "note": "다이어그램. 반응형 3종 이미지는 히어로 프레임과 중복이라 삭제됨"
     }
   ],
   "02-plp-revamp": [
@@ -167,6 +160,12 @@
       "used_by": "01 §1 HERO 프레임 두 개 · index 의 01 행 커서 미리보기(모바일 클립)",
       "alt": "",
       "note": "정적 스냅샷 대신 실제 화면 녹화가 들어갔다. 소유자 원본은 .mov 120fps (모바일 778x1494 19.6초 18.9MB / 데스크톱 3024x1628 49.2초 234MB) 였고, 30fps H.264 faststart 로 다시 인코딩해 1.4MB / 2.5MB 가 됐다. 모바일 720x1382 crf28, 데스크톱 1280x690 crf31. **폭은 프레임이 실제 렌더되는 최대치(데스크톱 ~625px CSS)의 2배에 맞춘다** — 1440 으로 뽑았다가 표시 크기에서 구분되지 않는 900KB 를 더 실을 뻔했다. autoplay muted loop playsinline + poster, preload=metadata. prefers-reduced-motion 이면 재생하지 않고 컨트롤을 켠다(main.js §6c). 프레임 안에서 스크롤하지 않는다 — 스크롤이 녹화 안에 있다. 모바일 클립은 index 의 Work 행 호버 미리보기에도 쓴다 — `data-preview` 가 .mp4 면 상자가 4:3 대신 클립 비율(720/1382)의 세로로 바뀌고 폭도 좁아진다. 호버 중에만 재생하고 벗어나면 멈춘다."
+    },
+    {
+      "path": "/images/noise.jpg",
+      "used_by": "모든 .demo__stage (Try it 배경)",
+      "alt": "",
+      "note": "소유자가 준 noisy-background.jpg 2000x2000 2.9MB 에서 384px 타일을 잘라 반복한다. 384 가 가장자리 밝기차가 가장 작았다(0.9/1.2, 255 기준) — 512·640 은 이음매가 커진다. **대비를 낮춰서 쓴다**: 원본 stddev 15.8 로는 muted 캡션('ON A PRODUCT CARD')이 알갱이에 묻혀 읽히지 않았다. 평균을 기존 tint 값(244)에 맞추고 진폭만 0.45배로 줄여 stddev 8.1, 23KB. background-color 로 tint 를 깔아 이미지가 실패해도 예전 회색으로 떨어진다."
     }
   ]
 }

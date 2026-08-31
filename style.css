@@ -308,6 +308,66 @@ figure.figure { padding: 1rem; }
 .figure:has(img) img { display: block; width: 100%; height: auto; }
 .figure:has(img) figcaption { max-width: none; padding-top: 0.6rem; text-align: left; }
 
+/* ── 메타필드 → PDP 구조도 (01 §5) ──
+   이미지가 아니라 HTML 이다. 이 도판은 박스와 라벨뿐이라 그림일 이유가 없고,
+   이미지로 만들면 320px 에서 통째로 축소돼 글자가 5px 가 된다 — 도식이 가장
+   필요한 화면에서 못 읽게 된다. HTML 이면 좁을 때 세로로 다시 쌓이고, 글자가
+   선택·검색되고, 용량이 0이다.
+   키와 타입은 지어낸 것이 아니라 라이브 스토어의 metafieldDefinitions 에서 읽었다.
+   Not an image: this is boxes and labels, and as a picture it would shrink whole on a
+   phone until the type was 5px — unreadable exactly where a diagram helps most. The
+   keys and types are read from the live store's metafieldDefinitions, not invented. */
+/* `figure.figure { padding: 1rem }` 이 요소+클래스라 단일 클래스로는 못 이긴다 —
+   선택자를 같은 형태로 맞춰야 padding 이 실제로 0 이 된다.
+   Matching the element+class form of the padding rule; a single class loses to it. */
+figure.figure--diagram { display: block; aspect-ratio: auto; padding: 0; background: none; border: 0; }
+.figure--diagram .mfd__note { max-width: none; }
+/* width 를 명시한다. max-width:none 인데도 이 figcaption 은 736px 부모 안에서 614px 로
+   줄어든다 — 매칭되는 규칙 5개 중 width 를 거는 것은 없었고 원인을 확정하지 못했다.
+   원인을 모른 채 그럴듯한 설명을 적느니 의도를 명시해 둔다. (width:100% 를 주면 736)
+   Explicit width: this caption shrinks to 614px inside a 736px parent even with
+   max-width:none, and none of the five matching rules sets a width. Cause unconfirmed,
+   so state the intent rather than guess at it. */
+.figure--diagram figcaption { width: 100%; max-width: none; text-align: left; padding-top: 0.6rem; }
+.mfd {
+  display: grid;
+  gap: 1px;                          /* 1px 틈이 곧 칸 사이 선이다 / the gap is the rule between cells */
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.mfd__col { padding: 1.1rem 1.15rem; background: var(--bg); display: grid; align-content: start; gap: 0.7rem; }
+.mfd__col--spine { background: var(--tint); }
+.mfd__head { color: var(--muted); }
+.mfd__list { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.7rem; }
+.mfd__list li { font-size: 0.85rem; line-height: 1.5; }
+.mfd__list code { font-size: 0.82rem; word-break: break-word; }
+.mfd__type { display: block; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.mfd__list--plain li { display: grid; }
+.mfd__template { margin: 0; }
+.mfd__was { margin: 0; font-size: 0.8rem; line-height: 1.5; color: var(--muted); }
+.mfd__note { margin: 0.8rem 0 0; font-size: 0.85rem; line-height: 1.6; color: var(--muted); }
+
+/* 좁을 땐 세로로 쌓이고 화살표가 아래를 가리킨다. 넓어지면 3열 + 오른쪽 화살표.
+   Stacked with a downward arrow when narrow; three columns pointing right when wide. */
+.mfd__col + .mfd__col { position: relative; }
+.mfd__col + .mfd__col::before {
+  content: "";
+  position: absolute;
+  width: 7px; height: 7px;
+  border-right: 1px solid var(--muted);
+  border-bottom: 1px solid var(--muted);
+  left: 50%; top: -4px;
+  transform: translateX(-50%) rotate(45deg);
+  background: var(--bg);
+}
+@media (min-width: 700px) {
+  .mfd { grid-template-columns: 1.1fr 0.85fr 1fr; }
+  .mfd__col + .mfd__col::before {
+    left: -4px; top: 1.35rem;
+    transform: translateY(0) rotate(-45deg);
+  }
+}
+
 /* ══ B 패스: 모션 / B pass: motion ══════════════════════════
    JS가 없거나 실패하면 아래 규칙이 하나도 적용되지 않아 전부 그냥 보인다
    Without JS none of this applies and everything simply shows */
@@ -463,7 +523,24 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .demo { margin: 2.5rem 0; border: 1px solid var(--line); background: var(--bg); }
 .demo__label { display: block; padding: 0.9rem 1rem 0.15rem; }
 .demo__caption { margin: 0; padding: 0 1rem 0.9rem; max-width: 34rem; font-size: 0.9rem; line-height: 1.6; color: var(--muted); }
-.demo__stage { padding: 2rem 1rem; border-top: 1px solid var(--line); background: var(--tint); display: grid; justify-items: center; gap: 1.75rem; }
+/* 조작 가능한 자리는 종이 질감을 깔아 정적 도판과 구분한다. 384px 타일을 반복한다 —
+   2000px 원본을 그대로 쓰면 2.9MB 이고, cover 로 늘리면 알갱이가 뭉개진다. 이 크기가
+   이음매가 가장 안 보이는 지점이다(가장자리 밝기차 0.9/1.2, 255 기준).
+   background-color 를 같이 남겨 이미지가 실패해도 회색으로 떨어진다.
+   The interactive slots get a paper grain so they read differently from static figures.
+   A 384px tile repeats: the 2000px original is 2.9MB, and covering blurs the grain.
+   The colour stays underneath so a failed image degrades to the old tint. */
+.demo__stage {
+  padding: 2rem 1rem;
+  border-top: 1px solid var(--line);
+  background-color: var(--tint);
+  background-image: url("images/noise.jpg");
+  background-repeat: repeat;
+  background-size: 384px 384px;
+  display: grid;
+  justify-items: center;
+  gap: 1.75rem;
+}
 .demo__stage--pair { grid-auto-flow: row; }
 @media (min-width: 560px) { .demo__stage--pair { grid-auto-flow: column; align-items: end; } }
 .demo__controls { padding: 1.1rem 1rem; border-top: 1px solid var(--line); display: grid; gap: 1rem; }

@@ -369,8 +369,35 @@
     <p>Alongside the layout: standardized title conventions (<code>[Product Name] | Atacz</code>), meta descriptions rewritten inside the crawl limit, and JSON-LD product schema.</p>
     <p><strong>Infrastructure.</strong> The store ran one theme template per product &mdash; a workaround for having no metafields, which meant every content change needed a developer. Extending &ldquo;Pairs Well With&rdquo; to every PDP would have meant hand-editing every template forever. I migrated to a single template driven by Shopify metafields, so pairings, bottle counts and badge states became data the merchandising team edits in Shopify admin. The redesign only holds up if someone other than a developer can keep it current.</p>
 
-    <figure class="figure">
-      <figcaption class="label muted">One metafield set rendering into the PDP: pairings, bottle count, badge states<br><code>/images/01-pdp/05.jpg</code></figcaption>
+    <figure class="figure figure--diagram">
+      <div class="mfd">
+        <div class="mfd__col">
+          <p class="mfd__head label">In Shopify admin</p>
+          <ul class="mfd__list">
+            <li><code>custom.pet_bottle_badge2</code><span class="mfd__type">number_decimal</span></li>
+            <li><code>custom.is_new</code><span class="mfd__type">boolean</span></li>
+            <li><code>custom.best_seller_rank</code><span class="mfd__type">number_integer</span></li>
+            <li><code>complementary_products</code><span class="mfd__type">list.product_reference</span></li>
+            <li><code>custom.details</code> &middot; <code>features</code> &middot; <code>materials</code><span class="mfd__type">rich_text_field</span></li>
+          </ul>
+        </div>
+        <div class="mfd__col mfd__col--spine">
+          <p class="mfd__head label">One template</p>
+          <p class="mfd__template"><code>product.pdp-revamp</code></p>
+          <p class="mfd__was">was one template per product</p>
+        </div>
+        <div class="mfd__col">
+          <p class="mfd__head label">On the page</p>
+          <ul class="mfd__list mfd__list--plain">
+            <li>PET badge, on the product photo</li>
+            <li>One badge slot &mdash; Low Stock, New, Popular</li>
+            <li>Pairs Well With, under Add to Cart</li>
+            <li>Description, collapsed</li>
+          </ul>
+        </div>
+      </div>
+      <p class="mfd__note">The low stock threshold is the exception: it is a section setting in the theme editor, not a metafield, so it is tuned per collection rather than per product.</p>
+      <figcaption class="label muted">One metafield set rendering into the PDP: pairings, bottle count, badge states</figcaption>
     </figure>
 
     <blockquote>
