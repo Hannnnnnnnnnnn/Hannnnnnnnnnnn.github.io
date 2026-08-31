@@ -523,24 +523,7 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .demo { margin: 2.5rem 0; border: 1px solid var(--line); background: var(--bg); }
 .demo__label { display: block; padding: 0.9rem 1rem 0.15rem; }
 .demo__caption { margin: 0; padding: 0 1rem 0.9rem; max-width: 34rem; font-size: 0.9rem; line-height: 1.6; color: var(--muted); }
-/* 조작 가능한 자리는 종이 질감을 깔아 정적 도판과 구분한다. 384px 타일을 반복한다 —
-   2000px 원본을 그대로 쓰면 2.9MB 이고, cover 로 늘리면 알갱이가 뭉개진다. 이 크기가
-   이음매가 가장 안 보이는 지점이다(가장자리 밝기차 0.9/1.2, 255 기준).
-   background-color 를 같이 남겨 이미지가 실패해도 회색으로 떨어진다.
-   The interactive slots get a paper grain so they read differently from static figures.
-   A 384px tile repeats: the 2000px original is 2.9MB, and covering blurs the grain.
-   The colour stays underneath so a failed image degrades to the old tint. */
-.demo__stage {
-  padding: 2rem 1rem;
-  border-top: 1px solid var(--line);
-  background-color: var(--tint);
-  background-image: url("images/noise.jpg");
-  background-repeat: repeat;
-  background-size: 384px 384px;
-  display: grid;
-  justify-items: center;
-  gap: 1.75rem;
-}
+.demo__stage { padding: 2rem 1rem; border-top: 1px solid var(--line); background: var(--tint); display: grid; justify-items: center; gap: 1.75rem; }
 .demo__stage--pair { grid-auto-flow: row; }
 @media (min-width: 560px) { .demo__stage--pair { grid-auto-flow: column; align-items: end; } }
 .demo__controls { padding: 1.1rem 1rem; border-top: 1px solid var(--line); display: grid; gap: 1rem; }
@@ -675,45 +658,83 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
   mask-position: 0 0;
 }
 
+/* ── 비포/애프터 나란히 (01 Dec 01) ──
+   좁은 화면에서 위아래로 쌓으면 "나란히 놓고 비교한다"는 성립이 안 되므로, 모바일에서는
+   두 칸을 그대로 두고 가로로 스크롤한다. 비포는 세로로 매우 긴 스크린샷이라 히어로
+   프레임과 같은 방식으로 고정 높이 창 안에서 스크롤시킨다 — 안 그러면 애프터가
+   350px 인데 비포가 2400px 이라 나란히 놓은 의미가 없어진다.
+   Side by side stays side by side on a phone and scrolls horizontally instead: stacking
+   would stop it being a comparison. The before is a very tall screenshot, so it scrolls
+   inside a fixed window the way the hero frames do — otherwise it is 2400px against the
+   after's 350 and the pairing means nothing. */
+.cmp { margin: 2rem 0; display: grid; gap: 1.25rem; }
+.cmp__side { margin: 0; display: grid; align-content: start; gap: 0.6rem; }
+.cmp__label { color: var(--muted); }
+.cmp__window { height: 26rem; overflow-y: auto; border: 1px solid var(--line); background: var(--tint); }
+.cmp__window img { display: block; width: 100%; height: auto; }
+.cmp__side figcaption { font-size: 0.7rem; line-height: 1.7; }
+.cmp .demo { margin: 0; }
+
+@media (max-width: 749px) {
+  .cmp {
+    grid-auto-flow: column;
+    grid-auto-columns: 84vw;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    gap: 0.75rem;
+  }
+  .cmp__side { scroll-snap-align: start; }
+  .cmp__window { height: 20rem; }
+}
+@media (min-width: 750px) { .cmp { grid-template-columns: 1fr 1fr; align-items: start; } }
+
 /* ── 리뷰 아코디언 (01 Dec 01) ──
-   행 구성·치수는 라이브 PDP 에서 읽었다: Details · Size · Materials & Care ·
-   Shipping & Returns · Reviews, summary 46px(패딩 15/0), 15px/400/ls .6, 문장형.
-   리뷰가 큰 블록이 아니라 행 하나라는 게 이 결정의 결과이고, 조건부 렌더링은
-   그 행이 있느냐 없느냐로 드러난다.
-   Rows and dimensions read off the live PDP. Reviews being one row rather than a block
-   is the outcome; the conditional shows up as that row existing or not. */
-/* 실물처럼 흰 면 위에 올린다 — 알갱이 위에 바로 얹으면 1px 구분선이 묻힌다
-   On a white surface as it really is; straight on the grain the 1px rules get lost */
-.demo .acc { width: 100%; max-width: 32rem; padding: 0.25rem 1.5rem 1rem; background: var(--bg); }
-.demo .acc__row { border-bottom: 1px solid var(--line); }
+   실물 PDP 에서 읽은 값으로 다시 만들었다. 앞선 판은 세 군데가 틀렸다:
+   구분선이 연회색(var(--line))이었는데 실제는 **1px #0c0c0c**, 마커가 +/− 였는데
+   실제는 캐럿 SVG(10x6, viewBox 0 0 24 15), 그리고 Reviews 안이 한 줄짜리였는데
+   실제는 평점·히스토그램·개별 리뷰가 들어 있다.
+   Rebuilt from the live PDP: the rules are 1px #0c0c0c not the light grey, the marker is
+   the theme's caret rather than a +/-, and the reviews body carries a score, a histogram
+   and individual reviews instead of one line. */
+.demo .acc { width: 100%; max-width: 32rem; background: var(--bg); }
+.demo .acc__row { border-top: 1px solid #0c0c0c; }
 .demo .acc__head {
   display: flex;
   align-items: center;
   gap: 0.45rem;
   padding: 15px 0;
-  line-height: 16px;          /* 15+16+15 = 46px — 라이브에서 잰 summary 높이 / measured on the live PDP */
+  line-height: 16px;          /* 15+16+15 = 46px — 라이브에서 잰 summary 높이 */
   font-family: var(--shop);
   font-size: 15px;
   font-weight: 400;
   letter-spacing: 0.6px;
+  color: #0c0c0c;
   cursor: pointer;
+  list-style: none;
 }
-/* display:flex 는 ::marker 를 없앤다. 표시가 아예 없으면 펼칠 수 있는 줄로 안 읽히므로
-   +/− 를 직접 그린다 / flex drops ::marker, and with no affordance the rows do not read
-   as openable, so the +/- is drawn explicitly */
 .demo .acc__head::marker, .demo .acc__head::-webkit-details-marker { content: ""; display: none; }
-.demo .acc__head::after {
-  content: "+";
-  margin-left: auto;
-  font-size: 16px;
-  line-height: 1;
-  color: #6b6b6b;
-}
-.demo .acc__row[open] > .acc__head::after { content: "\2212"; }
-.demo .acc__stars { color: #0c0c0c; font-size: 11px; letter-spacing: 1px; }
+.demo .acc__caret { flex: 0 0 auto; width: 10px; height: 6px; margin-left: auto; transition: transform 0.2s ease; }
+.demo .acc__row[open] > .acc__head .acc__caret { transform: rotate(180deg); }
+.demo .acc__stars { color: #0c0c0c; font-size: 10px; letter-spacing: 1px; }
 .demo .acc__count { color: #6b6b6b; font-size: 13px; }
-.demo .acc__body { margin: 0 0 1rem; font-family: var(--shop); font-size: 13px; line-height: 1.65; color: #4a4a4a; }
+.demo .acc__body { padding: 0 0 1.1rem; font-family: var(--shop); font-size: 13px; line-height: 1.65; color: #4a4a4a; }
+.demo .acc__body p { margin: 0; }
 .demo .acc__row[hidden] { display: none; }
+
+/* 리뷰 본문 — 평점 / 히스토그램 / 개별 리뷰 */
+.demo .rev__top { display: flex; align-items: baseline; gap: 0.5rem; margin: 0 0 0.7rem; }
+.demo .rev__score { font-size: 22px; font-weight: 500; color: #0c0c0c; letter-spacing: 0.5px; }
+.demo .rev__count { color: #6b6b6b; }
+.demo .rev__hist { margin: 0 0 0.9rem; padding: 0; list-style: none; display: grid; gap: 3px; max-width: 15rem; }
+.demo .rev__hist li { display: grid; grid-template-columns: 0.9rem 1fr 0.9rem; align-items: center; gap: 0.45rem; font-size: 11px; }
+.demo .rev__n { color: #6b6b6b; text-align: center; }
+.demo .rev__bar { height: 5px; background: #ececec; }
+.demo .rev__bar span { display: block; height: 100%; background: #0c0c0c; }
+.demo .rev__item + .rev__item { margin-top: 0.7rem; }
+.demo .rev__meta { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.2rem; font-size: 11px; color: #6b6b6b; }
+.demo .rev__verified { font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
+.demo .rev__text { margin: 0; color: #0c0c0c; }
 
 /* ── 데모 B: 상품 정보 칼럼 ──
    배지 하나만 떼어 보여주면 그게 무엇 옆에 앉는지가 사라진다. PDP 오른쪽 칼럼을

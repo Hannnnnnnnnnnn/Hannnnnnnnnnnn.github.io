@@ -381,10 +381,12 @@ run(() => {
   const demo = document.querySelector("[data-demo-reviews]");
   if (!demo) return;
   const row = demo.querySelector("[data-reviews-row]");
+  // 숨길 때 open 을 건드리지 않는다 — 껐다 켜면 접힌 채로 돌아와서, 정작 보여줘야 할
+  // 리뷰 내용이 사라진다. 숨은 동안 열려 있어도 보이지 않으므로 상관없다.
+  // Hiding does not close it: forcing it shut meant toggling back returned an empty row,
+  // and being open while hidden costs nothing.
   const render = () => {
-    const none = demo.querySelector("[name='reviews']:checked").value === "none";
-    row.hidden = none;
-    if (none) row.open = false;
+    row.hidden = demo.querySelector("[name='reviews']:checked").value === "none";
   };
   demo.addEventListener("change", render);
   render();

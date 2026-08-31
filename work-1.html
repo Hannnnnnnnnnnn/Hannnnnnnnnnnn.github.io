@@ -138,45 +138,63 @@
       <p>They were right about the goal. The disagreement was about what an empty block communicates. Removing proof and displaying the absence of proof aren&rsquo;t the same thing.</p>
       <p><strong>What I shipped instead of restoring it.</strong> A conditional section &mdash; products with reviews render it, products without don&rsquo;t render the block at all. Marketing&rsquo;s goal met, catalog consistency preserved. Review collection continued through email marketing the whole time.</p>
       <p><strong>In hindsight, that&rsquo;s what should have shipped first.</strong> Removing it outright was the faster call and it stopped the inconsistency immediately, but it also discarded working signal on the products that had it.</p>
-      <figure class="figure">
-        <img src="images/01-pdp/02.jpg" alt="The old product page with the review section outlined: a full-width Customer Reviews block sitting between the product information and the lifestyle photography" width="1472" height="4852" loading="lazy">
-        <figcaption class="label muted">Before &mdash; the review block as it rendered on the old template</figcaption>
-      </figure>
-      <div class="demo" data-demo-reviews>
-        <span class="demo__label label">Try it</span>
-        <p class="demo__caption">After &mdash; reviews became a row in the accordion rather than a block of their own. Switch the product: with reviews the row renders, without them it isn&rsquo;t rendered at all. That is the whole decision &mdash; the page never shows an empty shell where proof should be.</p>
-        <div class="demo__stage">
-          <div class="acc">
-            <details class="acc__row">
-              <summary class="acc__head">Details</summary>
-              <p class="acc__body">A distinctive knit construction that creates a bold, sculptural silhouette, finished with signature binding details and a contrast lining.</p>
-            </details>
-            <details class="acc__row">
-              <summary class="acc__head">Size</summary>
-              <p class="acc__body">Height 22&nbsp;cm &middot; Width 26&nbsp;cm &middot; Depth 9.5&nbsp;cm &middot; Handle drop 11&nbsp;cm &middot; Weight 0.21&nbsp;kg</p>
-            </details>
-            <details class="acc__row">
-              <summary class="acc__head">Materials &amp; Care</summary>
-              <p class="acc__body">68% recycled polyester, 32% nylon, made with REPREVE&reg; recycled yarn. Hand wash gently, dry flat to keep its shape.</p>
-            </details>
-            <details class="acc__row">
-              <summary class="acc__head">Shipping &amp; Returns</summary>
-              <p class="acc__body">Free Canada shipping on orders over $150. See the shipping and return policies for full delivery information.</p>
-            </details>
-            <details class="acc__row" data-reviews-row>
-              <summary class="acc__head">Reviews <span class="acc__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="acc__count">7</span></summary>
-              <p class="acc__body">Rated 4.57 out of 5. &ldquo;I love love love this bag. It&rsquo;s so unique and functional.&rdquo;</p>
-            </details>
+      <div class="cmp">
+        <figure class="cmp__side">
+          <p class="cmp__label label">Before</p>
+          <div class="cmp__window">
+            <img src="images/01-pdp/02.jpg" alt="The old product page with the review section outlined: a full-width Customer Reviews block sitting between the product information and the lifestyle photography" width="1472" height="4852" loading="lazy">
           </div>
-        </div>
-        <div class="demo__controls">
-          <p class="demo__field">
-            <span class="label">This product</span>
-            <span class="demo__seg">
-              <label><input type="radio" name="reviews" value="some" checked><span>Has 7 reviews</span></label>
-              <label><input type="radio" name="reviews" value="none"><span>Has none yet</span></label>
-            </span>
-          </p>
+          <figcaption class="label muted">The review block as it rendered on the old template. Scroll the frame.</figcaption>
+        </figure>
+        <div class="cmp__side">
+          <p class="cmp__label label">After &mdash; try it</p>
+          <div class="demo" data-demo-reviews>
+            <p class="demo__caption">Reviews became a row in the accordion, not a block of its own. Switch the product: with reviews the row renders, without them it isn&rsquo;t rendered at all &mdash; the page never shows an empty shell where proof should be.</p>
+            <div class="demo__stage">
+              <div class="acc">
+            <details class="acc__row">
+              <summary class="acc__head"><span class="acc__title">Details</span><svg class="acc__caret" viewBox="0 0 24 15" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 15c-.3 0-.6-.1-.8-.4l-11-13C-.2 1.2-.1.5.3.2c.4-.4 1.1-.3 1.4.1L12 12.5 22.2.4c.4-.4 1-.5 1.4-.1.4.4.5 1 .1 1.4l-11 13c-.1.2-.4.3-.7.3z" fill="currentColor"/></svg></summary>
+              <div class="acc__body"><p>A distinctive knit construction that creates a bold, sculptural silhouette, finished with signature binding details and a contrast lining.</p></div>
+            </details>
+            <details class="acc__row">
+              <summary class="acc__head"><span class="acc__title">Size</span><svg class="acc__caret" viewBox="0 0 24 15" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 15c-.3 0-.6-.1-.8-.4l-11-13C-.2 1.2-.1.5.3.2c.4-.4 1.1-.3 1.4.1L12 12.5 22.2.4c.4-.4 1-.5 1.4-.1.4.4.5 1 .1 1.4l-11 13c-.1.2-.4.3-.7.3z" fill="currentColor"/></svg></summary>
+              <div class="acc__body"><p>Height 22&nbsp;cm &middot; Width 26&nbsp;cm &middot; Depth 9.5&nbsp;cm &middot; Handle drop 11&nbsp;cm &middot; Weight 0.21&nbsp;kg</p></div>
+            </details>
+            <details class="acc__row">
+              <summary class="acc__head"><span class="acc__title">Materials &amp; Care</span><svg class="acc__caret" viewBox="0 0 24 15" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 15c-.3 0-.6-.1-.8-.4l-11-13C-.2 1.2-.1.5.3.2c.4-.4 1.1-.3 1.4.1L12 12.5 22.2.4c.4-.4 1-.5 1.4-.1.4.4.5 1 .1 1.4l-11 13c-.1.2-.4.3-.7.3z" fill="currentColor"/></svg></summary>
+              <div class="acc__body"><p>68% recycled polyester, 32% nylon, made with REPREVE&reg; recycled yarn. Hand wash gently, dry flat to keep its shape.</p></div>
+            </details>
+            <details class="acc__row">
+              <summary class="acc__head"><span class="acc__title">Shipping &amp; Returns</span><svg class="acc__caret" viewBox="0 0 24 15" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 15c-.3 0-.6-.1-.8-.4l-11-13C-.2 1.2-.1.5.3.2c.4-.4 1.1-.3 1.4.1L12 12.5 22.2.4c.4-.4 1-.5 1.4-.1.4.4.5 1 .1 1.4l-11 13c-.1.2-.4.3-.7.3z" fill="currentColor"/></svg></summary>
+              <div class="acc__body"><p>Free Canada shipping on orders over $150. See the shipping and return policies for full delivery information.</p></div>
+            </details>
+            <details class="acc__row" data-reviews-row open>
+              <summary class="acc__head"><span class="acc__title">Reviews <span class="acc__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="acc__count">7</span></span><svg class="acc__caret" viewBox="0 0 24 15" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 15c-.3 0-.6-.1-.8-.4l-11-13C-.2 1.2-.1.5.3.2c.4-.4 1.1-.3 1.4.1L12 12.5 22.2.4c.4-.4 1-.5 1.4-.1.4.4.5 1 .1 1.4l-11 13c-.1.2-.4.3-.7.3z" fill="currentColor"/></svg></summary>
+              <div class="acc__body">
+                <p class="rev__top"><span class="rev__score">4.6</span> <span class="acc__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="rev__count">7 reviews</span></p>
+                <ul class="rev__hist"><li><span class="rev__n">5</span><span class="rev__bar"><span style="width:57%"></span></span><span class="rev__n">4</span></li><li><span class="rev__n">4</span><span class="rev__bar"><span style="width:43%"></span></span><span class="rev__n">3</span></li><li><span class="rev__n">3</span><span class="rev__bar"><span style="width:0%"></span></span><span class="rev__n">0</span></li><li><span class="rev__n">2</span><span class="rev__bar"><span style="width:0%"></span></span><span class="rev__n">0</span></li><li><span class="rev__n">1</span><span class="rev__bar"><span style="width:0%"></span></span><span class="rev__n">0</span></li></ul>
+                <div class="rev__item">
+                  <p class="rev__meta"><span class="acc__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span>28 days ago</span> <span class="rev__verified">Verified buyer</span></p>
+                  <p class="rev__text">Love my new bag!</p>
+                </div>
+                <div class="rev__item">
+                  <p class="rev__meta"><span class="acc__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span>1 month ago</span> <span class="rev__verified">Verified buyer</span></p>
+                  <p class="rev__text">Handy size and I like that it is a little different. Too expensive though.</p>
+                </div>
+</div>
+            </details>
+              </div>
+            </div>
+            <div class="demo__controls">
+              <p class="demo__field">
+                <span class="label">This product</span>
+                <span class="demo__seg">
+                  <label><input type="radio" name="reviews" value="some" checked><span>Has 7 reviews</span></label>
+                  <label><input type="radio" name="reviews" value="none"><span>Has none yet</span></label>
+                </span>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

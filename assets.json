@@ -23,7 +23,7 @@
       "path": "/images/01-pdp/02.jpg",
       "section": "4 · Decision 01",
       "alt": "The old product page with the review section outlined",
-      "note": "Frame 8.png 2390x7878 RGBA → 흰 배경 합성 후 1472x4852 JPEG 617KB (원본 5.9MB). **Before 만 이미지다.** After 는 정적 이미지 대신 조건부 렌더를 만지는 아코디언 데모로 대체했다 — 리뷰가 있으면 행이 렌더되고 없으면 아예 렌더되지 않는 것이 이 결정 자체이고, 그건 정지 화면으로는 보이지 않는다. 데스크톱에서 736x2426 으로 렌더된다 — 이 페이지에서 가장 긴 도판이다.",
+      "note": "Frame 8.png 2390x7878 RGBA → 흰 배경 합성 후 1472x4852 JPEG 617KB (원본 5.9MB). **Before 만 이미지다.** After 는 정적 이미지 대신 조건부 렌더를 만지는 아코디언 데모로 대체했다 — 리뷰가 있으면 행이 렌더되고 없으면 아예 렌더되지 않는 것이 이 결정 자체이고, 그건 정지 화면으로는 보이지 않는다. 나란히 배치 후에는 고정 높이 창(26rem, 모바일 20rem) 안에서 세로로 스크롤한다 — 원본 비율대로 두면 736x2426 이라 옆의 아코디언과 나란히 놓은 의미가 없어진다.",
       "status": "들어옴 (Before 만)"
     },
     {
@@ -106,9 +106,9 @@
     {
       "id": "E",
       "where": "01 · Decision 01",
-      "what": "리뷰 조건부 렌더 — 아코디언에서 Reviews 행이 있고/없고",
+      "what": "리뷰 조건부 렌더 — 아코디언 Reviews 행이 있고/없고 (Before 이미지와 나란히)",
       "js": "~10 lines",
-      "note": "행 구성과 치수는 라이브 PDP 에서 읽었다: Details · Size · Materials & Care · Shipping & Returns · Reviews, summary 46px(패딩 15/0, line-height 16), 15px/400/ls .6. display:flex 가 ::marker 를 없애므로 +/− 를 직접 그린다. BUILD-PLAN 은 '리뷰 조건부 렌더링'을 인터랙티브로 만들지 말라고 명시한다 — 소유자 요청."
+      "note": "행 구성·치수·색은 라이브 PDP 에서 읽었다: Details · Size · Materials & Care · Shipping & Returns · Reviews, summary 46px(패딩 15/0 + line-height 16), 15px/400/ls .6, **행 구분선은 1px #0c0c0c**(연회색 아님), 마커는 테마의 캐럿 SVG 10x6 viewBox 0 0 24 15. Reviews 본문에는 평점 4.6 · 7 reviews · 히스토그램(5:4 4:3 3:0 2:0 1:0) · 개별 리뷰 2건이 들어간다 — 실물이 그렇다. Before 이미지와 .cmp 로 나란히 놓고, 750px 미만에서는 두 칸을 유지한 채 가로 스크롤한다(쌓으면 '나란히 비교'가 성립하지 않는다). BUILD-PLAN 은 '리뷰 조건부 렌더링'을 인터랙티브로 만들지 말라고 명시 — 소유자 요청."
     },
     {
       "id": "A",
@@ -168,12 +168,6 @@
       "used_by": "01 §1 HERO 프레임 두 개 · index 의 01 행 커서 미리보기(모바일 클립)",
       "alt": "",
       "note": "정적 스냅샷 대신 실제 화면 녹화가 들어갔다. 소유자 원본은 .mov 120fps (모바일 778x1494 19.6초 18.9MB / 데스크톱 3024x1628 49.2초 234MB) 였고, 30fps H.264 faststart 로 다시 인코딩해 1.4MB / 2.5MB 가 됐다. 모바일 720x1382 crf28, 데스크톱 1280x690 crf31. **폭은 프레임이 실제 렌더되는 최대치(데스크톱 ~625px CSS)의 2배에 맞춘다** — 1440 으로 뽑았다가 표시 크기에서 구분되지 않는 900KB 를 더 실을 뻔했다. autoplay muted loop playsinline + poster, preload=metadata. prefers-reduced-motion 이면 재생하지 않고 컨트롤을 켠다(main.js §6c). 프레임 안에서 스크롤하지 않는다 — 스크롤이 녹화 안에 있다. 모바일 클립은 index 의 Work 행 호버 미리보기에도 쓴다 — `data-preview` 가 .mp4 면 상자가 4:3 대신 클립 비율(720/1382)의 세로로 바뀌고 폭도 좁아진다. 호버 중에만 재생하고 벗어나면 멈춘다."
-    },
-    {
-      "path": "/images/noise.jpg",
-      "used_by": "모든 .demo__stage (Try it 배경)",
-      "alt": "",
-      "note": "소유자가 준 noisy-background.jpg 2000x2000 2.9MB 에서 384px 타일을 잘라 반복한다. 384 가 가장자리 밝기차가 가장 작았다(0.9/1.2, 255 기준) — 512·640 은 이음매가 커진다. **대비를 낮춰서 쓴다**: 원본 stddev 15.8 로는 muted 캡션('ON A PRODUCT CARD')이 알갱이에 묻혀 읽히지 않았다. 평균을 기존 tint 값(244)에 맞추고 진폭만 0.45배로 줄여 stddev 8.1, 23KB. background-color 로 tint 를 깔아 이미지가 실패해도 예전 회색으로 떨어진다."
     }
   ]
 }
