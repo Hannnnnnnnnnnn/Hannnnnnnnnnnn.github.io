@@ -254,8 +254,38 @@
       <p><strong>How it fires.</strong> The theme writes a hidden line item property when a pre-order is added to cart. Shopify Flow reads that property, tags the order, and hands off to Klaviyo, which sends the email.</p>
       <p><strong>Four systems, one signal</strong> &mdash; and that signal is the thing I didn&rsquo;t make durable. More on that below.</p>
       <p><strong>One implementation note.</strong> The property is rendered conditionally rather than always-rendered-and-disabled, because <code>disabled</code> inputs still leak into the theme&rsquo;s JavaScript form collection. I found that the hard way, and left the reasoning in a comment for whoever reads it next.</p>
+      <figure class="figure figure--diagram">
+        <div class="mfd mfd--chain">
+          <div class="mfd__col">
+            <p class="mfd__head label">Theme</p>
+            <ul class="mfd__list">
+              <li><code>properties[_pre_order]</code><span class="mfd__type">Hidden line item property</span></li>
+            </ul>
+            <p class="mfd__was">Rendered only when the variant resolves to pre-order, not rendered-and-disabled.</p>
+          </div>
+          <div class="mfd__col">
+            <p class="mfd__head label">Checkout</p>
+            <p class="mfd__template">The property rides along on the line item</p>
+            <p class="mfd__was">Nothing is added at checkout; the signal is whatever the cart carried in.</p>
+          </div>
+          <div class="mfd__col">
+            <p class="mfd__head label">Shopify Flow</p>
+            <ul class="mfd__list">
+              <li><code>Pre-order</code><span class="mfd__type">Order tag</span></li>
+            </ul>
+            <p class="mfd__was">Reads the property on order creation and tags the order.</p>
+          </div>
+          <div class="mfd__col mfd__col--spine">
+            <p class="mfd__head label">Klaviyo</p>
+            <p class="mfd__template">Sends the pre-order confirmation</p>
+            <p class="mfd__was">Immediately after checkout, while the decision is still fresh.</p>
+          </div>
+        </div>
+        <p class="mfd__note">Each hand-off reads the one before it, and nothing along the way writes the fact down anywhere queryable. That is why section 6 cannot say how much this changed.</p>
+        <figcaption class="label muted">The chain that fires the email: a hidden property written by the theme, read by Flow, handed to Klaviyo</figcaption>
+      </figure>
       <figure class="figure">
-        <figcaption class="label muted">The confirmation email and the chain that fires it: theme line item property &rarr; Shopify Flow &rarr; Klaviyo<br><code>/images/03-preorder/04.jpg</code></figcaption>
+        <figcaption class="label muted">The pre-order confirmation email as it arrives, at mobile width<br><code>/images/03-preorder/04-email.jpg</code></figcaption>
       </figure>
     </section>
 

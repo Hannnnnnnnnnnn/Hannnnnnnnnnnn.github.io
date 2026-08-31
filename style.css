@@ -375,6 +375,26 @@ figure.figure--diagram { display: block; aspect-ratio: auto; padding: 0; backgro
   }
 }
 
+/* ── 트리거 체인 변형 (03 Dec 04) ──
+   칸이 4개다. 기본 .mfd 의 3열 규칙만 덮어쓰고 나머지(1px 선, 화살표 위치)는 그대로 쓴다 —
+   02 가 같은 기본 규칙에 얹혀 있으므로 .mfd 자체는 건드리지 않는다.
+   4열은 700px 에서 한 칸이 너무 좁아지므로 900px 부터 연다. 그 사이 폭에서는 2×2 가 되어
+   화살표가 읽히지 않으니, 900px 미만은 기본 세로 스택(아래 화살표)을 그대로 쓴다.
+   Trigger chain variant (03 Dec 04): four cells. It overrides only the column count and
+   inherits the 1px rules and arrow placement, leaving .mfd itself alone for 02's sake.
+   Four columns at 700px squeeze each cell too far, so this opens at 900px; below that the
+   base vertical stack (downward arrows) still applies — a 2x2 would break the chain reading. */
+@media (min-width: 700px) and (max-width: 899px) {
+  .mfd--chain { grid-template-columns: 1fr; }
+  .mfd--chain .mfd__col + .mfd__col::before {
+    left: 50%; top: -4px;
+    transform: translateX(-50%) rotate(45deg);
+  }
+}
+@media (min-width: 900px) {
+  .mfd--chain { grid-template-columns: repeat(4, 1fr); }
+}
+
 /* ── 유입 페이지 분포 (02 §2) ──
    막대 넷과 숫자 넷이다. 이미지로 만들면 320px 에서 라벨이 먼저 죽는데, 이건 이 케이스가
    내놓는 첫 근거라 안 읽히면 전제가 통째로 사라진다. 도식과 같은 이유로 HTML 이다.
