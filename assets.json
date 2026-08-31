@@ -14,8 +14,9 @@
       "slot": "01",
       "path": "/images/01-pdp/01.jpg",
       "section": "3 · What I found",
-      "alt": "Clarity scroll heatmap, cropped to where engagement collapsed",
-      "note": "드롭오프 지점만 잘라 가로로 넓게. 전체 페이지 히트맵 금지"
+      "alt": "Clarity scroll heatmaps for the old product page, mobile beside desktop",
+      "note": "**들어왔지만 이 슬롯의 규칙과는 어긋난다.** MEDIA-MAP 은 '드롭오프 지점만 잘라 가로로 넓게, 전체 페이지 히트맵 금지'라고 하는데 받은 것은 전체 페이지 히트맵 2개(모바일+데스크톱)다. 소유자가 이 파일을 지정했다. 원본 Frame 4.png 3202x4837 RGBA(오른쪽 아래가 투명), 흰 배경에 얹어 1600x2417 JPEG 154KB 로 받았다. 데스크톱 1280 에서 736x1112 로 렌더된다 — 뷰포트보다 높다.",
+      "status": "들어옴"
     },
     {
       "slot": "02",

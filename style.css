@@ -305,6 +305,7 @@ figure.figure { padding: 1rem; }
   border: 0;
   color: var(--muted);
 }
+.figure:has(img) img { display: block; width: 100%; height: auto; }
 .figure:has(img) figcaption { max-width: none; padding-top: 0.6rem; text-align: left; }
 
 /* ══ B 패스: 모션 / B pass: motion ══════════════════════════
