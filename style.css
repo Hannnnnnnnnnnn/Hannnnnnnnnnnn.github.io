@@ -429,10 +429,11 @@ figure.figure--diagram { display: block; aspect-ratio: auto; padding: 0; backgro
    내용이 100% 텍스트라 사진으로 자르면 320px 에서 제일 먼저 죽는다. 게다가 같은 문장이
    히어로에도 데모 C 에도 이미 있어서, 네 번째 복제는 증거가 아니라 반복이다. 대신 한 줄을
    세 절로 쪼개고 각 절이 하는 일을 붙여 "each clause does one job" 을 주장에서 구조로 바꾼다.
+   flex-wrap 이라 좁으면 절 단위로 접힌다 — 절 안에서 끊기면 논지가 사라지므로 절이 단위다.
    Copy annotation (03 Dec 03): the content is entirely text, so a crop dies first at 320px,
    and the same sentence already appears in the hero and in demo C. Splitting the line into
    its three clauses and labelling each turns "each clause does one job" from a claim into
-   structure. */
+   structure. flex-wrap folds by clause, never inside one — the clause is the unit. */
 .anno { border: 1px solid var(--line); padding: 1.4rem 1.15rem; }
 /* row-gap 이 핵심이다. 0 이면 라벨이 제 절보다 다음 절에 더 가까이 붙어, 아래 절의 제목처럼
    읽힌다 — 근접성이 소속을 정한다. 절↔제 라벨(0.9rem)보다 절↔다음 절이 확실히 멀어야 한다.
