@@ -320,7 +320,14 @@ figure.figure { padding: 1rem; }
 /* `figure.figure { padding: 1rem }` 이 요소+클래스라 단일 클래스로는 못 이긴다 —
    선택자를 같은 형태로 맞춰야 padding 이 실제로 0 이 된다.
    Matching the element+class form of the padding rule; a single class loses to it. */
-figure.figure--diagram { display: block; aspect-ratio: auto; padding: 0; background: none; border: 0; }
+/* place-items 도 같이 되돌린다. `.figure` 의 `place-items: center` 는 display 를 block 으로
+   바꿔도 남아 있고, justify-items 는 블록 레이아웃의 자식에게도 적용된다 — 자식이
+   justify-self: center 가 되면서 width:auto 가 shrink-to-fit 으로 바뀐다. 그래서 736px
+   부모 안에서 .dist 가 137px 로, figcaption 이 614px 로 줄었던 것이다.
+   Reset place-items too: `.figure`'s `place-items: center` survives the display change, and
+   justify-items applies to children in block layout — they become justify-self: center,
+   which turns width:auto into shrink-to-fit. That is why children of this figure shrank. */
+figure.figure--diagram { display: block; aspect-ratio: auto; padding: 0; background: none; border: 0; place-items: normal; }
 .figure--diagram .mfd__note { max-width: none; }
 /* width 를 명시한다. max-width:none 인데도 이 figcaption 은 736px 부모 안에서 614px 로
    줄어든다 — 매칭되는 규칙 5개 중 width 를 거는 것은 없었고 원인을 확정하지 못했다.
@@ -367,6 +374,24 @@ figure.figure--diagram { display: block; aspect-ratio: auto; padding: 0; backgro
     transform: translateY(0) rotate(-45deg);
   }
 }
+
+/* ── 유입 페이지 분포 (02 §2) ──
+   막대 넷과 숫자 넷이다. 이미지로 만들면 320px 에서 라벨이 먼저 죽는데, 이건 이 케이스가
+   내놓는 첫 근거라 안 읽히면 전제가 통째로 사라진다. 도식과 같은 이유로 HTML 이다.
+   라벨과 값을 한 줄에 두고 막대를 그 아래 전폭으로 깔면 레이아웃이 하나로 끝난다 —
+   폭에 따라 배치를 바꾸면 좁은 화면에서 라벨 칸과 막대가 서로 자리를 뺏는다.
+   Four bars and four numbers. As an image the labels die first at 320px, and this is the
+   first evidence the case offers — losing it loses the premise. Label and value share a
+   line with the bar full width beneath, so one layout holds at every width. */
+.dist { display: grid; gap: 0.9rem; }
+.dist__row { display: grid; grid-template-columns: 1fr auto; gap: 0.35rem 0.75rem; }
+.dist__name { font-size: 0.85rem; line-height: 1.4; }
+.dist__pct { font-family: var(--shop); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+.dist__track { grid-column: 1 / -1; height: 10px; background: var(--tint); }
+.dist__bar { display: block; height: 100%; background: #d4d4d4; }
+/* 51% 하나만 본문이 다루는 값이다 / only the 51% is the one the prose argues from */
+.dist__row--lead .dist__bar { background: var(--fg); }
+.dist__row--lead :is(.dist__name, .dist__pct) { color: var(--fg); font-weight: 500; }
 
 /* ══ B 패스: 모션 / B pass: motion ══════════════════════════
    JS가 없거나 실패하면 아래 규칙이 하나도 적용되지 않아 전부 그냥 보인다

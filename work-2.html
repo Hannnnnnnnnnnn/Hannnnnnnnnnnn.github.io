@@ -56,8 +56,8 @@
     </ul>
 
     <ul class="metrics">
-      <li><span class="metric-value">+8.2%</span><span class="metric-label label muted">product click-through</span></li>
       <li><span class="metric-value">+9.4%</span><span class="metric-label label muted">actual scroll distance</span></li>
+      <li><span class="metric-value">+8.2%</span><span class="metric-label label muted">product click-through</span></li>
       <li><span class="metric-value">0</span><span class="metric-label label muted">metrics worsened</span></li>
     </ul>
     <p class="caveat">43-day split test, 70,716 visits assigned. Result matches the target range but doesn&rsquo;t reach statistical proof &mdash; that&rsquo;s the finding.</p>
@@ -82,8 +82,30 @@
     <p><strong>51% of paid-social sessions land directly on a collection page.</strong> Only 20% start at the homepage. For most of the people we pay to acquire, a product grid is doing the homepage&rsquo;s job &mdash; and it says nothing about who we are.</p>
     <p><strong>57% of all traffic is cold paid social</strong>, converting at roughly 0.1%. They arrive knowing nothing about the brand, land on a grid of bags at a premium price point, and the page offers no reason for it.</p>
 
-    <figure class="figure">
-      <figcaption class="label muted">Where paid social sessions land: collection 51%, home 20%, the rest elsewhere<br><code>/images/02-plp/01.jpg</code></figcaption>
+    <figure class="figure figure--diagram">
+      <div class="dist">
+        <div class="dist__row dist__row--lead">
+          <span class="dist__name">Collection (PLP)</span>
+          <span class="dist__pct">51%</span>
+          <span class="dist__track"><span class="dist__bar" style="width: 51%"></span></span>
+        </div>
+        <div class="dist__row">
+          <span class="dist__name">Homepage</span>
+          <span class="dist__pct">20%</span>
+          <span class="dist__track"><span class="dist__bar" style="width: 20%"></span></span>
+        </div>
+        <div class="dist__row">
+          <span class="dist__name">Other</span>
+          <span class="dist__pct">19.5%</span>
+          <span class="dist__track"><span class="dist__bar" style="width: 19.5%"></span></span>
+        </div>
+        <div class="dist__row">
+          <span class="dist__name">Product (PDP)</span>
+          <span class="dist__pct">9.5%</span>
+          <span class="dist__track"><span class="dist__bar" style="width: 9.5%"></span></span>
+        </div>
+      </div>
+      <figcaption class="label muted">Entry page for paid-social sessions, last six months. The page we pay to land on is not the one built to introduce the brand.</figcaption>
     </figure>
 
     <p><strong>What the page was missing wasn&rsquo;t features. It was context.</strong> No upcycling story at the point of decision. No explanation of the premium. And mix-and-match &mdash; the brand&rsquo;s biggest differentiator and an AOV lever &mdash; invisible on a grid.</p>
@@ -139,8 +161,30 @@ After    PET badge (top-left, always visible)
       </ul>
       <p><strong>Nobody updates that number.</strong> It isn&rsquo;t a claim about the brand; it&rsquo;s an accumulating fact, and it goes up whether or not anyone remembers to maintain it. The same field powers the individual story and the cumulative one, so the two can never contradict each other.</p>
       <p><strong>Placement.</strong> Between the banner and the grid is the one point every scrolling visitor passes before seeing a single product. Brand context arrives before the shopping starts, without a section anyone has to choose to read.</p>
-      <figure class="figure">
-        <figcaption class="label muted">One <code>pet_bottle_count</code> metafield driving both the card badge and the page counter<br><code>/images/02-plp/03.jpg</code></figcaption>
+      <figure class="figure figure--diagram">
+        <div class="mfd">
+          <div class="mfd__col">
+            <p class="mfd__head label">In Shopify admin</p>
+            <ul class="mfd__list">
+              <li><code>custom.pet_bottle_count</code><span class="mfd__type">number_decimal</span></li>
+            </ul>
+            <p class="mfd__was">Set once, on the product. There is no second field for the total.</p>
+          </div>
+          <div class="mfd__col mfd__col--spine">
+            <p class="mfd__head label">One source</p>
+            <p class="mfd__template">The same field, read at two scales</p>
+            <p class="mfd__was">No separate total to keep in sync, so the two can never disagree</p>
+          </div>
+          <div class="mfd__col">
+            <p class="mfd__head label">On the page</p>
+            <ul class="mfd__list mfd__list--plain">
+              <li>Badge on the product card &mdash; <em>this bag = N bottles</em></li>
+              <li>Running total above the grid, summed across every item sold</li>
+            </ul>
+          </div>
+        </div>
+        <p class="mfd__note">The total is derived, not stored: it is read from orders across all channels and summed. Nobody updates it, so it cannot fall out of date.</p>
+        <figcaption class="label muted">One <code>pet_bottle_count</code> metafield driving both the card badge and the page counter</figcaption>
       </figure>
     </section>
 
