@@ -156,9 +156,11 @@ After    PET badge (top-left, always visible)
          swatch selected + hover &rarr; add to cart</code></pre>
       <div class="demo" data-demo-card>
         <span class="demo__label label">Try it</span>
-        <p class="demo__caption">The card as it ships. Pick a colour and the photo swaps in place. The badge sits in the
-          corner quick view used to hold and expands without navigating &mdash; and the top-right stays empty, because
-          nothing moved in to take the space back.</p>
+        <p class="demo__caption">The card as it ships. Pick a colour: the photo swaps in place, and only then does
+          hovering the photo raise <em>Add to cart</em> &mdash; on the live page that button does not exist until a
+          variant is chosen, because a card with several colours has nothing specific to add yet. The badge sits in the
+          corner quick view used to hold and expands without navigating; the top-right stays empty, because nothing
+          moved in to take the space back.</p>
         <div class="demo__stage">
           <figure class="pcard">
             <div class="pcard__media">
@@ -169,6 +171,7 @@ After    PET badge (top-left, always visible)
                 <span class="pet-badge__hover" aria-hidden="true">6 Bottles Upcycled</span>
               </label>
               <span class="pcard__corner" data-card-corner hidden aria-hidden="true"><span class="pcard__corner-tag label">Quick view</span></span>
+              <div class="pcard__buy"><button class="pcard__atc" type="button">Add to cart</button></div>
             </div>
             <p class="pcard__title">Twist Bag</p>
             <p class="pcard__price"><span class="pcard__cur">$</span>163<span class="pcard__cents">.00</span></p>

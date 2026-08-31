@@ -153,9 +153,9 @@
     {
       "id": "F",
       "where": "02 · Decision 01",
-      "what": "상품 카드 — 색 선택으로 사진 교체 + 비워진 우상단 모서리 아웃라인 토글",
+      "what": "상품 카드 — 색 선택으로 사진 교체 + 호버 시 Add to cart + 비워진 우상단 아웃라인 토글",
       "js": "~12 lines",
-      "note": "라이브 카드에는 add to cart 가 없다 — 19개 카드 전부 `.card-information__button` 이 비어 있다. 케이스 본문의 before/after 블록은 'After: swatch selected + hover → add to cart' 라고 적고 있어 라이브와 어긋나므로, 데모에는 넣지 않고 소유자에게 확인 요청했다. `.pcard__corner` 는 `:not([hidden])` 로 걸어야 한다 — 클래스 규칙의 display 가 UA 의 `[hidden]{display:none}` 을 이겨서, 처음엔 토글이 아무것도 숨기지 못했다."
+      "note": "**초기 HTML 만 보고 'Add to cart 가 없다'고 판단했다가 소유자가 바로잡았다(2026-08-31).** 실제로는 `.card-information__button` 이 처음에는 비어 있고, 스워치의 `mouseenter` 에서 `color-swatches.js` 가 `?variant=<id>&view=card` 를 fetch 해 `updateButtons()` 로 그 슬롯을 채운다 — 받아 보면 `<add-to-cart class=\"button button--small\">Add to cart</add-to-cart>`. 그리고 `.card-wrapper:hover .card-information__button .button{opacity:1;transform:translateY(0)}` 가 카드 호버에서 그것을 올린다. 즉 '색을 고른 뒤 사진에 호버'가 정확한 서술이고, 케이스 본문의 before/after 블록이 맞았다. **정적 HTML 은 JS 가 만드는 상태를 말해 주지 않는다.** 버튼 스펙은 라이브 값 그대로: 폭 calc(100% - 3rem)=337px, 높이 40px, 사진 하단에서 15px, 흰 배경 · 1px #0c0c0c · 12px/400 · letter-spacing 2.4px · 대문자 · radius 0. `.pcard__corner` 는 `:not([hidden])` 로 걸어야 한다 — 클래스 규칙의 display 가 UA 의 `[hidden]{display:none}` 을 이겨서 처음엔 토글이 아무것도 숨기지 못했다."
     }
   ],
   "demo_assets": [

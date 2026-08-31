@@ -636,6 +636,39 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .demo .pcard__swatch.is-active::after { transform: scale(1); }
 .demo .pcard__swatch:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
 
+/* Add to cart — 라이브에서는 이 버튼이 처음부터 있는 게 아니다. 스워치에 마우스를 올리면
+   color-swatches.js 가 `?variant=<id>&view=card` 를 가져와 .card-information__button 을
+   채우고, 그제서야 카드 호버가 이 버튼을 올린다. 그래서 여기서도 색을 고르기 전에는 없다.
+   The live button is injected by the swatch fetch (view=card), not rendered up front, and
+   only then does card hover raise it — so it does not exist here until a colour is picked.
+   버튼 모양은 라이브에서 잰 값 그대로(01 Dec 05 의 .pdp__cta 와 같은 스펙):
+   흰 배경 · 1px #0c0c0c · 12px/400 · letter-spacing 2.4px · 대문자 · radius 0.
+   위치는 .card-information__button 의 규칙 — 폭 calc(100% - 3rem), 사진 아래쪽에 겹치고
+   translateY(-1.5rem) 만큼 올라와 있다. */
+.demo .pcard__buy { position: absolute; left: 15px; right: 15px; bottom: 15px; overflow: hidden; pointer-events: none; }
+.demo .pcard__atc {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #0c0c0c;
+  background: #fff;
+  color: #0c0c0c;
+  font-family: var(--shop);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+/* 색을 고르기 전에는 아예 없다 — 라이브에서 슬롯이 비어 있는 것과 같다
+   Absent, not merely transparent, until a colour is picked — the live slot is empty */
+.demo .pcard:not(.is-picked) .pcard__buy { display: none; }
+.demo .pcard.is-picked:hover .pcard__atc,
+.demo .pcard.is-picked:focus-within .pcard__atc { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.demo .pcard__atc:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+
 /* 비워진 오른쪽 위 모서리 — 기본은 아무것도 없다. 그게 이 결정의 결과물이라
    토글로 켤 때만 자리를 표시한다.
    The vacated top-right: empty by default, because that is the outcome being argued.

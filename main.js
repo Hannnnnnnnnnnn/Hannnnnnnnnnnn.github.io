@@ -539,13 +539,23 @@ run(() => {
   const photo = demo.querySelector("[data-card-photo]");
   const swatches = [...demo.querySelectorAll(".pcard__swatch")];
 
-  swatches.forEach((sw) => sw.addEventListener("click", () => {
+  const card = demo.querySelector(".pcard");
+  const pick = (sw) => {
     photo.src = sw.dataset.photo;
     swatches.forEach((o) => {
       o.classList.toggle("is-active", o === sw);
       o.setAttribute("aria-pressed", String(o === sw));
     });
-  }));
+    // 라이브에서는 이 시점에 view=card 를 가져와 버튼 슬롯을 채운다 — 여기서는 상태 하나로 대신한다
+    // The live page fills the button slot from a view=card fetch at exactly this point
+    card.classList.add("is-picked");
+  };
+  // 라이브 트리거는 스워치의 mouseenter 다(클릭이 아니다). 클릭은 터치·키보드용으로 같이 둔다
+  // The live trigger is mouseenter on the swatch; click is kept for touch and keyboard
+  swatches.forEach((sw) => {
+    sw.addEventListener("mouseenter", () => pick(sw));
+    sw.addEventListener("click", () => pick(sw));
+  });
 
   const corner = demo.querySelector("[data-card-corner]");
   demo.querySelector("[data-card-outline]").addEventListener("change", (e) => {
