@@ -372,6 +372,24 @@ run(() => {
   });
 });
 
+/* ── 4b. 리뷰 조건부 렌더 (01 Decision 01) ──
+   "리뷰를 없앤 게 아니라 빈 껍데기를 없앴다"는 게 논점이라, 리뷰 없는 상태에서
+   자리가 비어 보이면 안 된다 — 행 자체가 사라져야 한다. hidden 하나면 된다.
+   The claim is that the empty shell went, not the reviews, so with none the row is
+   not rendered at all rather than left standing empty. */
+run(() => {
+  const demo = document.querySelector("[data-demo-reviews]");
+  if (!demo) return;
+  const row = demo.querySelector("[data-reviews-row]");
+  const render = () => {
+    const none = demo.querySelector("[name='reviews']:checked").value === "none";
+    row.hidden = none;
+    if (none) row.open = false;
+  };
+  demo.addEventListener("change", render);
+  render();
+});
+
 /* ── 5. 데모 B: 상품 정보 칼럼의 배지 ──
    임계값을 8~10으로 올려 보면 "이건 거짓말 같다"는 감각이 직접 생긴다. 그게 2를
    고른 근거고, 산문으로 설명하는 것보다 빠르다.

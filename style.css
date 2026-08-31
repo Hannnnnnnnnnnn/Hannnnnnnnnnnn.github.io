@@ -675,6 +675,46 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
   mask-position: 0 0;
 }
 
+/* ── 리뷰 아코디언 (01 Dec 01) ──
+   행 구성·치수는 라이브 PDP 에서 읽었다: Details · Size · Materials & Care ·
+   Shipping & Returns · Reviews, summary 46px(패딩 15/0), 15px/400/ls .6, 문장형.
+   리뷰가 큰 블록이 아니라 행 하나라는 게 이 결정의 결과이고, 조건부 렌더링은
+   그 행이 있느냐 없느냐로 드러난다.
+   Rows and dimensions read off the live PDP. Reviews being one row rather than a block
+   is the outcome; the conditional shows up as that row existing or not. */
+/* 실물처럼 흰 면 위에 올린다 — 알갱이 위에 바로 얹으면 1px 구분선이 묻힌다
+   On a white surface as it really is; straight on the grain the 1px rules get lost */
+.demo .acc { width: 100%; max-width: 32rem; padding: 0.25rem 1.5rem 1rem; background: var(--bg); }
+.demo .acc__row { border-bottom: 1px solid var(--line); }
+.demo .acc__head {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 15px 0;
+  line-height: 16px;          /* 15+16+15 = 46px — 라이브에서 잰 summary 높이 / measured on the live PDP */
+  font-family: var(--shop);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+}
+/* display:flex 는 ::marker 를 없앤다. 표시가 아예 없으면 펼칠 수 있는 줄로 안 읽히므로
+   +/− 를 직접 그린다 / flex drops ::marker, and with no affordance the rows do not read
+   as openable, so the +/- is drawn explicitly */
+.demo .acc__head::marker, .demo .acc__head::-webkit-details-marker { content: ""; display: none; }
+.demo .acc__head::after {
+  content: "+";
+  margin-left: auto;
+  font-size: 16px;
+  line-height: 1;
+  color: #6b6b6b;
+}
+.demo .acc__row[open] > .acc__head::after { content: "\2212"; }
+.demo .acc__stars { color: #0c0c0c; font-size: 11px; letter-spacing: 1px; }
+.demo .acc__count { color: #6b6b6b; font-size: 13px; }
+.demo .acc__body { margin: 0 0 1rem; font-family: var(--shop); font-size: 13px; line-height: 1.65; color: #4a4a4a; }
+.demo .acc__row[hidden] { display: none; }
+
 /* ── 데모 B: 상품 정보 칼럼 ──
    배지 하나만 떼어 보여주면 그게 무엇 옆에 앉는지가 사라진다. PDP 오른쪽 칼럼을
    제목·가격·스워치·CTA까지 통째로 가져와서, 배지가 실제로 사는 자리에 둔다.

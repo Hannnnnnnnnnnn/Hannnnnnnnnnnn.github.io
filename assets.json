@@ -22,8 +22,9 @@
       "slot": "02",
       "path": "/images/01-pdp/02.jpg",
       "section": "4 · Decision 01",
-      "alt": "The review slot before and after, at the section it occupies",
-      "note": "페이지 전체가 아니라 리뷰 영역만 확대"
+      "alt": "The old product page with the review section outlined",
+      "note": "Frame 8.png 2390x7878 RGBA → 흰 배경 합성 후 1472x4852 JPEG 617KB (원본 5.9MB). **Before 만 이미지다.** After 는 정적 이미지 대신 조건부 렌더를 만지는 아코디언 데모로 대체했다 — 리뷰가 있으면 행이 렌더되고 없으면 아예 렌더되지 않는 것이 이 결정 자체이고, 그건 정지 화면으로는 보이지 않는다. 데스크톱에서 736x2426 으로 렌더된다 — 이 페이지에서 가장 긴 도판이다.",
+      "status": "들어옴 (Before 만)"
     },
     {
       "slot": "03",
@@ -102,6 +103,13 @@
     }
   ],
   "demos": [
+    {
+      "id": "E",
+      "where": "01 · Decision 01",
+      "what": "리뷰 조건부 렌더 — 아코디언에서 Reviews 행이 있고/없고",
+      "js": "~10 lines",
+      "note": "행 구성과 치수는 라이브 PDP 에서 읽었다: Details · Size · Materials & Care · Shipping & Returns · Reviews, summary 46px(패딩 15/0, line-height 16), 15px/400/ls .6. display:flex 가 ::marker 를 없애므로 +/− 를 직접 그린다. BUILD-PLAN 은 '리뷰 조건부 렌더링'을 인터랙티브로 만들지 말라고 명시한다 — 소유자 요청."
+    },
     {
       "id": "A",
       "where": "01 · Decision 04, 02 · Decision 03",

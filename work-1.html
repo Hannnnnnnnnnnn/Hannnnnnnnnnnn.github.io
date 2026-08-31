@@ -139,8 +139,46 @@
       <p><strong>What I shipped instead of restoring it.</strong> A conditional section &mdash; products with reviews render it, products without don&rsquo;t render the block at all. Marketing&rsquo;s goal met, catalog consistency preserved. Review collection continued through email marketing the whole time.</p>
       <p><strong>In hindsight, that&rsquo;s what should have shipped first.</strong> Removing it outright was the faster call and it stopped the inconsistency immediately, but it also discarded working signal on the products that had it.</p>
       <figure class="figure">
-        <figcaption class="label muted">The review slot before and after, at the section it occupies<br><code>/images/01-pdp/02.jpg</code></figcaption>
+        <img src="images/01-pdp/02.jpg" alt="The old product page with the review section outlined: a full-width Customer Reviews block sitting between the product information and the lifestyle photography" width="1472" height="4852" loading="lazy">
+        <figcaption class="label muted">Before &mdash; the review block as it rendered on the old template</figcaption>
       </figure>
+      <div class="demo" data-demo-reviews>
+        <span class="demo__label label">Try it</span>
+        <p class="demo__caption">After &mdash; reviews became a row in the accordion rather than a block of their own. Switch the product: with reviews the row renders, without them it isn&rsquo;t rendered at all. That is the whole decision &mdash; the page never shows an empty shell where proof should be.</p>
+        <div class="demo__stage">
+          <div class="acc">
+            <details class="acc__row">
+              <summary class="acc__head">Details</summary>
+              <p class="acc__body">A distinctive knit construction that creates a bold, sculptural silhouette, finished with signature binding details and a contrast lining.</p>
+            </details>
+            <details class="acc__row">
+              <summary class="acc__head">Size</summary>
+              <p class="acc__body">Height 22&nbsp;cm &middot; Width 26&nbsp;cm &middot; Depth 9.5&nbsp;cm &middot; Handle drop 11&nbsp;cm &middot; Weight 0.21&nbsp;kg</p>
+            </details>
+            <details class="acc__row">
+              <summary class="acc__head">Materials &amp; Care</summary>
+              <p class="acc__body">68% recycled polyester, 32% nylon, made with REPREVE&reg; recycled yarn. Hand wash gently, dry flat to keep its shape.</p>
+            </details>
+            <details class="acc__row">
+              <summary class="acc__head">Shipping &amp; Returns</summary>
+              <p class="acc__body">Free Canada shipping on orders over $150. See the shipping and return policies for full delivery information.</p>
+            </details>
+            <details class="acc__row" data-reviews-row>
+              <summary class="acc__head">Reviews <span class="acc__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="acc__count">7</span></summary>
+              <p class="acc__body">Rated 4.57 out of 5. &ldquo;I love love love this bag. It&rsquo;s so unique and functional.&rdquo;</p>
+            </details>
+          </div>
+        </div>
+        <div class="demo__controls">
+          <p class="demo__field">
+            <span class="label">This product</span>
+            <span class="demo__seg">
+              <label><input type="radio" name="reviews" value="some" checked><span>Has 7 reviews</span></label>
+              <label><input type="radio" name="reviews" value="none"><span>Has none yet</span></label>
+            </span>
+          </p>
+        </div>
+      </div>
     </section>
 
     <section class="decision" id="decision-2">
