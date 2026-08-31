@@ -66,10 +66,11 @@
     },
     {
       "slot": "04",
-      "path": "/images/02-plp/04.jpg",
+      "path": "/images/02-plp/04-{cross-sell,promotion}.jpg",
       "section": "4 · Decision 04",
-      "alt": "The two banner types side by side: cross-sell and best sellers",
-      "note": "크로스셀형 / 베스트셀러형 나란히"
+      "alt": "The two banner types side by side: cross-sell on a bag collection, promotion on an ad landing page",
+      "note": "**들어옴(2026-08-31).** 소유자가 `Miffy studio mixed.png` / `PLP Banner_Nami 2026-07-31.png` 두 장(각 1960x1470 RGBA, 2.4·3.4MB)을 지정. 흰 배경 합성 후 1280x960 JPEG 99KB·162KB. **폭 1280 은 1572 뷰포트가 아니라 749px 에서 결정된다** — 그 아래는 `.cmp` 가 84vw 가로 레일이 되어 한 칸이 629px 까지 커지므로 2배가 1258 이다. 데스크톱만 보고 720 으로 뽑았다가 늘렸다. 한 장으로 합치지 않고 `.cmp` 두 칸으로 둔 이유는 각각에 정확한 라벨이 붙어야 하기 때문. **오른쪽은 'best sellers' 가 아니라 '프로모션'이다** — Nami 컬렉션 캠페인 배너라서 표의 'Promotion, or best sellers' 중 앞쪽에 해당한다. 원래 캡션이 'best sellers' 라고만 적고 있어 라벨을 실제 내용에 맞췄다.",
+      "status": "들어옴"
     },
     {
       "slot": "05",
