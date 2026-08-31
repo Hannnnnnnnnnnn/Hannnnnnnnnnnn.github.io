@@ -656,21 +656,48 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
    translateY(-1.5rem) 만큼 올라와 있다. */
 .demo .pcard__buy { position: absolute; left: 15px; right: 15px; bottom: 15px; overflow: hidden; pointer-events: none; }
 .demo .pcard__atc {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;                    /* 광택 띠를 가둔다 / clips the shine band */
   width: 100%;
   height: 40px;
   border: 1px solid #0c0c0c;
-  background: #fff;
-  color: #0c0c0c;
+  background: #0c0c0c;                 /* 카드 버튼은 PDP 의 아웃라인 버튼이 아니라 솔리드다 */
+  color: #fff;                         /* the card button is the solid one, not the PDP outline */
   font-family: var(--shop);
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: 2.4px;
   text-transform: uppercase;
   cursor: pointer;
   opacity: 0;
   transform: translateY(100%);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease,
+              background-color 0.5s ease, color 0.5s ease;
 }
+
+/* 버튼 자체에 호버했을 때의 라이브 효과 두 가지 / the live hover, both halves of it:
+     .button:hover      { background-color: rgba(--color-button-background, .85); transition-delay: .25s }
+     .button:hover:after{ animation: shine 1s ease }   @keyframes shine { to { left: 100% } }
+   버튼 배경이 85% 로 옅어져 뒤의 사진이 살짝 비치고, 글자색(흰색) 25% 짜리 기울어진 띠가
+   왼쪽에서 오른쪽으로 한 번 지나간다. ::after 의 z-index:-1 은 버튼이 만든 쌓임 맥락 안이라
+   배경 위·글자 아래에 그려진다 — 그래서 글자를 가리지 않는다.
+   The band is the button's own text colour at 25%; the negative z-index paints it above the
+   button's background but under its text, inside the stacking context the button creates. */
+.demo .pcard__atc::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  transform: skew(-15deg);
+  background-image: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+}
+.demo .pcard__atc:hover { background-color: rgba(12, 12, 12, 0.85); transition-delay: 0.25s; }
+.demo .pcard__atc:hover::after { animation: pcard-shine 1s ease; }
+@keyframes pcard-shine { to { left: 100%; } }
 /* 색을 고르기 전에는 아예 없다 — 라이브에서 슬롯이 비어 있는 것과 같다
    Absent, not merely transparent, until a colour is picked — the live slot is empty */
 .demo .pcard:not(.is-picked) .pcard__buy { display: none; }
@@ -683,6 +710,7 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 @media (prefers-reduced-motion: reduce) {
   .demo .pcard__photo--hover, .demo .pcard__atc { transition: none; }
   .demo .pcard__media:hover .pcard__photo--hover { transform: none; }
+  .demo .pcard__atc:hover::after { animation: none; }
 }
 
 /* 비워진 오른쪽 위 모서리 — 기본은 아무것도 없다. 그게 이 결정의 결과물이라
