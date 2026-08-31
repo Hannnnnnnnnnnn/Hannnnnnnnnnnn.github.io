@@ -393,6 +393,18 @@ figure.figure--diagram { display: block; aspect-ratio: auto; padding: 0; backgro
 .dist__row--lead .dist__bar { background: var(--fg); }
 .dist__row--lead :is(.dist__name, .dist__pct) { color: var(--fg); font-weight: 500; }
 
+/* 시계열 변형 (03 §2). 12행이라 기본 0.9rem 간격이면 도식이 화면 하나를 넘긴다 —
+   행 간격만 줄이고 .dist 기본 규칙은 건드리지 않는다(02 가 같은 규칙을 쓴다).
+   막대 폭은 최댓값 9.4% 를 100% 로 정규화한 값이다. 9.4% 를 폭 9.4% 로 그리면 나머지
+   열한 달이 전부 1px 이 되어 "10월이 봉우리"라는 논지가 안 보인다. 캡션은 원값을 말한다.
+   Time-series variant (03 §2). Twelve rows at the default 0.9rem gap overrun a screen, so
+   this trims the row gap only and leaves the base .dist rules alone — 02 shares them.
+   Bar widths are normalised against the 9.4% maximum: drawing 9.4% as a 9.4%-wide bar
+   flattens the other eleven months to 1px and the peak stops being visible. The caption
+   states the real values. */
+.dist--months { gap: 0.5rem; }
+.dist--months .dist__track { height: 8px; }
+
 /* ══ B 패스: 모션 / B pass: motion ══════════════════════════
    JS가 없거나 실패하면 아래 규칙이 하나도 적용되지 않아 전부 그냥 보인다
    Without JS none of this applies and everything simply shows */
