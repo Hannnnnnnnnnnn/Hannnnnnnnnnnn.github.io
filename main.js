@@ -525,6 +525,34 @@ run(() => {
   io.observe(el);
 });
 
+/* ── 6e. 상품 카드 (02 Dec 01) — 색을 고르면 사진이 바뀌고, 비워진 모서리를 켤 수 있다 ──
+   Product card: pick a colour to swap the photo, and optionally outline the vacated corner.
+
+   사진 경로는 마크업의 data-photo 에 들어 있다 — 여기서 파일명을 만들지 않는다.
+   기본 상태(첫 색 선택됨, 모서리 비어 있음)는 HTML 에 이미 들어 있으므로 JS 가 없으면
+   카드는 그냥 그 상태로 보인다.
+   The paths live on the markup; this never builds a filename. The default state ships in
+   the HTML, so without JS the card simply shows as it is. */
+run(() => {
+  const demo = document.querySelector("[data-demo-card]");
+  if (!demo) return;
+  const photo = demo.querySelector("[data-card-photo]");
+  const swatches = [...demo.querySelectorAll(".pcard__swatch")];
+
+  swatches.forEach((sw) => sw.addEventListener("click", () => {
+    photo.src = sw.dataset.photo;
+    swatches.forEach((o) => {
+      o.classList.toggle("is-active", o === sw);
+      o.setAttribute("aria-pressed", String(o === sw));
+    });
+  }));
+
+  const corner = demo.querySelector("[data-card-corner]");
+  demo.querySelector("[data-card-outline]").addEventListener("change", (e) => {
+    corner.hidden = !e.target.checked;
+  });
+});
+
 /* ── 6c. 히어로 영상: 모션을 줄이라고 했으면 재생하지 않는다 ──
    autoplay 는 CSS 로 못 끈다. 대신 컨트롤을 켜서 원하면 직접 볼 수 있게 남긴다.
    Autoplay cannot be disabled from CSS; hand the reader controls instead of motion. */

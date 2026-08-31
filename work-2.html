@@ -154,9 +154,43 @@
 
 After    PET badge (top-left, always visible)
          swatch selected + hover &rarr; add to cart</code></pre>
-      <figure class="figure">
-        <figcaption class="label muted">One product card before and after, showing the corner quick view vacated<br><code>/images/02-plp/02.jpg</code></figcaption>
-      </figure>
+      <div class="demo" data-demo-card>
+        <span class="demo__label label">Try it</span>
+        <p class="demo__caption">The card as it ships. Pick a colour and the photo swaps in place. The badge sits in the
+          corner quick view used to hold and expands without navigating &mdash; and the top-right stays empty, because
+          nothing moved in to take the space back.</p>
+        <div class="demo__stage">
+          <figure class="pcard">
+            <div class="pcard__media">
+              <img src="images/01-pdp/twist-bag-peach-jelly.jpg" alt="Twist Bag" width="480" height="600" loading="lazy" data-card-photo>
+              <label class="pet-badge pet-badge--card">
+                <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge">
+                <span class="pet-badge__default"><svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg><span>6</span></span>
+                <span class="pet-badge__hover" aria-hidden="true">6 Bottles Upcycled</span>
+              </label>
+              <span class="pcard__corner" data-card-corner hidden aria-hidden="true"><span class="pcard__corner-tag label">Quick view</span></span>
+            </div>
+            <p class="pcard__title">Twist Bag</p>
+            <p class="pcard__price"><span class="pcard__cur">$</span>163<span class="pcard__cents">.00</span></p>
+            <div class="pcard__colors" role="group" aria-label="Colour">
+            <button class="pcard__swatch is-active" type="button" style="--chip: #F2BAAD" data-photo="images/01-pdp/twist-bag-peach-jelly.jpg" aria-pressed="true" aria-label="Peach Jelly"></button>
+            <button class="pcard__swatch" type="button" style="--chip: #85843F" data-photo="images/01-pdp/twist-bag-russian-green.jpg" aria-pressed="false" aria-label="Russian Green"></button>
+            <button class="pcard__swatch" type="button" style="--chip: #5299B2" data-photo="images/01-pdp/twist-bag-steel-blue.jpg" aria-pressed="false" aria-label="Steel Blue"></button>
+            <button class="pcard__swatch" type="button" style="--chip: #764D2A" data-photo="images/01-pdp/twist-bag-coffee-bean.jpg" aria-pressed="false" aria-label="Coffee Bean"></button>
+            <button class="pcard__swatch" type="button" style="--chip: #206363" data-photo="images/01-pdp/twist-bag-forest-green.jpg" aria-pressed="false" aria-label="Forest Green"></button>
+            <button class="pcard__swatch" type="button" style="--chip: #83A4A7" data-photo="images/01-pdp/twist-bag-mist-grey.jpg" aria-pressed="false" aria-label="Mist Grey"></button>
+            </div>
+          </figure>
+        </div>
+        <div class="demo__controls">
+          <p class="demo__field">
+            <span class="label">The corner it vacated</span>
+            <span class="demo__seg">
+              <label><input type="checkbox" data-card-outline><span>Outline it</span></label>
+            </span>
+          </p>
+        </div>
+      </div>
     </section>
 
     <section class="decision" id="decision-2">

@@ -52,10 +52,10 @@
     },
     {
       "slot": "02",
-      "path": "/images/02-plp/02.jpg",
+      "path": "— (데모 F 가 대체)",
       "section": "4 · Decision 01",
-      "alt": "One product card before and after, showing the corner quick view vacated",
-      "note": "카드 하나만 확대. 퀵뷰가 있던 우상단과 배지가 들어간 좌상단이 보이게"
+      "alt": "The product card as it ships, interactive",
+      "note": "2026-08-31 소유자 지시로 촬영 목록에서 빠졌다: before/after 를 보여주지 말고 **현재 카드만** Try it 데모로. 치수는 라이브 테마에서 읽었다 — 카드 367px(1570px 뷰포트 4열), 제목 12px/400, 가격 14px, 스워치 14px 원 gap 6px(안쪽 칩 scale .7 → 선택 시 1), 배지 rgba(84,213,131,.5)/hover #54d583/아이콘 18px/패딩 6·12/반경 30px. 스워치 색은 라이브 칩 PNG 의 중심 픽셀을 뽑은 플랫 컬러라 파일을 추가하지 않았다."
     },
     {
       "slot": "03",
@@ -149,6 +149,13 @@
       "where": "03 · Decision 01",
       "what": "프리오더 상태 리졸버 (시장별 opt-in)",
       "js": "~26 lines"
+    },
+    {
+      "id": "F",
+      "where": "02 · Decision 01",
+      "what": "상품 카드 — 색 선택으로 사진 교체 + 비워진 우상단 모서리 아웃라인 토글",
+      "js": "~12 lines",
+      "note": "라이브 카드에는 add to cart 가 없다 — 19개 카드 전부 `.card-information__button` 이 비어 있다. 케이스 본문의 before/after 블록은 'After: swatch selected + hover → add to cart' 라고 적고 있어 라이브와 어긋나므로, 데모에는 넣지 않고 소유자에게 확인 요청했다. `.pcard__corner` 는 `:not([hidden])` 로 걸어야 한다 — 클래스 규칙의 display 가 UA 의 `[hidden]{display:none}` 을 이겨서, 처음엔 토글이 아무것도 숨기지 못했다."
     }
   ],
   "demo_assets": [

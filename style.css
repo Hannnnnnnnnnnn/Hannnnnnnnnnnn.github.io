@@ -610,6 +610,42 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .demo .pet__photo:has(.pet-badge--card)  { width: 170px; aspect-ratio: 4 / 5; }
 .demo .pet__photo:has(.pet-badge--media) { width: 240px; aspect-ratio: 4 / 5; }
 
+/* ── 상품 카드 (02 Decision 01) ──
+   Product card, as the redesigned collection page ships it.
+   치수는 라이브 테마에서 읽은 값이다 — 카드 폭 367px(1570px 뷰포트에서 4열),
+   제목 12px/400, 가격 14px, 스워치 14px 원에 gap 6px, 안쪽 칩은 scale(.7) 로 들어가고
+   선택된 것만 1 로 커진다(component-color-swatches.css). 배지 색·패딩·반경은
+   pet-bottles-badge 의 인라인 커스텀 프로퍼티 그대로.
+   Every dimension here was read off the live theme rather than eyeballed; the swatch
+   scale trick is the theme's own. */
+.demo .pcard { margin: 0; width: min(367px, 100%); font-family: var(--shop); }
+.demo .pcard__media { position: relative; aspect-ratio: 4 / 5; background: #f0f0f0; padding: 12px; display: flex; align-items: flex-start; }
+.demo .pcard__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.demo .pcard__title { margin: 8px 0 0; font-size: 12px; font-weight: 400; line-height: 1.3; }
+.demo .pcard__price { margin: 2px 0 0; display: flex; align-items: baseline; font-size: 14px; font-weight: 500; letter-spacing: 0.5px; }
+.demo .pcard__cur { font-size: 0.72em; margin-right: 3px; }
+.demo .pcard__cents { font-size: 0.72em; align-self: flex-start; }
+.demo .pcard__colors { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
+
+/* 칩은 요소보다 작게 들어가 있다가 선택되면 요소 크기까지 커진다 — 라이브와 같은 방식
+   The chip sits inset and grows to full size when picked, exactly as the live swatch does */
+.demo .pcard__swatch { position: relative; width: 14px; height: 14px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; }
+.demo .pcard__swatch::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--chip); transform: scale(0.7); transition: transform 0.3s ease; }
+.demo .pcard__swatch::after { content: ""; position: absolute; inset: -1.5px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--line); transform: scale(0.7); transition: transform 0.3s ease; }
+.demo .pcard__swatch.is-active::before,
+.demo .pcard__swatch.is-active::after { transform: scale(1); }
+.demo .pcard__swatch:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+
+/* 비워진 오른쪽 위 모서리 — 기본은 아무것도 없다. 그게 이 결정의 결과물이라
+   토글로 켤 때만 자리를 표시한다.
+   The vacated top-right: empty by default, because that is the outcome being argued.
+   The outline is opt-in. */
+/* .pcard__corner 에 display 를 주면 UA 의 [hidden]{display:none} 를 이겨 버린다 —
+   :not([hidden]) 로 걸어야 토글이 실제로 숨긴다 (안 그러면 항상 보인다)
+   A class rule with display beats the UA [hidden] rule, so scope it to :not([hidden]). */
+.demo .pcard__corner:not([hidden]) { position: absolute; top: 12px; right: 12px; width: 92px; height: 30px; border: 1px dashed var(--muted); border-radius: 4px; display: grid; place-items: center; }
+.demo .pcard__corner-tag { color: var(--muted); font-size: 0.62rem; }
+
 .demo .pet-badge {
   position: relative;
   display: inline-flex;
