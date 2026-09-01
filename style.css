@@ -175,6 +175,49 @@ blockquote p:last-child { margin: 0; }
 .back { display: inline-block; margin: 3rem 0; }
 .back:hover { text-decoration: underline; text-underline-offset: 0.2em; }
 
+/* ── 케이스 하단 이동 / End-of-case navigation ──
+   케이스를 끝까지 읽은 사람이 다음 케이스를 읽을 사람이다.
+   목록으로 되돌리지 말고 바로 다음 편을 준다.
+   Whoever finished a case is who reads the next one —
+   hand them the next case rather than sending them back to the list. */
+.case-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin: 4rem 0 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+/* .prose a 의 밑줄은 본문 링크용이다 — 여기서는 카드 전체가 링크라 걷어낸다
+   .prose a underlines body links; here the whole card is the link, so drop it */
+.case-nav a { text-decoration: none; }
+.case-nav__back { color: var(--muted); }
+.case-nav__back:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+
+.case-nav__next { display: block; max-width: 26rem; text-align: right; margin-left: auto; }
+.case-nav__eyebrow { display: block; margin-bottom: 0.5rem; }
+.case-nav__title {
+  display: block;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+.case-nav__sub { display: block; margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
+/* 화살표는 제목에 붙어 밀린다 — 링크 텍스트가 아니라 장식
+   The arrow rides with the title; decoration, not link text */
+.case-nav__title::after { content: " \2192"; display: inline-block; transition: transform 0.25s ease; }
+.case-nav__next:hover .case-nav__title::after { transform: translateX(0.25rem); }
+.case-nav__next:hover .case-nav__sub { color: var(--fg); }
+
+@media (max-width: 34rem) {
+  .case-nav { gap: 1.5rem; }
+  .case-nav__next { text-align: left; margin-left: 0; }
+}
+
 /* ── 푸터 / Footer ── */
 footer {
   display: flex;
