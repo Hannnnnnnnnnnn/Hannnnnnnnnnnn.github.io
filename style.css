@@ -3,7 +3,7 @@
 :root {
   --bg: #ffffff;
   --fg: #0a0a0a;
-  --muted: #8f8f8f;
+  --muted: #6b6b6b;                     /* 흰 배경 대비 5.3:1 — WCAG AA 통과 / 5.3:1 on white, clears WCAG AA */
   --line: #dedede;
   --tint: #f4f4f4;                      /* 플레이스홀더·코드 배경 / placeholder & code fill */
   --pad: clamp(1.25rem, 4vw, 3.5rem);   /* 좌우 여백 / gutter */
