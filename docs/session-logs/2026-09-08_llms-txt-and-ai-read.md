@@ -11,7 +11,9 @@ Step 1 검증 결과와, 문서가 예측하지 못한 것들을 남긴다.
 | `index.html` | 푸터 **위**에 `<nav class="ai-read">` + 버튼 2개 (안 A) |
 | `style.css` | 푸터 절 바로 뒤에 `.ai-read` / `.ai-read__btn` 규칙 |
 | `main.js` | 9번 `run()` 블록 — `data-prompt` → `?q=` |
-| `CLAUDE.md` | 콘텐츠 절에 파생물 동기화 규칙 |
+| `CLAUDE.md` | 콘텐츠 절에 파생물 동기화 규칙, 검증 절에 함정 28 |
+| `brand/chatgpt.svg`·`brand/claude.svg` (신규) | 소유자 제공, 받은 그대로 |
+| `assets.json`·`ASSETS.md` | `brand` 항목 등록 + 실패한 경로 기록 |
 | `README.md` | 구조 표에 `llms.txt`, `main.js` 블록 수 정정 |
 
 `about.html`·`work-*.html` 푸터는 **건드리지 않았다** (지시서 범위).
@@ -75,7 +77,7 @@ volume` 로 바꾸고 근거 문장을 다시 대조했다.
 나머지 항목(CSS 토큰, `--border` 부재, 푸터 마크업, 포트 8765, 연락처,
 `robots.txt`/`sitemap.xml`/`llms.txt` 부재)은 전부 일치했다.
 
-## Step 2 — 브랜드 로고: 확보 실패
+## Step 2 — 브랜드 로고: 자동 확보 실패 → 소유자가 직접 받아 해결
 
 공식 경로가 전부 막혀 있다. 지시서가 "그리지 말고 멈춰라"라고 했으므로
 `<img>` 없이 진행했다.
@@ -85,7 +87,43 @@ volume` 로 바꾸고 근거 문장을 다시 대조했다.
     openai.com/brand                 403 (봇 챌린지, 9,930 bytes)
     cdn.openai.com/API/logo-openai.svg  404
 
-마크업에는 자리와 경로를 주석으로 남겼다. 파일이 오면 버튼당 한 줄 추가로 끝난다.
+소유자가 로고를 쓰겠다고 확정한 상태였으므로 마크업에는 자리를 주석으로 남기고
+나머지 Step 을 완주한 뒤 파일을 요청했다.
+
+### 2차 시도 — 더 깊이 팠고, 더 나쁜 함정이 나왔다
+
+    claude.ai/favicon.svg                       200 인데 본문이 Next.js 에러 HTML (60KB)
+    claude.ai/icon.svg                          200 인데 본문이 HTML (107KB)
+    claude.ai/login 헤드리스 DOM                봇 차단, 인라인 SVG 0개
+    anthropic.com/.../safari-pinned-tab.svg     진짜 SVG 지만 Anthropic A\ 워드마크
+    claude.ai/images/claude_app_icon.png        진짜 Claude 마크지만 크림색 배경판 PNG
+
+**`status=200` + `Content-Type: image/svg+xml` 인데 본문이 HTML 이었다.** 상태 코드도
+확장자도 MIME 도 전부 맞는데 파일이 아니다 — 404 를 상태 코드로 거르는 것보다 한 단계
+어렵다. `head -c 4` 로 `<svg` 인지 보는 게 유일하게 싼 방어였다.
+
+`safari-pinned-tab.svg` 는 더 조용한 실패다. **진짜 SVG 라서 모든 형식 검사를 통과하고,
+렌더해서 눈으로 봐야 Claude 마크가 아니라 회사 워드마크인 걸 안다.** 형식이 맞는 것과
+맞는 물건인 것은 다르다.
+
+### 결말
+
+소유자가 브라우저로 두 파일 다 받아 왔다 (`ChatGPT-Logo.svg`, `Claude_AI_symbol.svg`).
+**둘 다 받은 그대로 커밋했다** — `claude.svg` 는 Downloads 원본과 byte-identical.
+
+| | viewBox | fill | 비고 |
+|---|---|---|---|
+| `chatgpt.svg` | `0 0 320 320` | 없음 → 기본 검정 | OpenAI 모노크롬 |
+| `claude.svg` | `0 0 100 100` | `hsl(14.8, 63.1%, 59.6%)` = **#D97757** | 공식 코랄, 배경 rect 없음 |
+
+`claude.svg` 에 export 잔재로 `class="w-full"` 이 붙어 있다. `style.css` 에 그 규칙이
+**0건**이라 무해하므로 지우지 않았다("공식 애셋을 그대로"). 유틸리티 클래스를 도입하는
+날 확인할 지점이다.
+
+두 마크 다 자기 색을 지킨다 — 버튼 글자색(`--muted`)이 로고에 적용되지 않는 것이 의도다.
+`.ai-read` 가 flex row 라서 두 pill 은 높이가 같게 늘어난다(34px). 덕분에 로고가 한쪽만
+있던 중간 상태에서도 레이아웃이 깨져 보이지 않았고, 소유자가 "ChatGPT 만 먼저" 를
+고를 수 있었다.
 
 **주의: 404·403 응답도 본문이 크다.** `bytes=60130` 짜리 404 를 성공으로
 읽기 쉽다. 상태 코드를 먼저 보라 — CLAUDE.md 검증 절의 그 함정 그대로다.
@@ -134,11 +172,33 @@ curl 에 **403** 을 준다(봇 챌린지, 5.6KB / 8.7KB). URL 구성이 옳다�
 
 좁은 폭은 헤드리스가 500px 밑으로 못 내려가므로(CLAUDE.md) iframe 실측으로 했다.
 
+## 배포
+
+커밋 3개, 전부 `main` 에 푸시됨. Pages 빌드는 셋 다 success (28초 / 30초 / 30초대).
+
+| | |
+|---|---|
+| `e91273b` | `llms.txt` + 푸터 버튼 + CSS/JS + 문서 |
+| `b6be026` | ChatGPT 마크 |
+| `2a70cfc` | Claude 마크 |
+
+라이브 검증 (`hannnnnnnnnnnn.github.io`):
+
+- `/llms.txt` 200, **9,125 bytes 로 로컬과 byte-identical**, `text/plain; charset=utf-8`
+- `/brand/claude.svg` 1,155 · `/brand/chatgpt.svg` 1,739 — 둘 다 byte-identical, `<svg` 로 시작
+- `main.js`·`style.css` 로컬과 byte-identical
+- 라이브 HTML 을 `DOMParser` 로 파싱해 버튼별 `<img>` 수를 셌다 — 중간 상태에서
+  `grep` 은 **주석 안의 `<img>` 까지 잡아** 마치 이미 적용된 것처럼 보였다.
+  주석은 DOM 에 없으므로 파서로 봐야 진짜 상태가 나온다
+
 ## 남은 것
 
-- [ ] 브랜드 SVG 2개 → `/brand/`, `assets.json`·`ASSETS.md` 등록
+- [x] 브랜드 SVG 2개 → `/brand/`, `assets.json`·`ASSETS.md` 등록
 - [x] `Honest gaps` 4번 항목 vs 머리말 — 머리말 수정으로 해결 (항목 유지)
-- [ ] 로그인 브라우저에서 두 링크 실제로 눌러 보기
-- [ ] 배포 후 라이브 `/llms.txt` 확인 — **바이트 수(9,021)를 먼저 대조**하고
-      `# Han Kim (Hanbyoul Kim)` 마커를 확인할 것. 404 페이지도 grep 은 통과한다
-- [ ] 다른 4개 페이지 푸터로 확산할지 오너 결정
+- [x] 배포 후 라이브 `/llms.txt` 확인 — 바이트 수 먼저 대조, 마커 확인
+- [ ] **로그인 브라우저에서 두 링크 실제로 눌러 보기.** 이 세션이 검증하지 못한
+      유일한 항목이다. `claude.ai/new`·`chatgpt.com` 둘 다 curl 에 403(봇 챌린지)을
+      주므로, URL 구성이 옳다는 것(디코드 복원이 부록 A 와 일치, 개행 12개 전부
+      `%0A`)까지가 증명 가능한 전부다
+- [ ] 다른 4개 페이지 푸터로 확산할지 오너 결정 — 지금은 `index.html` 에만 있다.
+      푸터는 5개 파일에 하드코딩돼 있고 include 가 없으므로 확산은 4곳 수정이다
