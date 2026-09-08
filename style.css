@@ -229,6 +229,54 @@ footer {
   border-top: 1px solid var(--fg);
 }
 
+/* ── AI 어시스턴트 진입점 / AI-read entry points ──
+   JS 없이도 보이고 눌린다 — href 가 llms.txt 로 떨어진다.
+   Visible and clickable without JS; href falls back to llms.txt. */
+.ai-read {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 var(--pad);
+  margin-top: clamp(4rem, 12vh, 8rem);
+}
+
+/* 바로 뒤의 푸터가 자기 위 여백을 또 들고 온다 — 여기서 줄인다
+   The footer that follows carries its own top margin; shrink it here */
+.ai-read + footer {
+  margin-top: 1.5rem;
+}
+
+.ai-read__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.ai-read__btn:hover,
+.ai-read__btn:focus-visible {
+  border-color: var(--fg);
+  color: var(--fg);
+}
+
+/* 로고는 원본 색을 유지한다 — currentColor 로 치환하지 않는다
+   Brand marks keep their own colour; never swap to currentColor */
+.ai-read__btn img {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-read__btn { transition: none; }
+}
+
 /* ══ 케이스 스터디 / Case study ═══════════════════════════════
    본문 폭과 타입 스케일은 위 .prose 가 그대로 나른다. 여기에는 케이스 스터디에만
    필요한 블록만 더한다 — 지표, 결정 블록, 표, 코드, 이미지 자리.

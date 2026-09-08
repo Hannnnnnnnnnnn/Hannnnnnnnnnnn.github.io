@@ -644,3 +644,20 @@ run(() => {
   addEventListener("scroll", draw, { passive: true });
   draw();
 });
+
+/* ── 9. AI 어시스턴트 딥링크 ──
+   data-prompt 의 평문을 URLSearchParams 로 인코딩해 ?q= 로 붙인다.
+   href 는 llms.txt 로 두었으므로 이 블록이 죽어도 링크는 살아 있다.
+   Encode the plain-text prompt into the assistant's ?q= param.
+   href already points at llms.txt, so a failure here leaves a working link. */
+run(() => {
+  document.querySelectorAll(".ai-read__btn[data-ai-host][data-prompt]")
+    .forEach((link) => {
+      const url = new URL(link.dataset.aiHost);
+      url.searchParams.set("q", link.dataset.prompt);
+
+      link.href = url.toString();
+      link.target = "_blank";
+      link.rel = "noopener";
+    });
+});
