@@ -203,7 +203,7 @@
       "path": "/brand/claude.svg",
       "used_by": "index.html 푸터 — Read with Claude 버튼",
       "alt": "",
-      "note": "**아직 없음.** 2026-09-08 세션에서 공식 경로를 전부 시도했으나 확보 실패: anthropic.com/brand 404, claude.ai/favicon.svg·icon.svg 는 200 이지만 본문이 Next.js 에러 HTML, claude.ai DOM 은 봇 차단. safari-pinned-tab.svg 는 진짜 SVG 지만 Anthropic A\\ 워드마크이지 Claude 마크가 아니고, claude_app_icon.png 는 진짜 마크지만 크림색 배경판이 칠해진 PNG 다. 근사치로 그리지 않는다 — 소유자가 브라우저로 받아 오기로 함. 파일이 오면 index.html 106-107 행 주석을 <img> 로 바꾸면 끝난다."
+      "note": "Anthropic 공식 Claude 심볼. 소유자가 2026-09-08 제공 (Claude_AI_symbol.svg 원본 그대로). viewBox 0 0 100 100, path 1개, fill=\"hsl(14.8, 63.1%, 59.6%)\" = #D97757 공식 코랄, 배경 rect 없음. 색을 바꾸지 않는다 — 버튼 글자색(--muted)과 다른 것이 정상이다. export 잔재로 class=\"w-full\" 이 붙어 있으나 이 사이트에 그 규칙이 없어(style.css 0건) 무해하므로 원본 그대로 뒀다. 텍스트 라벨이 의미를 나르므로 alt=\"\"."
     }
   ]
 }
