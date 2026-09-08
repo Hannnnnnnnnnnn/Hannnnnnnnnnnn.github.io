@@ -191,5 +191,19 @@
       "alt": "",
       "note": "정적 스냅샷 대신 실제 화면 녹화가 들어갔다. 소유자 원본은 .mov 120fps (모바일 778x1494 19.6초 18.9MB / 데스크톱 3024x1628 49.2초 234MB) 였고, 30fps H.264 faststart 로 다시 인코딩해 1.4MB / 2.5MB 가 됐다. 모바일 720x1382 crf28, 데스크톱 1280x690 crf31. **폭은 프레임이 실제 렌더되는 최대치(데스크톱 ~625px CSS)의 2배에 맞춘다** — 1440 으로 뽑았다가 표시 크기에서 구분되지 않는 900KB 를 더 실을 뻔했다. autoplay muted loop playsinline + poster, preload=metadata. prefers-reduced-motion 이면 재생하지 않고 컨트롤을 켠다(main.js §6c). 프레임 안에서 스크롤하지 않는다 — 스크롤이 녹화 안에 있다. 모바일 클립은 index 의 Work 행 호버 미리보기에도 쓴다 — `data-preview` 가 .mp4 면 상자가 4:3 대신 클립 비율(720/1382)의 세로로 바뀌고 폭도 좁아진다. 호버 중에만 재생하고 벗어나면 멈춘다. 02(PLP)도 2026-08-31 같은 방식으로 추가했다: 원본 .mov 60fps(데스크톱 3140x1734 30.0초 101MB — GitHub 파일 100MB 한도를 넘어 재인코딩이 선택이 아니라 필수였다 / 모바일 778x1590 27.4초 22MB), 30fps H.264 faststart 로 데스크톱 1280x706 crf31 1.7MB, 모바일 720x1472 crf28 2.2MB. 01 과 같은 폭·crf 를 그대로 따랐고 렌더 상자도 같다(데스크톱 498x275, 모바일 292x598 @1572px)."
     }
+  ],
+  "brand": [
+    {
+      "path": "/brand/chatgpt.svg",
+      "used_by": "index.html 푸터 — Read with ChatGPT 버튼",
+      "alt": "",
+      "note": "OpenAI 공식 모노크롬 마크. 소유자가 2026-09-08 제공. viewBox 0 0 320 320, path 1개, fill 속성 없음(기본 검정) — 원본 그대로 두고 렌더 크기만 16x16 으로 준다. 색을 currentColor 로 바꾸지 않는다. 텍스트 라벨이 의미를 나르므로 alt=\"\"."
+    },
+    {
+      "path": "/brand/claude.svg",
+      "used_by": "index.html 푸터 — Read with Claude 버튼",
+      "alt": "",
+      "note": "**아직 없음.** 2026-09-08 세션에서 공식 경로를 전부 시도했으나 확보 실패: anthropic.com/brand 404, claude.ai/favicon.svg·icon.svg 는 200 이지만 본문이 Next.js 에러 HTML, claude.ai DOM 은 봇 차단. safari-pinned-tab.svg 는 진짜 SVG 지만 Anthropic A\\ 워드마크이지 Claude 마크가 아니고, claude_app_icon.png 는 진짜 마크지만 크림색 배경판이 칠해진 PNG 다. 근사치로 그리지 않는다 — 소유자가 브라우저로 받아 오기로 함. 파일이 오면 index.html 106-107 행 주석을 <img> 로 바꾸면 끝난다."
+    }
   ]
 }

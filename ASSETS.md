@@ -97,3 +97,46 @@ HTML 컴포넌트 3개라, work-3 에는 사진이 한 장도 들어가지 않�
   **빈 것이 의도된 상태**다
 - 스톡 이미지, 일러스트, AI 생성 비주얼
 - 미피가 보이는 이미지는 데모 안에 넣지 말 것 (라이선스 IP — 데모의 상품 자리는 회색 블록)
+
+---
+
+## 브랜드 마크 (`/brand/`) — 케이스 도판이 아니다
+
+`index.html` 푸터의 "Read with Claude / ChatGPT" 버튼에만 쓴다. 위의 슬롯 규칙(잘라낸
+구간, 한 결정에 하나)은 여기 해당 없다.
+
+| 파일 | 상태 |
+|---|---|
+| `brand/chatgpt.svg` | ✅ 있음. OpenAI 공식 모노크롬 마크, 소유자 제공 (2026-09-08) |
+| `brand/claude.svg` | ⬜ **없음.** 소유자가 브라우저로 받아 오기로 함 |
+
+### 규칙
+
+- **각사 공식 애셋만.** 다른 사이트에서 긁어오지 않고, **근사치로 그리지도 않는다.**
+  대충 맞춘 로고는 로고가 없는 것보다 나쁘다.
+- **색을 바꾸지 않는다.** `currentColor` 로 치환 금지. `chatgpt.svg` 는 `fill` 속성이
+  아예 없어서 기본 검정으로 렌더된다 — 버튼 글자색(`--muted`)과 다른 것이 정상이다.
+- `viewBox` 를 유지하고 렌더 크기만 `width="16" height="16"` 으로 준다.
+- 텍스트 라벨이 의미를 나르므로 `alt=""` (장식).
+
+### `claude.svg` 를 못 구한 이유 — 다시 시도할 사람을 위해
+
+2026-09-08 에 아래를 전부 시도했고 전부 실패했다. **같은 경로를 다시 돌지 말 것.**
+
+| 경로 | 결과 |
+|---|---|
+| `anthropic.com/brand`, `/company/brand`, `/press` | 404 (단 본문이 60KB — 상태 코드를 봐야 안다) |
+| `openai.com/brand` | 403 봇 챌린지 |
+| `claude.ai/favicon.svg`, `claude.ai/icon.svg` | **200 인데 본문이 Next.js 에러 HTML.** Content-Type 만 `image/svg+xml` 이다 |
+| `claude.ai` 헤드리스 DOM → 인라인 SVG 추출 | 봇 차단, SVG 0개 |
+| `anthropic.com/.../safari-pinned-tab.svg` | 진짜 SVG 지만 **Anthropic `A\` 워드마크** — Claude 마크가 아니다 |
+| `claude.ai/images/claude_app_icon.png` | 진짜 Claude 스타버스트지만 **PNG + 불투명 크림색 배경판** (RGBA 인데 배경이 칠해져 있다) |
+
+**200 이 파일을 받았다는 뜻이 아니다.** 여기서만 두 번 걸렸다 — 확장자·Content-Type 이
+맞는데 본문은 에러 페이지였다. 받은 뒤 `<svg` 로 시작하는지, `viewBox` 가 있는지 확인하고,
+확실히 하려면 렌더해서 눈으로 볼 것.
+
+### 파일이 오면
+
+`index.html` 의 Claude 버튼 안 주석 두 줄을 `<img>` 한 줄로 바꾸고, `assets.json` 의
+`brand[].note` 를 갱신하면 끝난다.
