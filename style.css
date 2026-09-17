@@ -1166,6 +1166,27 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
   cursor: pointer;
 }
 .demo .pdp__cta[disabled] { color: #8f8f8f; border-color: #d5d5d5; cursor: not-allowed; }
+/* 호버 광택 띠 — work-2(.pcard__atc)·work-3(.resolver__cta)와 같은 라이브 효과이고
+   키프레임(pcard-shine)도 그대로 재사용한다. 이 버튼은 흰 배경·검은 글자라 띠는
+   글자색 25%로 쓴다(저쪽은 흰색 25%). 라이브 호버의 나머지 절반인 "배경 85% 페이드"는
+   흰 버튼이 흰 스테이지 위에 있어 눈에 보이지 않으므로 넣지 않았다.
+   Same live hover as work-2/-3, same keyframes. This button is black-on-white, so the band
+   is the text colour at 25% rather than white. The other half of the live hover — background
+   to 85% — is invisible for a white button on a white stage, so it is omitted.
+   품절일 때는 누를 수 없으니 띠도 지나가지 않는다 / no sweep when it is not clickable. */
+.demo .pdp__cta { position: relative; z-index: 0; overflow: hidden; }
+.demo .pdp__cta::after {
+  content: "";
+  z-index: -1;                         /* 배경 위·글자 아래 / above the fill, under the text */
+  position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  transform: skew(-15deg);
+  background-image: linear-gradient(90deg, transparent, rgba(12, 12, 12, 0.25), transparent);
+}
+.demo .pdp__cta:hover:not([disabled])::after { animation: pcard-shine 1s ease; }
+.demo .pdp__cta[disabled]::after { content: none; }
+@media (prefers-reduced-motion: reduce) {
+  .demo .pdp__cta:hover:not([disabled])::after { animation: none; }
+}
 
 /* 배지 스펙도 라이브 블록 설정 그대로 — show_background:false 라 색 글자만 남는다.
    Straight from the live block: show_background is false, so it is coloured text. */
