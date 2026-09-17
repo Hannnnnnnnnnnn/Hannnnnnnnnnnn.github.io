@@ -422,7 +422,7 @@
   assign limit = block.settings.low_stock_threshold | default: 2
   assign left = variant.inventory_quantity
 
-  # 자리는 하나. 먼저 맞는 규칙이 이긴다 / one slot, first rule wins
+  # One slot, so the first rule that matches wins
   if left &gt; 0 and left &lt;= limit
     assign badge = 'Low Stock'
   elsif product.metafields.custom.is_new

@@ -227,7 +227,8 @@
         <details>
           <summary class="label">The conditional in Liquid, simplified</summary>
 <pre><code>{%- liquid
-  # 마켓별 opt-in 키 / Per-market opt-in key
+  # Market decides which opt-in key to read
+  assign market_code = localization.market.handle
   assign key = 'preorder_' | append: market_code
   assign opted_in = variant.metafields.custom[key].value
 
@@ -274,7 +275,7 @@
     <section class="decision" id="decision-4">
       <span class="label muted">Decision 04</span>
       <h3>Saying it again, separately</h3>
-      <p>Shopify&rsquo;s own order confirmation fires automatically, so the pre-order email has one job: state again, in its own message, that this item is a pre-order and will take 2&ndash;3 weeks. It sends immediately after checkout, while the decision is still fresh. Silence is what turns a wait into a complaint, and the first silence starts the moment the confirmation arrives.</p>
+      <p>Shopify&rsquo;s own order confirmation fires automatically, so the pre-order email has one job: state again, in its own message, that this item is a pre-order and that it ships when stock arrives. It sends immediately after checkout, while the decision is still fresh. Silence is what turns a wait into a complaint, and the first silence starts the moment the confirmation arrives.</p>
       <p><strong>How it fires.</strong> The theme writes a hidden line item property when a pre-order is added to cart. Shopify Flow reads that property, tags the order, and hands off to Klaviyo, which sends the email.</p>
       <p><strong>Four systems, one signal</strong> &mdash; and that signal is the thing I didn&rsquo;t make durable. More on that below.</p>
       <p><strong>One implementation note.</strong> The property is rendered conditionally rather than always-rendered-and-disabled, because <code>disabled</code> inputs still leak into the theme&rsquo;s JavaScript form collection. I found that the hard way, and left the reasoning in a comment for whoever reads it next.</p>
@@ -322,9 +323,7 @@
 
       <p><strong>Trade-off.</strong> Re-checking live state can disagree with the page the customer actually saw. I took the stricter side deliberately: someone shown &ldquo;Pre-order&rdquo; for an item that turns out to be in stock gets it early, and early is a good surprise. The other direction is the one that costs trust.</p>
 
-      <p><strong>Then my own gate produced a new false positive.</strong> I wrote it to accept either market&rsquo;s flag &mdash; the property is already market-filtered, I reasoned, so checking either one is enough. An order placed on the US site and shipped to Canada showed that was wrong. The US flag was true, so the property was attached; the order then shipped from Canadian stock within days. The gate read the US flag, agreed with it, and tagged the order.</p>
-
-      <p>The property is filtered by the market at <em>add-to-cart</em> time. Fulfilment is decided by where the order ships. Those are two different markets, and Decision 01 had only ever named one of them. The fix is one line &mdash; let the shipping country choose which flag to read.</p>
+      <p><strong>Then my own gate produced a new false positive.</strong> I wrote it to accept either market&rsquo;s flag &mdash; the property is already market-filtered, I reasoned, so checking either one is enough. An order placed on the US site and shipped to Canada showed that was wrong. The US flag was true, so the property was attached, the gate agreed with it, and the order then shipped from Canadian stock within days. The property is filtered by the market at <em>add-to-cart</em> time; fulfilment is decided by where the order ships. Those are two different markets, and Decision 01 had only ever named one of them. The fix is one line &mdash; let the shipping country choose which flag to read.</p>
 
       <p><strong>The shape of the mistake is the part worth keeping.</strong> Adding a condition to a gate only tightens it when the conditions are <code>AND</code>ed. Mine were <code>OR</code>ed, so &ldquo;check both flags to be safe&rdquo; made the gate looser than checking one. I did not find it by reading the code. The reasoning behind it was written down at the time and reading it back revealed nothing. I found it by deliberately ordering the awkward combination.</p>
 
@@ -346,14 +345,14 @@
 
       <p>The last row is the one that mattered. A gate that filters correctly and a gate that blocks everything look identical from the negative side &mdash; &ldquo;no tag&rdquo; proves nothing on its own. Confirming that an ordinary US order still tags is what separated them.</p>
 
-      <p><strong>What I changed in the email.</strong> One path is left open: an order that itself takes the last unit can flip the flag a moment before the tag is evaluated. It needs three things to coincide, and closing it would cost more machinery than it is worth. So I changed the wording instead. The email confirms the order is reserved and says stock ships as it arrives, rather than repeating the window the page shows. It stays true whether or not the item ships immediately, which turns a wrong tag into a wrong internal record instead of a broken promise. The flow is also set transactional &mdash; someone who opted out of marketing should still hear about an order they paid for.</p>
+      <p><strong>What I changed in the email.</strong> One path is left open: an order that itself takes the last unit can flip the flag a moment before the tag is evaluated. Closing it would cost more machinery than it is worth, so I changed the wording instead. The email confirms the order is reserved and says stock ships as it arrives, rather than repeating the window the page shows. It stays true whether or not the item ships immediately, which turns a wrong tag into a wrong internal record instead of a broken promise. The flow is also set transactional &mdash; someone who opted out of marketing should still hear about an order they paid for.</p>
     </section>
 
     <h2>5 &middot; What shipped</h2>
     <p>A pre-order state running through the existing PDP &mdash; no app, no separate checkout, no data leaving Shopify.</p>
     <p><strong>The storefront</strong> resolves the CTA into one of three states from inventory policy, market, and a per-variant opt-in.<br>
       <strong>The expectation</strong> sits directly beneath the button, before the commitment rather than after it.<br>
-      <strong>The email</strong> restates the window immediately after checkout.</p>
+      <strong>The email</strong> confirms the reservation immediately after checkout.</p>
 
     <h2 id="outcome">6 &middot; What I can and can&rsquo;t claim</h2>
     <p><strong>What I can say.</strong> After launch, the &ldquo;where is my order&rdquo; thread that prompted this work stopped being a recurring conversation. Pre-orders became something the store could sell rather than something it had to apologise for.</p>
