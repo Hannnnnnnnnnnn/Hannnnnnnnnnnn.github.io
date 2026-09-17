@@ -444,6 +444,8 @@ run(() => {
     const optin = $("[name='optin']");
     if (e && e.target === optin) optedIn[market] = optin.checked;
     optin.checked = optedIn[market];
+    // 메타필드 정의 이름 그대로 / the metafield definition's own name
+    $("[data-optin-label]").textContent = "Preorder " + market;
     const policy = val("policy"), n = +val("stock");
     const preorder = n === 0 && policy === "continue" && optedIn[market];
     $("[data-cta]").textContent = n > 0 ? "Add to cart" : preorder ? "Pre-order now" : "Sold out";
