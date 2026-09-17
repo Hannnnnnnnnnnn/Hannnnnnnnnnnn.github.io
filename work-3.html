@@ -166,21 +166,19 @@
     <section class="decision" id="decision-1">
       <span class="label muted">Decision 01</span>
       <h3>Deciding what a promise is made of</h3>
-      <p>Three conditions have to agree before the page will promise anything:</p>
+      <p>Two conditions have to agree before the page will promise anything:</p>
       <ol>
-        <li><strong>The variant is out of stock.</strong> There is nothing to promise if it can ship today.</li>
         <li><strong>Its inventory policy allows selling past zero.</strong> Shopify has to accept the order at all.</li>
-        <li><strong>It is out of stock in <em>this</em> market.</strong> Canada and the US answer that differently.</li>
+        <li><strong>This market, specifically, is out of stock.</strong> There is nothing to promise if it can ship today &mdash; and Canada and the US answer that differently.</li>
       </ol>
-      <p><strong>Two choices inside that are worth naming.</strong></p>
       <p><strong>It&rsquo;s per variant, not per product.</strong> A bag might be pre-orderable in one colourway and simply sold out in another. Promising at the product level would have made the page lie about half its own options.</p>
       <p><strong>It&rsquo;s per market.</strong> The same variant can be a pre-order in Canada while it ships today in the US, because the two markets are served by different locations holding different stock. A delivery promise that ignores where the customer is standing isn&rsquo;t a promise; it&rsquo;s an average.</p>
-      <p><strong>Which is why the third condition needs a metafield.</strong> Liquid is handed one inventory number for the whole store, so the page cannot tell whether <em>this</em> market is out &mdash; the only number within its reach is the wrong one. So the answer is worked out where the per-location stock is visible, by a workflow that recomputes it on every inventory change and writes it per variant, per market. The metafield isn&rsquo;t a note somebody leaves for the page. It is the market-aware stock level the page is otherwise blind to.</p>
+      <p><strong>Which is why the second condition needs a metafield.</strong> Liquid is handed one inventory number for the whole store, so the page cannot tell whether <em>this</em> market is out &mdash; the only number within its reach is the wrong one. So the answer is worked out where the per-location stock is visible, by a workflow that recomputes it on every inventory change and writes it per variant, per market. The metafield isn&rsquo;t a note somebody leaves for the page. It is the market-aware stock level the page is otherwise blind to.</p>
       <p><strong>Selling past zero stays a decision, though.</strong> It is a per-variant setting someone turns on deliberately, product by product, and nothing is promised without it. The simpler rule &mdash; <em>out of stock means pre-order</em> &mdash; needs no configuration at all, and promises things nobody agreed to ship. Making someone say yes per item is slower to operate and correct.</p>
-      <p><strong>Resulting states.</strong> Out of stock in this market, selling past zero &rarr; <strong>Pre-order</strong>. In stock &rarr; <strong>Add to Cart</strong>. Out of stock with either condition missing &rarr; <strong>Sold out</strong>, disabled.</p>
+      <p><strong>Resulting states.</strong> Out of stock here, selling past zero &rarr; <strong>Pre-order</strong>. In stock here &rarr; <strong>Add to Cart</strong>. Out of stock with selling past zero off &rarr; <strong>Sold out</strong>, disabled.</p>
       <div class="demo" data-demo-resolver>
         <span class="demo__label label">Try it</span>
-        <p class="demo__caption">Three conditions decide what this button can promise. Change them &mdash; and change the market, because the same variant resolves differently in each one.</p>
+        <p class="demo__caption">Two conditions decide what this button can promise. Change them &mdash; and change the market, because the same variant resolves differently in each one.</p>
         <div class="demo__stage">
           <div class="resolver">
             <button class="resolver__cta" type="button" data-cta>Pre-order now</button>
@@ -307,7 +305,7 @@
             <p class="mfd__was">Immediately after checkout, while the decision is still fresh.</p>
           </div>
         </div>
-        <p class="mfd__note">As shipped, each hand-off read the one before it and nothing wrote the fact down anywhere queryable &mdash; which is why section 6 cannot say how much this changed. The order tag closed that gap later. Decision 05 is what it took to make the tag worth trusting.</p>
+        <p class="mfd__note">As shipped, each hand-off read the one before it and nothing wrote the fact down anywhere queryable &mdash; which is why section 5 cannot say how much this changed. The order tag closed that gap later. Decision 05 is what it took to make the tag worth trusting.</p>
         <figcaption class="label muted">The chain that fires the email.</figcaption>
       </figure>
     </section>
@@ -349,26 +347,19 @@
       <p><strong>What I changed in the email.</strong> One path is left open: an order that itself takes the last unit can flip the flag a moment before the tag is evaluated. Closing it would cost more machinery than it is worth, so I changed the wording instead. The email confirms the order is reserved and says stock ships as it arrives, rather than repeating the window the page shows. It stays true whether or not the item ships immediately, which turns a wrong tag into a wrong internal record instead of a broken promise. The flow is also set transactional &mdash; someone who opted out of marketing should still hear about an order they paid for.</p>
     </section>
 
-    <h2>5 &middot; What shipped</h2>
-    <p>A pre-order state running through the existing PDP &mdash; no app, no separate checkout, no data leaving Shopify.</p>
-    <p><strong>The storefront</strong> resolves the CTA into one of three states from inventory policy, market, and per-market stock.<br>
-      <strong>The expectation</strong> sits directly beneath the button, before the commitment rather than after it.<br>
-      <strong>The email</strong> confirms the reservation immediately after checkout.</p>
-
-    <h2 id="outcome">6 &middot; What I can and can&rsquo;t claim</h2>
+    <h2 id="outcome">5 &middot; What I can and can&rsquo;t claim</h2>
     <p><strong>What I can say.</strong> After launch, the &ldquo;where is my order&rdquo; thread that prompted this work stopped being a recurring conversation. Pre-orders became something the store could sell rather than something it had to apologise for.</p>
     <p><strong>What I can&rsquo;t say is how much.</strong></p>
     <p>The flow shipped without a reliable way to identify a pre-order at the order level. The storefront logic and the email trigger both worked, so I stopped there. Months later, when I went back to ask what this had actually changed, I couldn&rsquo;t separate pre-order orders from the rest. Store-wide reversal rates did fall across the period, but that data covers a window including a holiday season and pre-orders were a small share of volume. Attributing that movement to this feature would be a claim I can&rsquo;t support, so I don&rsquo;t make it.</p>
     <p><strong>Why it happened.</strong> This was one of the first features I built directly in the theme rather than specified for someone else, and I was measuring success by whether it worked. It didn&rsquo;t occur to me that <em>&ldquo;did this work?&rdquo;</em> is a question you have to build the answer to in advance &mdash; that instrumentation is part of the design, not a reporting task that comes later.</p>
-    <p><strong>What changed because of it.</strong> Order-level identification exists now, added months after launch &mdash; and Decision 05 is what happened when I finally checked whether it was correct. It wasn&rsquo;t: one order had been tagged for an item already shipping, and the fix I wrote for it introduced a second case of its own. More usefully, the habit changed too: on the PLP redesign that followed, success criteria and measurement method were written into the proposal before anything shipped, and the report was judged against them rather than against whatever looked good afterwards.</p>
+    <p><strong>What changed because of it.</strong> Order-level identification exists now, added months after launch &mdash; and Decision 05 is what happened when I finally checked whether it was correct. It wasn&rsquo;t. More usefully, the habit changed too: on the PLP redesign that followed, success criteria and measurement method were written into the proposal before anything shipped, and the report was judged against them rather than against whatever looked good afterwards.</p>
 
     <p><strong>Still open.</strong> Two orders from August carry the tag with no property at all. The flow as written cannot produce that, so either it was edited after those orders or something else also applies the tag. Until I know which, the gate can be bypassed without anyone noticing. I would rather write that down here than describe the fix as finished.</p>
 
-    <h2 id="next">7 &middot; What&rsquo;s next</h2>
+    <h2 id="next">6 &middot; What&rsquo;s next</h2>
     <p><strong>Per-product delivery windows.</strong> Replace the static 2&ndash;3 weeks with a metafield holding each item&rsquo;s expected arrival, so the page says what we actually know instead of the same hedge everywhere.</p>
     <p><strong>Tell them when it slips.</strong> A delayed restock currently reaches nobody until they ask. Once the date is data, the notification should follow from it.</p>
     <p><strong>Mixed carts.</strong> A cart holding one in-stock item and one pre-order has no stated behaviour &mdash; split the shipment, or hold everything? Either is defensible. Neither is decided, and that ambiguity currently belongs to the customer.</p>
-    <p><strong>Order status in the account area.</strong> Someone waiting three weeks should be able to check without emailing anyone.</p>
     <p><strong>Expire the snapshot outside the theme.</strong> The cleanup script that strips stale properties only runs when the theme renders. The Shop app, POS and any headless path never load it, so a stale property can survive there indefinitely. Decision 05 catches the consequence at the order. Nothing yet clears the cause.</p>
     <p><strong>Consolidate the two code paths.</strong> An earlier per-product template approach still exists alongside the metafield logic. One implementation, one source of truth.</p>
 

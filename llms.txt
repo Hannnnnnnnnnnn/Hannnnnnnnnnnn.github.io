@@ -115,7 +115,7 @@ pre-order state into the existing theme: no app, no separate checkout, no
 data leaving Shopify.
 
 Decisions worth reading:
-- Three conditions must agree before the page promises anything, resolved
+- Two conditions must agree before the page promises anything, resolved
   per variant and per market. Liquid is handed one inventory number for the
   whole store, so the page cannot tell whether a given market is out; the
   answer is computed where per-location stock is visible and written to a
