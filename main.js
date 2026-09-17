@@ -437,17 +437,15 @@ run(() => {
   const demo = document.querySelector("[data-demo-resolver]");
   if (!demo) return;
   const $ = (s) => demo.querySelector(s);
-  const optedIn = { CA: true, US: false };
   const val = (name) => demo.querySelector("[name='" + name + "']:checked").value;
-  const render = (e) => {
+  const render = () => {
     const market = val("market");
-    const optin = $("[name='optin']");
-    if (e && e.target === optin) optedIn[market] = optin.checked;
-    optin.checked = optedIn[market];
-    // 메타필드 정의 이름 그대로 / the metafield definition's own name
-    $("[data-optin-label]").textContent = "Preorder " + market;
+    // 두 마켓의 플래그를 동시에 보여주고, 마켓 토글은 어느 쪽을 읽을지만 고른다
+    // Both markets' flags stay visible; the market toggle only picks which one is read.
+    const where = market === "CA" ? "Canada" : "US";
+    const optedIn = val("preorder_" + market.toLowerCase()) === "true";
     const policy = val("policy"), n = +val("stock");
-    const preorder = n === 0 && policy === "continue" && optedIn[market];
+    const preorder = n === 0 && policy === "continue" && optedIn;
     $("[data-cta]").textContent = n > 0 ? "Add to cart" : preorder ? "Pre-order now" : "Sold out";
     $("[data-cta]").disabled = n === 0 && !preorder;
     $("[data-copy]").hidden = !preorder;
@@ -456,8 +454,8 @@ run(() => {
       : policy === "deny"
         ? "Selling past zero is turned off for this variant."
         : preorder
-          ? "Opted in for " + market + ", so the page can name a wait."
-          : "Selling past zero is allowed, but this variant hasn't been opted in for " + market + ".";
+          ? "Pre-order in " + where + " is true, so the page can name a wait."
+          : "Selling past zero is allowed, but pre-order in " + where + " is false.";
   };
   demo.addEventListener("change", render);
   render();
