@@ -170,13 +170,14 @@
       <ol>
         <li><strong>The variant is out of stock.</strong> There is nothing to promise if it can ship today.</li>
         <li><strong>Its inventory policy allows selling past zero.</strong> Shopify has to accept the order at all.</li>
-        <li><strong>Someone opted this variant in, for this market.</strong> A per-variant metafield, set in Shopify admin.</li>
+        <li><strong>It is out of stock in <em>this</em> market.</strong> Canada and the US answer that differently.</li>
       </ol>
       <p><strong>Two choices inside that are worth naming.</strong></p>
       <p><strong>It&rsquo;s per variant, not per product.</strong> A bag might be pre-orderable in one colourway and simply sold out in another. Promising at the product level would have made the page lie about half its own options.</p>
-      <p><strong>It&rsquo;s per market.</strong> The same variant can be a pre-order in Canada and unavailable in the US, because fulfilment timelines differ by market. A delivery promise that ignores where the customer is standing isn&rsquo;t a promise; it&rsquo;s an average.</p>
-      <p><strong>Why the opt-in is the design.</strong> Selling past zero is necessary but not sufficient &mdash; someone still has to opt this variant in, for this market. That keeps the decision with merchandising, per item, in Shopify admin. The simpler rule &mdash; <em>out of stock means pre-order</em> &mdash; needs no configuration at all, and promises things nobody agreed to ship. Explicit opt-in is slower to operate and correct.</p>
-      <p><strong>Resulting states.</strong> Out of stock, selling past zero, opted in &rarr; <strong>Pre-order</strong>. In stock &rarr; <strong>Add to Cart</strong>. Out of stock with either condition missing &rarr; <strong>Sold out</strong>, disabled.</p>
+      <p><strong>It&rsquo;s per market.</strong> The same variant can be a pre-order in Canada while it ships today in the US, because the two markets are served by different locations holding different stock. A delivery promise that ignores where the customer is standing isn&rsquo;t a promise; it&rsquo;s an average.</p>
+      <p><strong>Which is why the third condition needs a metafield.</strong> Liquid is handed one inventory number for the whole store, so the page cannot tell whether <em>this</em> market is out &mdash; the only number within its reach is the wrong one. So the answer is worked out where the per-location stock is visible, by a workflow that recomputes it on every inventory change and writes it per variant, per market. The metafield isn&rsquo;t a note somebody leaves for the page. It is the market-aware stock level the page is otherwise blind to.</p>
+      <p><strong>Selling past zero stays a decision, though.</strong> It is a per-variant setting someone turns on deliberately, product by product, and nothing is promised without it. The simpler rule &mdash; <em>out of stock means pre-order</em> &mdash; needs no configuration at all, and promises things nobody agreed to ship. Making someone say yes per item is slower to operate and correct.</p>
+      <p><strong>Resulting states.</strong> Out of stock in this market, selling past zero &rarr; <strong>Pre-order</strong>. In stock &rarr; <strong>Add to Cart</strong>. Out of stock with either condition missing &rarr; <strong>Sold out</strong>, disabled.</p>
       <div class="demo" data-demo-resolver>
         <span class="demo__label label">Try it</span>
         <p class="demo__caption">Three conditions decide what this button can promise. Change them &mdash; and change the market, because the same variant resolves differently in each one.</p>
@@ -227,14 +228,14 @@
         <details>
           <summary class="label">The conditional in Liquid, simplified</summary>
 <pre><code>{%- liquid
-  # Market decides which opt-in key to read
+  # Market decides which per-market stock flag to read
   assign market_code = localization.market.handle
   assign key = 'preorder_' | append: market_code
-  assign opted_in = variant.metafields.custom[key].value
+  assign preorder_here = variant.metafields.custom[key].value
 
   if variant.inventory_quantity &gt; 0
     echo 'products.product.add_to_cart' | t
-  elsif variant.inventory_policy == 'continue' and opted_in == true
+  elsif variant.inventory_policy == 'continue' and preorder_here == true
     echo 'products.product.preorder' | t
   else
     echo 'products.product.sold_out' | t
@@ -350,7 +351,7 @@
 
     <h2>5 &middot; What shipped</h2>
     <p>A pre-order state running through the existing PDP &mdash; no app, no separate checkout, no data leaving Shopify.</p>
-    <p><strong>The storefront</strong> resolves the CTA into one of three states from inventory policy, market, and a per-variant opt-in.<br>
+    <p><strong>The storefront</strong> resolves the CTA into one of three states from inventory policy, market, and per-market stock.<br>
       <strong>The expectation</strong> sits directly beneath the button, before the commitment rather than after it.<br>
       <strong>The email</strong> confirms the reservation immediately after checkout.</p>
 

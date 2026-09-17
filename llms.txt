@@ -116,9 +116,12 @@ data leaving Shopify.
 
 Decisions worth reading:
 - Three conditions must agree before the page promises anything, resolved
-  per variant and per market, with an explicit merchandising opt-in in the
-  middle. The simpler rule — out of stock means pre-order — needs no
-  configuration and also promises things nobody agreed to ship.
+  per variant and per market. Liquid is handed one inventory number for the
+  whole store, so the page cannot tell whether a given market is out; the
+  answer is computed where per-location stock is visible and written to a
+  per-variant, per-market metafield. Selling past zero stays a deliberate
+  per-variant setting — the simpler rule, out of stock means pre-order,
+  needs no configuration and also promises things nobody agreed to ship.
 - Changed the button label rather than adding a note under it, accepting
   that some conversions stop at the change: a purchase made without
   realising there is a three-week wait is a refund with a delay attached.
