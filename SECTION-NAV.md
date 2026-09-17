@@ -60,7 +60,7 @@
 
 현재 위치가 Decisions 구간일 때 **그 아래에만** 결정 번호가 펼쳐집니다.
 
-- **번호만.** 01 PDP 는 5개, 02·03 은 4개. 결정 제목은 넣지 않습니다 — 제목이 길어서
+- **번호만.** 01 PDP 와 03 Pre-order 는 5개, 02 PLP 는 4개. 결정 제목은 넣지 않습니다 — 제목이 길어서
   (`"Removing the review section, then putting it back differently"`) 사이드바에 안 들어갑니다
 - **스크롤 위치에 반응.** 호버로 여닫지 않습니다
 - Decisions 구간을 벗어나면 접힙니다

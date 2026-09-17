@@ -103,7 +103,8 @@ this size, and before/after should be the default.
 
 ### 03 — Pre-order Experience
 https://hannnnnnnnnnnn.github.io/work-3.html
-Feb–Mar 2026 · self-initiated, sole designer and developer
+Feb–Mar 2026, audited and hardened Sept 2026 · self-initiated, sole
+designer and developer
 
 Nobody assigned this. A launch before he joined had oversold and shipped
 late; store-wide sales reversals peaked at 9.4% of gross sales that October.
@@ -124,6 +125,11 @@ Decisions worth reading:
 - A range, not a date, on a supply chain that had just proven unpredictable.
 - A confirmation email fired through a hidden line item property → Shopify
   Flow tag → Klaviyo.
+- Deciding when a promise expires. The property is a snapshot of what the
+  customer was shown and never changes; the order tag now requires the live
+  metafield to agree with it. His own first version of that gate OR'd the
+  two markets' flags, which made it looser rather than stricter — adding a
+  condition only tightens a gate when the conditions are ANDed.
 
 What he cannot claim, and why it is the point of the case: the flow shipped
 without order-level identification of pre-orders, so months later he could
@@ -131,9 +137,14 @@ not separate pre-order orders from the rest and cannot say how much anything
 changed. Reversal rates fell across the period; he declines to attribute it.
 His stated diagnosis is that he was measuring success by whether the feature
 worked, and that instrumentation is part of the design rather than a
-reporting task that comes later. Order-level identification exists now, and
-the habit carried into the PLP project, where success criteria and method
-were written into the proposal before anything shipped.
+reporting task that comes later. Order-level identification exists now — and
+when he finally checked whether it was correct, it was not: one order had
+been tagged for an item already shipping, and his fix for it introduced a
+second case of its own. Two August orders carry the tag with no property at
+all, which the flow as written cannot produce; he leaves that written down
+as open rather than describing the fix as finished. The habit carried into
+the PLP project, where success criteria and method were written into the
+proposal before anything shipped.
 
 ## What he works with
 

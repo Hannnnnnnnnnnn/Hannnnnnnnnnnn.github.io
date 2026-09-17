@@ -48,6 +48,7 @@
           <li><a class="toc__num" href="#decision-2">02</a></li>
           <li><a class="toc__num" href="#decision-3">03</a></li>
           <li><a class="toc__num" href="#decision-4">04</a></li>
+          <li><a class="toc__num" href="#decision-5">05</a></li>
         </ol>
       </li>
       <li><a href="#outcome">Outcome</a></li>
@@ -74,7 +75,7 @@
     <dl class="meta">
       <dt>Client</dt><dd>Atacz</dd>
       <dt>Role</dt><dd>Sole designer and developer &mdash; problem discovery to production</dd>
-      <dt>Timeline</dt><dd>Feb &ndash; Mar 2026</dd>
+      <dt>Timeline</dt><dd>Feb &ndash; Mar 2026 &middot; audited and hardened Sept 2026</dd>
       <dt>Tools</dt><dd>Liquid, Shopify Flow, Klaviyo, Shopify metafields</dd>
     </dl>
 
@@ -166,12 +167,16 @@
       <span class="label muted">Decision 01</span>
       <h3>Deciding what a promise is made of</h3>
       <p>Three conditions have to agree before the page will promise anything:</p>
+      <ol>
+        <li><strong>The variant is out of stock.</strong> There is nothing to promise if it can ship today.</li>
+        <li><strong>Its inventory policy allows selling past zero.</strong> Shopify has to accept the order at all.</li>
+        <li><strong>Someone opted this variant in, for this market.</strong> A per-variant metafield, set in Shopify admin.</li>
+      </ol>
       <p><strong>Two choices inside that are worth naming.</strong></p>
       <p><strong>It&rsquo;s per variant, not per product.</strong> A bag might be pre-orderable in one colourway and simply sold out in another. Promising at the product level would have made the page lie about half its own options.</p>
       <p><strong>It&rsquo;s per market.</strong> The same variant can be a pre-order in Canada and unavailable in the US, because fulfilment timelines differ by market. A delivery promise that ignores where the customer is standing isn&rsquo;t a promise; it&rsquo;s an average.</p>
-      <p><strong>Why the toggle stays in the middle.</strong> Selling past zero is necessary but not sufficient &mdash; someone still has to opt this variant in, for this market. That opt-in is the design: it keeps the decision with merchandising, per item, in Shopify admin, and it stops the page from making a promise about every discontinued product that happens to have inventory policy set loosely.</p>
-      <p><strong>Trade-off.</strong> A simpler rule &mdash; <em>out of stock means pre-order</em> &mdash; needs no configuration and no metafields. It also promises things nobody agreed to ship. Requiring an explicit opt-in is slower to operate and correct.</p>
-      <p><strong>Resulting states.</strong> Available and opted in &rarr; <strong>Pre-order</strong>. Available, not opted in &rarr; <strong>Add to Cart</strong>. Not available &rarr; <strong>Sold out</strong>, disabled.</p>
+      <p><strong>Why the opt-in is the design.</strong> Selling past zero is necessary but not sufficient &mdash; someone still has to opt this variant in, for this market. That keeps the decision with merchandising, per item, in Shopify admin. The simpler rule &mdash; <em>out of stock means pre-order</em> &mdash; needs no configuration at all, and promises things nobody agreed to ship. Explicit opt-in is slower to operate and correct.</p>
+      <p><strong>Resulting states.</strong> Out of stock, selling past zero, opted in &rarr; <strong>Pre-order</strong>. In stock &rarr; <strong>Add to Cart</strong>. Out of stock with either condition missing &rarr; <strong>Sold out</strong>, disabled.</p>
       <div class="demo" data-demo-resolver>
         <span class="demo__label label">Try it</span>
         <p class="demo__caption">Three conditions decide what this button can promise. Change them &mdash; and change the market, because the same variant resolves differently in each one.</p>
@@ -212,15 +217,15 @@
           </p>
         </div>
         <details>
-          <summary class="label">The conditional in Liquid</summary>
+          <summary class="label">The conditional in Liquid, simplified</summary>
 <pre><code>{%- liquid
-  assign market = localization.country.iso_code | downcase
-  assign key = 'preorder_' | append: market
-  assign opted_in = variant.metafields.custom[key]
+  # 마켓별 opt-in 키 / Per-market opt-in key
+  assign key = 'preorder_' | append: market_code
+  assign opted_in = variant.metafields.custom[key].value
 
-  if variant.available
+  if variant.inventory_quantity &gt; 0
     echo 'products.product.add_to_cart' | t
-  elsif variant.inventory_policy == 'continue' and opted_in
+  elsif variant.inventory_policy == 'continue' and opted_in == true
     echo 'products.product.preorder' | t
   else
     echo 'products.product.sold_out' | t
@@ -284,7 +289,7 @@
             <ul class="mfd__list">
               <li><code>Pre-order</code><span class="mfd__type">Order tag</span></li>
             </ul>
-            <p class="mfd__was">Reads the property on order creation and tags the order.</p>
+            <p class="mfd__was">Reads the property on order creation, re-reads the live metafield for the market the order ships to, and tags only when both agree. See Decision 05.</p>
           </div>
           <div class="mfd__col mfd__col--spine">
             <p class="mfd__head label">Klaviyo</p>
@@ -292,9 +297,48 @@
             <p class="mfd__was">Immediately after checkout, while the decision is still fresh.</p>
           </div>
         </div>
-        <p class="mfd__note">Each hand-off reads the one before it, and nothing along the way writes the fact down anywhere queryable. That is why section 6 cannot say how much this changed.</p>
-        <figcaption class="label muted">The chain that fires the email: a hidden property written by the theme, read by Flow, handed to Klaviyo</figcaption>
+        <p class="mfd__note">As shipped, each hand-off read the one before it and nothing wrote the fact down anywhere queryable &mdash; which is why section 6 cannot say how much this changed. The order tag closed that gap later. Decision 05 is what it took to make the tag worth trusting.</p>
+        <figcaption class="label muted">The chain that fires the email.</figcaption>
       </figure>
+    </section>
+
+    <section class="decision" id="decision-5">
+      <span class="label muted">Decision 05</span>
+      <h3>Deciding when a promise expires</h3>
+
+      <p>Six months after launch, an order came through tagged <strong>Pre-order</strong> for an item that was in stock and shipped the same day. The customer was told to wait for something already on its way to them.</p>
+
+      <p><strong>Where it came from.</strong> The theme writes the hidden property at add-to-cart, and that property never changes afterwards. It is a snapshot of what the customer saw in that moment. This cart had been sitting in the Shop app for thirteen days, from before the variant stopped being a pre-order. The theme does carry a cleanup script that strips stale properties &mdash; but it only runs when the theme renders, and a Shop app checkout never loads the theme.</p>
+
+      <p><strong>What I decided.</strong> The property says what the customer was shown. The metafield says whether the item is a pre-order now. The tag requires both. That is Decision 01&rsquo;s rule asked a second time, at the moment the promise turns into a commitment.</p>
+
+      <p><strong>Trade-off.</strong> Re-checking live state can disagree with the page the customer actually saw. I took the stricter side deliberately: someone shown &ldquo;Pre-order&rdquo; for an item that turns out to be in stock gets it early, and early is a good surprise. The other direction is the one that costs trust.</p>
+
+      <p><strong>Then my own gate produced a new false positive.</strong> I wrote it to accept either market&rsquo;s flag &mdash; the property is already market-filtered, I reasoned, so checking either one is enough. An order placed on the US site and shipped to Canada showed that was wrong. The US flag was true, so the property was attached; the order then shipped from Canadian stock within days. The gate read the US flag, agreed with it, and tagged the order.</p>
+
+      <p>The property is filtered by the market at <em>add-to-cart</em> time. Fulfilment is decided by where the order ships. Those are two different markets, and Decision 01 had only ever named one of them. The fix is one line &mdash; let the shipping country choose which flag to read.</p>
+
+      <p><strong>The shape of the mistake is the part worth keeping.</strong> Adding a condition to a gate only tightens it when the conditions are <code>AND</code>ed. Mine were <code>OR</code>ed, so &ldquo;check both flags to be safe&rdquo; made the gate looser than checking one. I did not find it by reading the code. The reasoning behind it was written down at the time and reading it back revealed nothing. I found it by deliberately ordering the awkward combination.</p>
+
+      <p><strong>How I know it works now.</strong> Five test orders covering both markets and both cross-market directions, plus one real customer order carrying no property at all as the negative control.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Scenario</th><th scope="col">Property</th><th scope="col">Flag the gate read</th><th scope="col">Tag</th><th scope="col">Verdict</th></tr></thead>
+          <tbody>
+            <tr><td>Real customer, ordinary items</td><td>none</td><td>&mdash;</td><td>none</td><td>Negative control</td></tr>
+            <tr><td>CA site &rarr; Canada</td><td>present</td><td><code>preorder_ca</code> true</td><td>tagged</td><td>Correct</td></tr>
+            <tr><td>US site &rarr; United States</td><td>present</td><td><code>preorder_us</code> true</td><td>tagged</td><td>Correct</td></tr>
+            <tr><td>US site &rarr; Canada, before the fix</td><td>present</td><td>either flag</td><td>tagged</td><td>False positive</td></tr>
+            <tr><td>US site &rarr; Canada, after the fix</td><td>present</td><td><code>preorder_ca</code> false</td><td>none</td><td>Fixed</td></tr>
+            <tr><td>US site &rarr; United States, after the fix</td><td>present</td><td><code>preorder_us</code> true</td><td>tagged</td><td>Still passes</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>The last row is the one that mattered. A gate that filters correctly and a gate that blocks everything look identical from the negative side &mdash; &ldquo;no tag&rdquo; proves nothing on its own. Confirming that an ordinary US order still tags is what separated them.</p>
+
+      <p><strong>What I changed in the email.</strong> One path is left open: an order that itself takes the last unit can flip the flag a moment before the tag is evaluated. It needs three things to coincide, and closing it would cost more machinery than it is worth. So I changed the wording instead. The email confirms the order is reserved and says stock ships as it arrives, rather than repeating the window the page shows. It stays true whether or not the item ships immediately, which turns a wrong tag into a wrong internal record instead of a broken promise. The flow is also set transactional &mdash; someone who opted out of marketing should still hear about an order they paid for.</p>
     </section>
 
     <h2>5 &middot; What shipped</h2>
@@ -308,13 +352,16 @@
     <p><strong>What I can&rsquo;t say is how much.</strong></p>
     <p>The flow shipped without a reliable way to identify a pre-order at the order level. The storefront logic and the email trigger both worked, so I stopped there. Months later, when I went back to ask what this had actually changed, I couldn&rsquo;t separate pre-order orders from the rest. Store-wide reversal rates did fall across the period, but that data covers a window including a holiday season and pre-orders were a small share of volume. Attributing that movement to this feature would be a claim I can&rsquo;t support, so I don&rsquo;t make it.</p>
     <p><strong>Why it happened.</strong> This was one of the first features I built directly in the theme rather than specified for someone else, and I was measuring success by whether it worked. It didn&rsquo;t occur to me that <em>&ldquo;did this work?&rdquo;</em> is a question you have to build the answer to in advance &mdash; that instrumentation is part of the design, not a reporting task that comes later.</p>
-    <p><strong>What changed because of it.</strong> Order-level identification exists now, added months after launch. More usefully, the habit did: on the PLP redesign that followed, success criteria and measurement method were written into the proposal before anything shipped, and the report was judged against them rather than against whatever looked good afterwards.</p>
+    <p><strong>What changed because of it.</strong> Order-level identification exists now, added months after launch &mdash; and Decision 05 is what happened when I finally checked whether it was correct. It wasn&rsquo;t: one order had been tagged for an item already shipping, and the fix I wrote for it introduced a second case of its own. More usefully, the habit changed too: on the PLP redesign that followed, success criteria and measurement method were written into the proposal before anything shipped, and the report was judged against them rather than against whatever looked good afterwards.</p>
+
+    <p><strong>Still open.</strong> Two orders from August carry the tag with no property at all. The flow as written cannot produce that, so either it was edited after those orders or something else also applies the tag. Until I know which, the gate can be bypassed without anyone noticing. I would rather write that down here than describe the fix as finished.</p>
 
     <h2 id="next">7 &middot; What&rsquo;s next</h2>
     <p><strong>Per-product delivery windows.</strong> Replace the static 2&ndash;3 weeks with a metafield holding each item&rsquo;s expected arrival, so the page says what we actually know instead of the same hedge everywhere.</p>
     <p><strong>Tell them when it slips.</strong> A delayed restock currently reaches nobody until they ask. Once the date is data, the notification should follow from it.</p>
     <p><strong>Mixed carts.</strong> A cart holding one in-stock item and one pre-order has no stated behaviour &mdash; split the shipment, or hold everything? Either is defensible. Neither is decided, and that ambiguity currently belongs to the customer.</p>
     <p><strong>Order status in the account area.</strong> Someone waiting three weeks should be able to check without emailing anyone.</p>
+    <p><strong>Expire the snapshot outside the theme.</strong> The cleanup script that strips stale properties only runs when the theme renders. The Shop app, POS and any headless path never load it, so a stale property can survive there indefinitely. Decision 05 catches the consequence at the order. Nothing yet clears the cause.</p>
     <p><strong>Consolidate the two code paths.</strong> An earlier per-product template approach still exists alongside the metafield logic. One implementation, one source of truth.</p>
 
     <nav class="case-nav" aria-label="More work">
