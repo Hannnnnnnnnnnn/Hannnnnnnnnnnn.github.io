@@ -90,16 +90,19 @@ predicted. Actual scroll distance +9.4% at 0.06% noise probability. Badges
 reached 58% exposure at the first product row; dead clicks and quick
 bounce-backs both fell.
 
-What he refuses to claim: the headline result. At ~26 sessions per arm per
-day the 95% confidence interval was [−18%, +35%] and detecting a change that
-size would take six months, so he writes that the result matches the target
-rather than confirms it. Two friction metrics sit within chance individually
-and are cited only as direction. Canada is called a blank. The scroll result
-only exists after correcting for the redesigned page being 9.5% longer —
-raw scroll looked flat at 37.74% vs 37.76%. He also recommended scaling back
-the banners despite their performance being normal, on cost-versus-return.
-His stated conclusion is that A/B testing is the wrong instrument for a page
-this size, and before/after should be the default.
+What he refuses to claim: the headline result. The 95% confidence interval
+was [−18%, +35%], and he traces that to his own scoping rather than to a
+weak effect — the rollout split 70,716 store-wide visits while the redesign
+existed on one collection, so only 2,327 visitors ever reached it, against
+the ~24,000 per arm the comparison needed. Two friction metrics sit within
+chance individually and are cited only as direction. Canada is called a
+blank. The scroll result only exists after correcting for the redesigned
+page being 9.5% longer — raw scroll looked flat at 37.74% vs 37.76%. He also
+recommended scaling back the banners despite their performance being normal,
+on cost-versus-return. His stated conclusion is that the A/B test was the
+right instrument aimed too narrowly: roll the treatment out at the PLP
+template level so it is as wide as the split, and reserve before/after for
+questions whose traffic genuinely cannot carry a split test.
 
 ### 03 — Pre-order Experience
 https://hannnnnnnnnnnn.github.io/work-3.html

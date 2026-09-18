@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PLP Revamp &mdash; Hanbyoul Kim</title>
-<meta name="description" content="Half our paid visitors never see the homepage. Redesigning the page that greets them instead &mdash; and learning it was the wrong page to A/B test.">
+<meta name="description" content="Half our paid visitors never see the homepage. Redesigning the page that greets them instead &mdash; and learning I had scoped the A/B test to one collection while the split divided the whole store.">
 <link rel="canonical" href="https://hannnnnnnnnnnn.github.io/work-2.html">
 
 <!-- 공유 카드 — 링크를 붙여넣는 모든 곳에서 쓰인다 / Share card, used wherever the link is pasted -->
@@ -58,7 +58,7 @@
 
     <p class="label muted">02 &middot; PLP Revamp</p>
     <h1>Making a product grid introduce the brand</h1>
-    <p class="lead">Redesigning a collection page for visitors who never see the homepage &mdash; and learning it was the wrong page to A/B test.</p>
+    <p class="lead">Redesigning a collection page for visitors who never see the homepage &mdash; and learning the test was scoped to one collection while the split divided the whole store.</p>
 
     <ul class="tags label">
       <li>Product Strategy</li>
@@ -74,7 +74,7 @@
       <li><span class="metric-value">+8.2%</span><span class="metric-label label muted">product click-through</span></li>
       <li><span class="metric-value">58%</span><span class="metric-label label muted">badge exposure, first row</span></li>
     </ul>
-    <p class="caveat">43-day split test, 70,716 visits assigned; click-through moved 9.05% &rarr; 9.80%. Result matches the target range but doesn&rsquo;t reach statistical proof &mdash; that&rsquo;s the finding.</p>
+    <p class="caveat">43-day split test, 70,716 visits assigned; click-through moved 9.05% &rarr; 9.80%. The result lands inside the predicted range, but only 2,327 visitors ever reached the redesigned page &mdash; the split was store-wide, the change was not. That gap is the finding.</p>
 
     <dl class="meta">
       <dt>Client</dt><dd>Atacz</dd>
@@ -133,9 +133,11 @@
 
     <p><strong>What the page was missing wasn&rsquo;t features. It was context.</strong> No upcycling story at the point of decision. No explanation of the premium. And mix-and-match &mdash; the brand&rsquo;s biggest differentiator and an AOV lever &mdash; invisible on a grid.</p>
 
-    <h2 id="research">3 &middot; What I found</h2>
-    <h3>First: ruling out the obvious answer</h3>
-    <p>Before proposing anything I checked whether the PLP was actually the conversion bottleneck. It wasn&rsquo;t.</p>
+    <h2 id="research">3 &middot; Ruling out the wrong problems</h2>
+    <p>A grid that converts badly invites two obvious diagnoses: it is leaking conversions, or it is hard to browse. Both turned out to be wrong, and ruling them out is what set the scope of the redesign.</p>
+
+    <h3>It is not the conversion bottleneck</h3>
+    <p>Before proposing anything I checked whether the PLP was where the money was being lost. It wasn&rsquo;t.</p>
 
     <div class="table-wrap">
       <table>
@@ -149,33 +151,39 @@
       </table>
     </div>
 
-    <p>Behaviour on the page is nearly identical across channels, yet conversion differs by 9&times;. <strong>The gap sits downstream, not here.</strong> So the proposal explicitly ruled conversion out of scope and committed to two things the PLP genuinely could move: brand presence, and click-through into products.</p>
-    <p>Writing that constraint down in the proposal is what kept the report honest later. When results came in, I couldn&rsquo;t quietly promote whichever metric happened to look good.</p>
+    <p>Behaviour on the page is nearly identical across channels, yet conversion differs by 9&times;. <strong>Whatever loses a paid visitor happens after they leave this page, not on it.</strong> No PLP redesign reaches that, so the proposal ruled conversion out of scope and committed instead to the two things this page genuinely controls: brand presence, and click-through into products.</p>
+    <p>Fixing the target metrics in writing, before building anything, is what kept the report honest later &mdash; when results came in I couldn&rsquo;t quietly promote whichever number happened to look good.</p>
 
-    <h3>Second: it isn&rsquo;t a filtering problem</h3>
-    <p>With 60 SKUs across already-categorized collections, scrolling the whole grid costs less than opening a filter panel. The page didn&rsquo;t need better browsing tools. It needed something to say.</p>
+    <h3>It is not a browsing problem</h3>
+    <p>With 60 SKUs across collections that are already categorised, scrolling the whole grid costs less than opening a filter panel. Better browsing tools would have solved a problem this page does not have.</p>
+
+    <p><strong>What that leaves is a brief, not a bug list.</strong> Nothing on the page is broken. The page simply has nothing to say to someone who has never heard of the brand and is looking at a $163 bag. So the work became: add brand context without adding an exit, and without pushing product further down the page. Every decision below is that brief applied.</p>
 
     <h2 id="decisions">4 &middot; Decisions</h2>
 
     <section class="decision" id="decision-1">
       <span class="label muted">Decision 01</span>
       <h3>Taking space back before adding anything</h3>
-      <p><strong>Quick view was desktop-only, and this store is 97% mobile.</strong> Usage rounded to nothing &mdash; not because the feature was bad, but because almost nobody was on a device that could reach it. It occupied the top-right corner of every card plus a CTA inside every photo.</p>
-      <p>I removed it. The top-left corner it vacated is where the PET badge went.</p>
-      <p><strong>The filter button got smaller, not removed.</strong> Filtering wasn&rsquo;t the problem this page had, so the control shouldn&rsquo;t compete for attention as though it were. Shrinking it still serves people who want it, without implying the catalog is large enough to need it.</p>
-<pre><code>Before   hover &rarr; quick view (top-right) + CTA inside photo
-         swatch selected + hover &rarr; quick view + add to cart
-
-After    PET badge (top-left, always visible)
-         swatch selected + hover &rarr; add to cart</code></pre>
+      <p><strong>Quick view was desktop-only, and this store is 97% mobile.</strong> Not by intent &mdash; by CSS. Both of its triggers were revealed on <code>:hover</code>, inside an <code>@media (hover: hover)</code> block, so on a phone neither ever appeared. Usage rounded to nothing because almost nobody was on a device that could reach it. Meanwhile it still cost the card two things: the circular button in the top-right corner, and a second call to action laid over every photo.</p>
+      <p>I turned it off. One section setting removes both triggers at once, and the theme keeps the markup, so it is reversible rather than deleted. The top-right it held is still empty; the PET badge went to the top-left, which was free. The point wasn&rsquo;t to swap one mark for another in the same spot &mdash; it was that the card now carries one always-visible mark where it used to carry two that a phone could never reveal.</p>
+      <p><strong>The filter got smaller, not removed.</strong> It went from a full-width button with an icon to plain underlined text with a plus after it. Filtering wasn&rsquo;t the problem this page had, so the control shouldn&rsquo;t compete for attention as though it were. Reduced, it still serves people who want it, without implying the catalog is large enough to need it.</p>
       <div class="demo" data-demo-card>
         <span class="demo__label label">Try it</span>
-        <p class="demo__caption">The card as it ships. Pick a colour: the photo swaps in place and hovering it reveals that colour&rsquo;s second shot. Only then does
-          hovering the photo raise <em>Add to cart</em> &mdash; on the live page that button does not exist until a
-          variant is chosen, because a card with several colours has nothing specific to add yet. The badge sits in the
-          corner quick view used to hold and expands without navigating; the top-right stays empty, because nothing
-          moved in to take the space back.</p>
-        <div class="demo__stage">
+        <p class="demo__caption">Switch between the two versions below. <strong>Before</strong> is lifted from the theme that ran it: the circular quick-view
+          button in the top-right, the second call to action over the photo, and the full-width filter button above the grid.
+          <strong>After</strong> is the card as it ships now &mdash; quick view off, the top-right left empty, the PET badge in the free top-left
+          corner, and the filter reduced to underlined text with a plus.</p>
+        <p class="demo__caption">In both versions, pick a colour: the photo swaps in place and hovering it reveals that colour&rsquo;s second
+          shot. Only then does hovering the photo raise <em>Add to cart</em> &mdash; on the live page that button does not exist
+          until a variant is chosen, because a card with several colours has nothing specific to add yet.</p>
+        <div class="demo__stage" data-card-stage>
+          <div class="fbar">
+            <span class="fbar__count label muted">60 products</span>
+            <button class="fbar__btn" type="button" tabindex="-1">
+              <svg class="fbar__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" fill="currentColor"/></svg>
+              <span class="fbar__txt">Filter and sort</span>
+            </button>
+          </div>
           <figure class="pcard">
             <div class="pcard__media">
               <img class="pcard__photo" src="images/01-pdp/twist-bag-peach-jelly.jpg" alt="Twist Bag" width="480" height="600" loading="lazy" data-card-photo>
@@ -185,8 +193,15 @@ After    PET badge (top-left, always visible)
                 <span class="pet-badge__default"><svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg><span>6</span></span>
                 <span class="pet-badge__hover" aria-hidden="true">6 Bottles Upcycled</span>
               </label>
-              <span class="pcard__corner" data-card-corner hidden aria-hidden="true"><span class="pcard__corner-tag label">Quick view</span></span>
-              <div class="pcard__buy"><button class="pcard__atc" type="button">Add to cart</button></div>
+              <span class="pcard__qv" aria-hidden="true">
+                <svg viewBox="0 0 15 17" fill="none" aria-hidden="true"><circle cx="7.11113" cy="7.11113" r="6.56113" stroke="currentColor" stroke-width="1.1" fill="none"/><path d="M11.078 12.3282L13.8878 16.0009" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" fill="none"/></svg>
+              </span>
+              <div class="pcard__buy pcard__buy--before" data-buy-before aria-hidden="true">
+                <button class="pcard__atc" type="button" tabindex="-1">Choose options
+                  <svg class="pcard__cart" viewBox="0 0 18 19" fill="none" aria-hidden="true"><path d="M3.09333 5.87954L16.2853 5.87945C16.3948 5.8795 16.4836 5.96831 16.4836 6.07785V11.4909C16.4836 11.974 16.1363 12.389 15.6603 12.4714C11.3279 13.2209 9.49656 13.2033 5.25251 13.9258C4.68216 14.0229 4.14294 13.6285 4.0774 13.0537C3.77443 10.3963 2.99795 3.58502 2.88887 2.62142C2.75288 1.42015 0.905376 1.51528 0.283581 1.51478" stroke="currentColor"/><path d="M13.3143 16.8554C13.3143 17.6005 13.9183 18.2045 14.6634 18.2045C15.4085 18.2045 16.0125 17.6005 16.0125 16.8554C16.0125 16.1104 15.4085 15.5063 14.6634 15.5063C13.9183 15.5063 13.3143 16.1104 13.3143 16.8554Z" fill="currentColor"/><path d="M3.72831 16.8554C3.72831 17.6005 4.33233 18.2045 5.07741 18.2045C5.8225 18.2045 6.42651 17.6005 6.42651 16.8554C6.42651 16.1104 5.8225 15.5063 5.07741 15.5063C4.33233 15.5063 3.72831 16.1104 3.72831 16.8554Z" fill="currentColor"/></svg>
+                </button>
+              </div>
+              <div class="pcard__buy" data-buy-after><button class="pcard__atc" type="button">Add to cart</button></div>
             </div>
             <p class="pcard__title">Twist Bag</p>
             <p class="pcard__price"><span class="pcard__cur">$</span>163<span class="pcard__cents">.00</span></p>
@@ -202,11 +217,13 @@ After    PET badge (top-left, always visible)
         </div>
         <div class="demo__controls">
           <p class="demo__field">
-            <span class="label">The corner it vacated</span>
+            <span class="label">Version</span>
             <span class="demo__seg">
-              <label><input type="checkbox" data-card-outline><span>Outline it</span></label>
+              <label><input type="radio" name="cardver" value="before" data-card-ver><span>Before</span></label>
+              <label><input type="radio" name="cardver" value="after" data-card-ver checked><span>After</span></label>
             </span>
           </p>
+          <p class="demo__note" data-card-note>Quick view removed; the PET badge holds the corner it left, and the filter is sized to the job this page actually has.</p>
         </div>
       </div>
     </section>
@@ -247,17 +264,11 @@ After    PET badge (top-left, always visible)
         <p class="mfd__note">The total is derived, not stored: it is read from orders across all channels and summed. Nobody updates it, so it cannot fall out of date.</p>
         <figcaption class="label muted">One <code>pet_bottle_badge2</code> metafield driving both the card badge and the page counter</figcaption>
       </figure>
-    </section>
-
-    <section class="decision" id="decision-3">
-      <span class="label muted">Decision 03</span>
-      <h3>Deliberately unclickable</h3>
-      <p>Every brand element on the page &mdash; badge, counter, slogan &mdash; is visible and leads nowhere.</p>
-      <p>That sounds like an oversight. It&rsquo;s the constraint the whole layer was designed around. Sales is this page&rsquo;s job, and a story link at the decision moment is just a well-designed exit. The proposal committed to a layer that gets <strong>seen, not clicked</strong>, and holding that line in execution meant refusing the obvious follow-up &mdash; a sustainability page, a &ldquo;learn more.&rdquo;</p>
-      <p><strong>The badge does take a click, though &mdash; it just doesn&rsquo;t navigate.</strong></p>
       <div class="demo">
         <span class="demo__label label">Try it</span>
-        <p class="demo__caption">Hover or tap the badge: it expands in place and never navigates &mdash; the same component the product page uses. The counter below it is the other scale of the same field, and it does not even take a click.</p>
+        <p class="demo__caption">One value, every place it surfaces. Hover or tap either badge &mdash; the card size and the product-media size
+          are the same component at different dimensions, reading the same field. Below them is that field read at the other
+          scale: every badge in the store, summed across orders. Nobody types any of these numbers in.</p>
         <div class="demo__stage demo__stage--pair">
           <figure class="pet">
             <div class="pet__photo">
@@ -315,7 +326,18 @@ After    PET badge (top-left, always visible)
 {%- endif -%}</code></pre>
         </details>
       </div>
-      <p>The compact form keeps the card layout intact; the expanded form serves the smaller group who want the detail. Progressive disclosure, resolved inside the card rather than on another page.</p>
+    </section>
+
+    <section class="decision" id="decision-3">
+      <span class="label muted">Decision 03</span>
+      <h3>Deliberately unclickable</h3>
+      <p>Every brand element on the page &mdash; badge, counter, slogan &mdash; is visible and leads nowhere.</p>
+      <p>That sounds like an oversight. It&rsquo;s the constraint the whole layer was designed around. Sales is this page&rsquo;s job, and a story link at the decision moment is just a well-designed exit. The proposal committed to a layer that gets <strong>seen, not clicked</strong>, and holding that line in execution meant refusing the obvious follow-up &mdash; a sustainability page, a &ldquo;learn more.&rdquo;</p>
+      <p><strong>The badge does take a click, though &mdash; it just doesn&rsquo;t navigate.</strong> Expanding it in the demo above is the
+        entire interaction: it opens in place, says its one sentence, and leaves you where you were. The compact form keeps
+        the card layout intact; the expanded form serves the smaller group who want the detail. Progressive disclosure
+        resolved inside the card rather than on another page &mdash; and, deliberately, with nothing at the end of it to click
+        through to.</p>
       <p><strong>What the test showed.</strong> I expected adding a non-navigating element to <em>raise</em> dead clicks &mdash; people tapping something that appears interactive and going nowhere. The opposite happened: dead clicks fell 14% and quick bounce-backs 9% on the redesigned page.</p>
     </section>
 
@@ -370,12 +392,13 @@ After    PET badge (top-left, always visible)
       </table>
     </div>
     <p>The June proposal predicted +5&ndash;15% relative. The result landed inside it &mdash; direction and magnitude both match.</p>
-    <p><strong>And it isn&rsquo;t proof.</strong> This page runs about 26 sessions a day per arm. Detecting a change this size at that volume would take six months or more; 43 days doesn&rsquo;t get there. The 95% confidence interval is <strong>[&minus;18%, +35%]</strong>. The baseline also halved between July and August for reasons I couldn&rsquo;t confirm, so the combined figure is indicative rather than precise.</p>
-    <p>What I can say is that nothing points the other way. The redesign never trailed in either period, and the friction metrics move in the same direction.</p>
+    <p><strong>That match is not proof &mdash; and the reason is a decision I made, not a weak result.</strong> The 95% confidence interval is <strong>[&minus;18%, +35%]</strong>. Resolving a lift this size on a 9% baseline needs roughly 24,000 exposed visitors per arm. I had 2,327.</p>
+    <p><strong>The shortfall was not a traffic problem. It was an aim problem.</strong> The rollout split the whole store &mdash; 70,716 visits &mdash; but the redesign existed on <em>one</em> collection, so the overwhelming majority of the traffic being divided never met the thing being tested. Applied at the PLP template level instead, across every collection, the same change would have been in front of the 51% of paid entries that land on a collection page &mdash; and the same 43 days would have cleared the threshold. The instrument was right for the job; I aimed it at a fraction of the traffic it was dividing.</p>
+    <p>One more caveat I can&rsquo;t tidy away: the baseline halved between July and August for reasons I couldn&rsquo;t confirm, so the combined figure is indicative rather than precise. What I can say is that nothing points the other way &mdash; the redesign never trailed in either period, and the friction metrics move with it.</p>
 
-    <h4>Scroll: the one solid result</h4>
+    <h4>Scroll: the result the data could settle</h4>
     <p>Raw average scroll was effectively identical between versions &mdash; 37.74% vs 37.76%. That looks like nothing happened.</p>
-    <p><strong>But scroll depth is a percentage of page length, and the redesigned page is 9.5% longer</strong> with the counter and banners added. The same percentage of a longer page means more actual scrolling. Corrected for length, <strong>actual scroll distance rose 9.4%</strong>, at a 0.06% noise probability &mdash; the most statistically solid finding in the test.</p>
+    <p><strong>But scroll depth is a percentage of page length, and the redesigned page is 9.5% longer</strong> with the counter and banners added. The same percentage of a longer page means more actual scrolling. Corrected for length, <strong>actual scroll distance rose 9.4%</strong>, at a 0.06% noise probability. Scroll accumulates on every session, not only on the ones that click, so it is the metric this exposure level had enough data to settle &mdash; and it settles in the same direction as the click-through result.</p>
 
     <div class="cmp">
       <figure class="cmp__side">
@@ -433,7 +456,7 @@ After    PET badge (top-left, always visible)
     <p><strong>So the recommendation is cost-versus-return, not performance.</strong> Banners earn their space when there&rsquo;s an offer behind them &mdash; a promotion or a launch clears that benchmark comfortably. Tie them to campaigns rather than running them evergreen.</p>
 
     <h3>What I can&rsquo;t claim</h3>
-    <p><strong>The headline goal stayed unproven.</strong> Not disproven &mdash; unproven. The page is too small to prove it in 43 days, and I&rsquo;d rather say that than call +8.2% a win.</p>
+    <p><strong>The headline goal is unproven</strong> &mdash; not disproven. At the exposure this test actually reached, no result in the realistic range could have come back significant. That is a verdict on how I scoped the test, not on the redesign.</p>
     <p><strong>AOV was never tested.</strong> The lever that would have moved it wasn&rsquo;t deployed on this page.</p>
     <p><strong>Two of the friction metrics sit within chance individually</strong> (dead clicks and quick bounce-backs, at 64% and 49% noise probability). I cite them only as a consistent direction &mdash; the redesign led in all four measured periods &mdash; not as findings.</p>
     <p><strong>Canada is a blank.</strong> 55 vs 57 clickers in July, 9 vs 14 in August. Nothing can be read from that.</p>
@@ -442,8 +465,9 @@ After    PET badge (top-left, always visible)
     <p><strong>Shipped.</strong> The redesign went into the main deploy. Hero copy came down from nine lines to three, restoring first-screen product visibility across every collection.</p>
     <p><strong>A bug the test found that the redesign didn&rsquo;t cause.</strong> Banner 1 used an absolute URL that sent Canadian visitors to the US site. Nothing in the test was designed to catch it &mdash; it surfaced because measuring the page meant looking at it closely. Fixed.</p>
     <p><strong>Banners applied selectively</strong> &mdash; ad landing pages, collections with 20+ products, seasonal campaigns.</p>
-    <p><strong>And the real conclusion: change how we measure.</strong> For pages this size, A/B testing is the wrong instrument. At 26 sessions per arm per day, improvements small enough to be realistic can&rsquo;t reach significance before the page or the catalog changes underneath the test. Before/after comparison uses the full traffic over the same window and gets to an answer faster. The proposal had listed it as an option; the test is what convinced me it should be the default.</p>
-    <p>I&rsquo;d rather have a method that matches the traffic we actually have than a rigorous one that can&rsquo;t finish.</p>
+    <p><strong>And the real conclusion: test the template, not the page.</strong> The split was store-wide and the change was not, so the test spent 70,716 assignments to observe 2,327 people. The fix isn&rsquo;t to abandon A/B testing here &mdash; it is to make the treatment as wide as the split. The same redesign rolled out across the PLP template puts it in front of every collection entry, which is where half our paid traffic lands, and the volume problem disappears without waiting for the store to grow.</p>
+    <p><strong>Where the volume still isn&rsquo;t there, say so before starting.</strong> A single collection or a seasonal drop can&rsquo;t carry a split test to significance, and running one anyway produces a number nobody can act on. Before/after over the full traffic answers those faster. The proposal had listed it as an option; what the test taught me was how to tell in advance which of the two a question needs.</p>
+    <p>The instrument was never the problem. Matching its scope to the question is the part I&rsquo;d do differently.</p>
 
     <nav class="case-nav" aria-label="More work">
       <a class="case-nav__back label" href="index.html#work">&larr; All work</a>

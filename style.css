@@ -882,11 +882,75 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
    토글로 켤 때만 자리를 표시한다.
    The vacated top-right: empty by default, because that is the outcome being argued.
    The outline is opt-in. */
-/* .pcard__corner 에 display 를 주면 UA 의 [hidden]{display:none} 를 이겨 버린다 —
-   :not([hidden]) 로 걸어야 토글이 실제로 숨긴다 (안 그러면 항상 보인다)
-   A class rule with display beats the UA [hidden] rule, so scope it to :not([hidden]). */
-.demo .pcard__corner:not([hidden]) { position: absolute; top: 12px; right: 12px; width: 92px; height: 30px; border: 1px dashed var(--muted); border-radius: 4px; display: grid; place-items: center; }
-.demo .pcard__corner-tag { color: var(--muted); font-size: 0.62rem; }
+/* ── 결정 01 데모: Before / After ──
+   Before 쪽 값은 추측이 아니라 miffy-drop2-organized 테마(#182726361392)에서 그대로 가져왔다:
+   퀵뷰는 component-quick-view.css 의 원형 버튼(우상단 1.5rem, 3.6rem, scale(0)→scale(1))이고
+   @media (hover:hover) 안에만 있어서 터치 기기에서는 아예 나타나지 않는다. 사진 위 CTA 는
+   여러 색상 상품일 때 'Choose options'(quick-view-button)이며 .card-information__button 이
+   사진 하단에 겹쳐 놓는다. 필터는 .mobile-facets__open.button--full-width 다.
+   After 쪽은 라이브(#188036022576)의 filter_text_underline_style 설정이 만드는 모양이다.
+   Before values are lifted from the miffy-drop2-organized theme, not invented; After matches
+   what the live theme's filter_text_underline_style setting renders. */
+
+/* 퀵뷰: 라이브 테마에는 마크업이 남아 있고 enable_quick_view 설정만 false 다 */
+/* Quick view still ships in the live markup; only the enable_quick_view setting is false */
+.demo .pcard__qv {
+  position: absolute; top: 15px; right: 15px; z-index: 2;
+  width: 36px; height: 36px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--bg); color: var(--fg);
+  box-shadow: 0 0 40px rgba(10, 10, 10, 0.2);
+  transform: scale(0);
+  transition: transform 0.25s ease;
+}
+.demo .pcard__qv svg { width: 18px; height: 18px; }
+/* 호버로만 나타난다 — 이게 97% 모바일에서 사용량이 0에 수렴한 이유다 */
+/* Hover-only, which is why usage rounded to nothing on a 97% mobile store */
+[data-demo-card].is-before .pcard__media:hover .pcard__qv,
+[data-demo-card].is-before .pcard__media:focus-within .pcard__qv { transform: scale(1); transition-delay: 0.1s; }
+
+/* 사진 위 CTA 는 Before 에만, 장바구니 버튼은 After 에만 */
+/* The in-photo CTA belongs to Before, the add-to-cart slot to After */
+.demo .pcard__buy--before { display: none; }
+[data-demo-card].is-before .pcard__buy--before { display: block; }
+[data-demo-card].is-before [data-buy-after] { display: none; }
+[data-demo-card].is-before .pcard__media:hover .pcard__buy--before .pcard__atc,
+[data-demo-card].is-before .pcard__media:focus-within .pcard__buy--before .pcard__atc {
+  opacity: 1; transform: translateY(0); pointer-events: auto;
+}
+.demo .pcard__cart { width: 14px; height: 14px; margin-inline-start: 8px; flex: none; }
+.demo .pcard__buy--before .pcard__atc { display: inline-flex; align-items: center; justify-content: center; }
+
+/* PET 배지는 After 에서 추가된 것이므로 Before 에는 없다 (자리는 유지) */
+/* The badge is an After addition, so it is absent in Before but keeps its box */
+[data-demo-card].is-before .pet-badge { opacity: 0; pointer-events: none; }
+
+/* 필터: 제거가 아니라 축소였다 — 박스 있는 풀폭 버튼 → 밑줄 친 텍스트 + "+" */
+/* The filter shrank rather than went away: boxed full-width button to underlined text + "+" */
+.demo .fbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.demo .fbar__count { font-size: 0.66rem; }
+.demo .fbar__btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 0; border: 0; border-radius: 0; background: none;
+  color: var(--fg); font-family: var(--shop); font-size: 13px; font-weight: 400;
+  letter-spacing: normal; text-transform: none; cursor: default;
+  transition: padding 0.3s ease, background-color 0.3s ease, color 0.3s ease, letter-spacing 0.3s ease;
+}
+.demo .fbar__icon { display: none; width: 16px; height: 16px; flex: none; }
+.demo .fbar__txt { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.demo .fbar__btn::after { content: '+'; margin-inline-start: 6px; }
+[data-demo-card].is-before .fbar__count { opacity: 0; }
+[data-demo-card].is-before .fbar__btn {
+  flex: 1; justify-content: center; padding: 12px;
+  border: 1px solid #0c0c0c; background: #0c0c0c; color: #fff;
+  font-size: 12px; font-weight: 600; letter-spacing: 2.4px; text-transform: uppercase;
+}
+[data-demo-card].is-before .fbar__icon { display: block; }
+[data-demo-card].is-before .fbar__txt { text-decoration: none; }
+[data-demo-card].is-before .fbar__btn::after { content: none; }
+
+.demo .demo__note { margin: 8px 0 0; color: var(--muted); font-size: 0.72rem; line-height: 1.5; }
+
 
 .demo .pet-badge {
   position: relative;
@@ -907,7 +971,7 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
      The theme measures these with JS because the count varies per product; the
      demo's content is fixed, so the numbers are the honest answer here */
   width: var(--pet-w);
-  transition: width 0.5s ease;
+  transition: width 0.5s ease, opacity 0.3s ease;
 }
 .demo .pet-badge--media { --pet-w: 73px; --pet-w-open: 136px; --pet-icon: 24px; }
 .demo .pet-badge--card  { --pet-w: 56px; --pet-w-open: 136px; --pet-icon: 18px; }
@@ -974,6 +1038,10 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
    무대가 tint 라 배경은 이 띠가 직접 들고 있어야 실제와 같아진다.
    Measured off the live block, not invented. The stage is tinted, so the band carries the
    white it actually sits on. */
+@media (prefers-reduced-motion: reduce) {
+  .demo .pcard__qv, .demo .fbar__btn, .demo .pet-badge { transition: none; }
+}
+
 .demo .icount { width: 100%; max-width: 400px; padding: 15px; background: #fff; font-family: var(--shop); color: #0c0c0c; text-align: center; }
 /* 320px 에서는 숫자와 단위가 한 줄에 못 들어간다. wrap 이 없으면 "bottles upcycled" 만
    두 줄로 쪼개져 숫자 옆에 걸치는데, wrap 을 주면 숫자 한 줄 · 단위 한 줄로 가운데 정렬돼

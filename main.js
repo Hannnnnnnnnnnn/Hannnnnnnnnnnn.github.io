@@ -559,9 +559,23 @@ run(() => {
     sw.addEventListener("click", () => pick(sw));
   });
 
-  const corner = demo.querySelector("[data-card-corner]");
-  demo.querySelector("[data-card-outline]").addEventListener("change", (e) => {
-    corner.hidden = !e.target.checked;
+  /* Before / After — 상태는 클래스 하나가 전부이고 나머지는 CSS 가 한다.
+     Before 로 돌아가면 색 선택 상태(is-picked)는 그대로 둔다: 두 버전에서 같은
+     조작을 해 봐야 무엇이 달라졌는지 비교가 되기 때문이다.
+     One class carries the state and CSS does the rest. Switching back to Before keeps
+     the picked colour, so the same interaction can be compared across both versions. */
+  const note = demo.querySelector("[data-card-note]");
+  const NOTES = {
+    before: "A circular quick-view button in the top-right, and a second call to action \u2014 Choose options \u2014 over the photo. Both are revealed by :hover inside an @media (hover: hover) block, so on a touch device neither one exists. The filter leads the page as a full-width button.",
+    after: "Quick view switched off, so the top-right is empty and the photo carries one button instead of two. The PET badge takes the free top-left corner, and the filter is underlined text with a plus rather than a bar.",
+  };
+  const setVer = (v) => {
+    demo.classList.toggle("is-before", v === "before");
+    if (note) note.textContent = NOTES[v];
+  };
+  demo.querySelectorAll("[data-card-ver]").forEach((r) => {
+    r.addEventListener("change", () => setVer(r.value));
+    if (r.checked) setVer(r.value);
   });
 });
 
