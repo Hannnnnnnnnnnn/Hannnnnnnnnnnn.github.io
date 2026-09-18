@@ -937,7 +937,7 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 /* The filter shrank rather than went away: boxed full-width button to underlined text + "+" */
 .demo .fbar {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  min-height: 42px; margin-bottom: 12px;
+  height: 44px; margin-bottom: 12px;
 }
 .demo .fbar__count { font-size: 0.66rem; }
 .demo .fbar__btn {
@@ -954,7 +954,7 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 /* Before's filter was button--full-width, so the count must not take a share of the row */
 .demo .demo__col--before .fbar__count { display: none; }
 .demo .demo__col--before .fbar__btn {
-  flex: 1; justify-content: center; padding: 12px;
+  flex: 1; align-self: stretch; justify-content: center; padding: 0 12px;
   border: 1px solid #0c0c0c; background: #0c0c0c; color: #fff;
   font-size: 12px; font-weight: 600; letter-spacing: 2.4px; text-transform: uppercase;
 }
