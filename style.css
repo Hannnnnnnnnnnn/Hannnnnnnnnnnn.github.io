@@ -944,9 +944,9 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .demo .fbar__icon { display: none; width: 16px; height: 16px; flex: none; }
 .demo .fbar__txt { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .demo .fbar__btn::after { content: '+'; margin-inline-start: 6px; }
-/* 행 높이를 맞추려고 자리만 남긴다 — visibility 라야 스크린리더에도 안 읽힌다 */
-/* Kept only to align the two rows; visibility (not opacity) also hides it from AT */
-.demo .demo__col--before .fbar__count { visibility: hidden; }
+/* Before 의 필터는 button--full-width 였다 — 개수 표시가 폭을 나눠 가지면 안 된다 */
+/* Before's filter was button--full-width, so the count must not take a share of the row */
+.demo .demo__col--before .fbar__count { display: none; }
 .demo .demo__col--before .fbar__btn {
   flex: 1; justify-content: center; padding: 12px;
   border: 1px solid #0c0c0c; background: #0c0c0c; color: #fff;
