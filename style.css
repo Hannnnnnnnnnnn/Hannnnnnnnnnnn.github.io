@@ -783,7 +783,7 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
    pet-bottles-badge 의 인라인 커스텀 프로퍼티 그대로.
    Every dimension here was read off the live theme rather than eyeballed; the swatch
    scale trick is the theme's own. */
-.demo .pcard { margin: 0; width: min(367px, 100%); font-family: var(--shop); }
+.demo .pcard { margin: 0; width: min(367px, 100%); font-family: var(--shop); display: flex; flex-direction: column; }
 /* overflow: hidden 은 라이브 .media 와 같다 — 호버에서 두 번째 사진이 scale(1.03) 되므로
    이게 없으면 사진이 카드 밖으로 삐져나온다 / the hover shot scales, so the box must clip */
 .demo .pcard__media { position: relative; aspect-ratio: 4 / 5; background: #f0f0f0; padding: 12px; display: flex; align-items: flex-start; overflow: hidden; }
@@ -932,6 +932,26 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 }
 .demo .pcard__cart { width: 14px; height: 14px; margin-inline-start: 8px; flex: none; }
 .demo .pcard__buy--before .pcard__atc { display: inline-flex; align-items: center; justify-content: center; }
+
+/* Before 의 카드 타이포와 스워치 위치는 테마 기본값이다 — 리밴프가 넣는 섹션 설정이 없다.
+   제목 기본값은 .card-information__text.h4 = calc(var(--font-heading-scale) * 1.5rem) 이고,
+   heading_scale 100 / body_scale 100 에 html font-size 가 62.5% 이므로 15px 로 떨어진다.
+   After 는 card_title_font_size 12(모바일 10) / card_price_font_size 14(모바일 12) 가 덮는다.
+   Before is simply the theme default; the revamp's per-section font-size settings do not exist
+   there. 15px falls out of the heading scale; After's 12/10 and 14/12 come from the settings. */
+.demo .demo__col--before .pcard__title { font-size: 15px; }
+@media screen and (max-width: 749px) {
+  .demo .demo__col--after .pcard__title { font-size: 10px; }
+  .demo .demo__col--after .pcard__price { font-size: 12px; }
+}
+
+/* 스워치 위치 — Before 는 color_swatches_position:'top' 그대로라 제목 위에 온다.
+   After 는 card_swatches_below_price 가 .card-information__top 에 order 를 줘 가격 아래로 내린다.
+   Before keeps the theme's 'top' swatch row; After reorders it below the price. */
+.demo .demo__col--before .pcard__media  { order: 0; }
+.demo .demo__col--before .pcard__colors { order: 1; }
+.demo .demo__col--before .pcard__title  { order: 2; }
+.demo .demo__col--before .pcard__price  { order: 3; }
 
 /* 필터: 제거가 아니라 축소였다 — 박스 있는 풀폭 버튼 → 밑줄 친 텍스트 + "+" */
 /* The filter shrank rather than went away: boxed full-width button to underlined text + "+" */
