@@ -21,7 +21,7 @@ are the ones worth reading.
 https://hannnnnnnnnnnn.github.io/work-1.html
 Mar–May 2026 · sole designer: research, UI, Liquid implementation, measurement
 
-Atacz product pages pulled 80,266 search impressions over four months but
+Atacz product pages drew steady search demand over four months but
 converted at 1.0–1.7% click-through, about half the ecommerce benchmark,
 with 74% of clicks landing on mobile from a desktop-first page. He rebuilt
 the page around what earned its space.
