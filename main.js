@@ -557,6 +557,9 @@ run(() => {
       // 라이브에서는 이 시점에 view=card 를 가져와 버튼 슬롯을 채운다 — 여기서는 상태 하나로 대신한다
       // The live page fills the button slot from a view=card fetch at exactly this point
       card.classList.add("is-picked");
+      // Before 카드의 제목은 선택된 변형명을 뒤에 달고 있었다 / the Before title carried the variant name
+      const vl = card.querySelector("[data-variant-label]");
+      if (vl) vl.innerHTML = "&nbsp;&ndash;&nbsp;" + sw.getAttribute("aria-label");
     };
     // 라이브 트리거는 스워치의 mouseenter 다(클릭이 아니다). 클릭은 터치·키보드용으로 같이 둔다
     // The live trigger is mouseenter on the swatch; click is kept for touch and keyboard

@@ -949,13 +949,21 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
   .demo .demo__col--after .pcard__price { font-size: 12px; }
 }
 
-/* 스워치 위치 — Before 는 color_swatches_position:'top' 그대로라 제목 위에 온다.
-   After 는 card_swatches_below_price 가 .card-information__top 에 order 를 줘 가격 아래로 내린다.
-   Before keeps the theme's 'top' swatch row; After reorders it below the price. */
-.demo .demo__col--before .pcard__media  { order: 0; }
-.demo .demo__col--before .pcard__colors { order: 1; }
-.demo .demo__col--before .pcard__title  { order: 2; }
-.demo .demo__col--before .pcard__price  { order: 3; }
+/* Before 의 카드 정보 블록은 마크업 순서 자체가 다르다 — CSS order 로 흉내내지 않고 그대로 썼다.
+   .card-information__top 은 flex + space-between 이라 vendor 가 왼쪽, 스워치가 오른쪽으로 붙고
+   (.card-article-info + .card__colors { margin-inline-start: auto }), 보이는 스워치 수를
+   color_swatches_max_items 가 자르고 남은 개수는 +N 링크로 나간다. 별점은 show_rating 이다.
+   After 는 show_vendor / show_rating 이 모두 false 이고 스워치가 가격 아래로 내려간다.
+   Before's information block differs in source order, so it is written that way rather than
+   reordered with CSS. Vendor left, swatches pushed right, the overflow count as a +N link. */
+.demo .pcard__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+.demo .pcard__top .pcard__colors { margin-top: 0; margin-inline-start: auto; }
+.demo .pcard__vendor { font-size: 10px; letter-spacing: 1.3px; text-transform: uppercase; color: rgba(10, 10, 10, 0.75); }
+.demo .pcard__more { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+.demo .pcard__more small { font-size: 10px; }
+.demo .pcard__title small { font-size: 0.86em; font-weight: 400; color: var(--muted); }
+.demo .pcard__rating { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 11px; color: var(--muted); }
+.demo .pcard__stars { color: var(--fg); letter-spacing: 1px; }
 
 /* 필터: 제거가 아니라 축소였다 — 박스 있는 풀폭 버튼 → 밑줄 친 텍스트 + "+" */
 /* The filter shrank rather than went away: boxed full-width button to underlined text + "+" */
