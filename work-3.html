@@ -326,6 +326,77 @@
 
       <p><strong>The shape of the mistake is the part worth keeping.</strong> Adding a condition to a gate only tightens it when the conditions are <code>AND</code>ed. Mine were <code>OR</code>ed, so &ldquo;check both flags to be safe&rdquo; made the gate looser than checking one. I did not find it by reading the code. The reasoning behind it was written down at the time and reading it back revealed nothing. I found it by deliberately ordering the awkward combination.</p>
 
+      <figure class="figure figure--diagram">
+        <div class="flows">
+          <div class="flows__item">
+            <p class="flows__name label">Flow &middot; <code>Pre-order setting for CA and US</code></p>
+            <div class="mfd">
+              <div class="mfd__col">
+                <p class="mfd__head label">Trigger</p>
+                <p class="mfd__template">Variant inventory quantity changed</p>
+                <p class="mfd__was">Every stock movement, in either market.</p>
+              </div>
+              <div class="mfd__col">
+                <p class="mfd__head label">Run code</p>
+                <p class="mfd__template">Reads stock per location, one market at a time</p>
+                <p class="mfd__was">Out of stock here with selling past zero on &rarr; pre-order. Out of stock with it off &rarr; hide the variant in that market.</p>
+              </div>
+              <div class="mfd__col">
+                <p class="mfd__head label">Writes</p>
+                <ul class="mfd__list">
+                  <li><code>custom.preorder_ca</code> / <code>_us</code><span class="mfd__type">Per variant, per market</span></li>
+                  <li><code>custom.hide_variant_ca</code> / <code>_us</code><span class="mfd__type">Per variant, per market</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <p class="flows__link">The first workflow is the only thing that knows the per-market stock. The second is the only thing that reads it back &mdash; and until Decision 05 it never did.</p>
+          <div class="flows__item">
+            <p class="flows__name label">Flow &middot; <code>pre-order</code></p>
+            <div class="mfd">
+              <div class="mfd__col">
+                <p class="mfd__head label">Trigger</p>
+                <p class="mfd__template">Order created</p>
+                <p class="mfd__was">Carries the line item property the theme wrote at add-to-cart.</p>
+              </div>
+              <div class="mfd__col mfd__col--spine">
+                <p class="mfd__head label">Run code &mdash; the gate</p>
+                <ul class="mfd__list">
+                  <li>Property present<span class="mfd__type">What the customer was shown</span></li>
+                  <li><strong>and</strong> the live flag for the <strong>shipping</strong> market<span class="mfd__type">Whether it is a pre-order now</span></li>
+                </ul>
+                <p class="mfd__was">Both, or no tag. Written as <code>or</code> the first time, which made it looser rather than stricter.</p>
+              </div>
+              <div class="mfd__col">
+                <p class="mfd__head label">Actions</p>
+                <ul class="mfd__list">
+                  <li><code>Pre-order</code><span class="mfd__type">Order tag</span></li>
+                  <li>Klaviyo event<span class="mfd__type">Sends the confirmation</span></li>
+                </ul>
+                <p class="mfd__was">The tag is first so a failed send is still findable by tag.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="label muted">The two workflows behind the feature: one keeps the per-market flag current, the other spends it at order time. Neither is visible to the Admin API, so both were read out of the Flow editor.</figcaption>
+      </figure>
+
+      <details>
+        <summary class="label">The gate in the Flow&rsquo;s Run Code, simplified</summary>
+<pre><code>// Where the order ships decides which market's flag to read.
+// Computed once per order, not inside the line item loop.
+const ship = order.shippingAddress || {};
+const shipCountry = ship.countryCodeV2 || ship.country || '';
+const marketKey = shipCountry === 'CA' ? 'preorder_ca' : 'preorder_us';
+
+const isPreOrder = lineItems.some(function (li) {
+  if (!hasPreOrderProperty(li)) return false;           // what the customer saw
+  return li.variant.metafields.some(function (mf) {     // what is true now
+    return mf.key === marketKey &amp;&amp; mf.value === 'true';
+  });
+});</code></pre>
+      </details>
+
       <p><strong>How I know it works now.</strong> Five test orders covering both markets and both cross-market directions, plus one real customer order carrying no property at all as the negative control.</p>
 
       <div class="table-wrap">
@@ -343,6 +414,7 @@
       </div>
 
       <p>The last row is the one that mattered. A gate that filters correctly and a gate that blocks everything look identical from the negative side &mdash; &ldquo;no tag&rdquo; proves nothing on its own. Confirming that an ordinary US order still tags is what separated them.</p>
+
     </section>
 
     <h2 id="outcome">5 &middot; What I can and can&rsquo;t claim</h2>

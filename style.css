@@ -486,6 +486,26 @@ figure.figure--diagram { display: block; aspect-ratio: auto; padding: 0; backgro
   .mfd--chain { grid-template-columns: repeat(4, 1fr); }
 }
 
+/* ── 워크플로 두 개 (03 Dec 05) ──
+   워크플로 하나가 트리거 → Run code → 액션 세 칸이라 기본 .mfd 격자가 그대로 맞는다.
+   더하는 건 이름표와 둘을 잇는 한 줄뿐 — 새 격자를 만들면 같은 그림을 두 가지 방법으로 갖게 된다.
+   Two workflows (03 Dec 05): each is trigger -> run code -> action, which is exactly the base
+   .mfd grid, so this adds only the name line and the sentence linking the two.
+   플로 이름은 실물 이름이라 대소문자가 정보다 — .label 의 대문자 변환을 code 에서만 끄다.
+   The Flow names are real names, so their casing is information: undo .label's uppercasing
+   inside the code element only. */
+.flows { display: grid; gap: 1.4rem; }
+.flows__name { margin: 0 0 0.6rem; color: var(--muted); }
+.flows__name code { font-size: 0.85em; letter-spacing: 0; text-transform: none; }
+.flows__link { margin: 0; font-size: 0.85rem; line-height: 1.6; color: var(--muted); }
+
+/* 본문 속 코드 발췌 접기 — .demo 안의 같은 장치와 모양을 맞춘다.
+   A code excerpt folded into the prose: same treatment as the one inside .demo. */
+.decision > details { margin: 1.5rem 0; border: 1px solid var(--line); }
+.decision > details summary { padding: 0.8rem 1rem; cursor: pointer; }
+.decision > details summary::marker { color: var(--muted); }
+.decision > details pre { max-width: none; margin: 0; border: 0; border-top: 1px solid var(--line); }
+
 /* ── 유입 페이지 분포 (02 §2) ──
    막대 넷과 숫자 넷이다. 이미지로 만들면 320px 에서 라벨이 먼저 죽는데, 이건 이 케이스가
    내놓는 첫 근거라 안 읽히면 전제가 통째로 사라진다. 도식과 같은 이유로 HTML 이다.
