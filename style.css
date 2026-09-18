@@ -895,11 +895,14 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 /* 나란히 놓기 — 토글이 아니라 한 화면에서 둘을 비교한다.
    좁은 폭에서는 한 열로 떨어뜨린다(400px 에서도 읽혀야 한다).
    Side by side rather than a toggle; collapses to one column on narrow screens. */
-.demo .demo__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+.demo .demo__pair {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start;
+  padding: 1.75rem 1.5rem; border-top: 1px solid var(--line);
+}
 .demo .demo__colhead { margin: 0 0 2px; }
 .demo .demo__colsub { margin: 0 0 14px; color: var(--muted); font-size: 0.72rem; line-height: 1.4; }
 @media (max-width: 640px) {
-  .demo .demo__pair { grid-template-columns: 1fr; gap: 34px; }
+  .demo .demo__pair { grid-template-columns: 1fr; gap: 34px; padding: 1.5rem 1.25rem; }
 }
 
 /* 퀵뷰: 라이브 테마에는 마크업이 남아 있고 enable_quick_view 설정만 false 다 */
@@ -932,7 +935,10 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 
 /* 필터: 제거가 아니라 축소였다 — 박스 있는 풀폭 버튼 → 밑줄 친 텍스트 + "+" */
 /* The filter shrank rather than went away: boxed full-width button to underlined text + "+" */
-.demo .fbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.demo .fbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 42px; margin-bottom: 12px;
+}
 .demo .fbar__count { font-size: 0.66rem; }
 .demo .fbar__btn {
   display: inline-flex; align-items: center; gap: 8px;
