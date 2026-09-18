@@ -536,46 +536,34 @@ run(() => {
 run(() => {
   const demo = document.querySelector("[data-demo-card]");
   if (!demo) return;
-  const photo = demo.querySelector("[data-card-photo]");
-  const photoHover = demo.querySelector("[data-card-photo-hover]");
-  const swatches = [...demo.querySelectorAll(".pcard__swatch")];
 
-  const card = demo.querySelector(".pcard");
-  const pick = (sw) => {
-    photo.src = sw.dataset.photo;
-    photoHover.src = sw.dataset.photoHover;   // 호버 사진도 그 색의 두 번째 컷으로 / hover shot follows the colour
-    swatches.forEach((o) => {
-      o.classList.toggle("is-active", o === sw);
-      o.setAttribute("aria-pressed", String(o === sw));
+  /* 카드가 둘(Before/After)이므로 전부 같은 규칙으로 돌린다 — 두 벌을 따로 쓰지 않는다.
+     사진 경로는 마크업의 data-photo 에 들어 있고, 기본 상태(첫 색 선택됨)는 HTML 에 이미
+     있으므로 JS 가 없으면 카드는 그냥 그 상태로 보인다.
+     Two cards now, driven by one rule rather than a copy each. The paths live on the markup
+     and the default state ships in the HTML, so without JS the cards simply show as they are. */
+  demo.querySelectorAll(".pcard").forEach((card) => {
+    const photo = card.querySelector("[data-card-photo]");
+    const photoHover = card.querySelector("[data-card-photo-hover]");
+    const swatches = [...card.querySelectorAll(".pcard__swatch")];
+
+    const pick = (sw) => {
+      photo.src = sw.dataset.photo;
+      photoHover.src = sw.dataset.photoHover;   // 호버 사진도 그 색의 두 번째 컷으로 / hover shot follows the colour
+      swatches.forEach((o) => {
+        o.classList.toggle("is-active", o === sw);
+        o.setAttribute("aria-pressed", String(o === sw));
+      });
+      // 라이브에서는 이 시점에 view=card 를 가져와 버튼 슬롯을 채운다 — 여기서는 상태 하나로 대신한다
+      // The live page fills the button slot from a view=card fetch at exactly this point
+      card.classList.add("is-picked");
+    };
+    // 라이브 트리거는 스워치의 mouseenter 다(클릭이 아니다). 클릭은 터치·키보드용으로 같이 둔다
+    // The live trigger is mouseenter on the swatch; click is kept for touch and keyboard
+    swatches.forEach((sw) => {
+      sw.addEventListener("mouseenter", () => pick(sw));
+      sw.addEventListener("click", () => pick(sw));
     });
-    // 라이브에서는 이 시점에 view=card 를 가져와 버튼 슬롯을 채운다 — 여기서는 상태 하나로 대신한다
-    // The live page fills the button slot from a view=card fetch at exactly this point
-    card.classList.add("is-picked");
-  };
-  // 라이브 트리거는 스워치의 mouseenter 다(클릭이 아니다). 클릭은 터치·키보드용으로 같이 둔다
-  // The live trigger is mouseenter on the swatch; click is kept for touch and keyboard
-  swatches.forEach((sw) => {
-    sw.addEventListener("mouseenter", () => pick(sw));
-    sw.addEventListener("click", () => pick(sw));
-  });
-
-  /* Before / After — 상태는 클래스 하나가 전부이고 나머지는 CSS 가 한다.
-     Before 로 돌아가면 색 선택 상태(is-picked)는 그대로 둔다: 두 버전에서 같은
-     조작을 해 봐야 무엇이 달라졌는지 비교가 되기 때문이다.
-     One class carries the state and CSS does the rest. Switching back to Before keeps
-     the picked colour, so the same interaction can be compared across both versions. */
-  const note = demo.querySelector("[data-card-note]");
-  const NOTES = {
-    before: "A circular quick-view button in the top-right, and a second call to action \u2014 Choose options \u2014 over the photo. Both are revealed by :hover inside an @media (hover: hover) block, so on a touch device neither one exists. The filter leads the page as a full-width button.",
-    after: "Quick view switched off, so the top-right is empty and the photo carries one button instead of two. The PET badge takes the free top-left corner, and the filter is underlined text with a plus rather than a bar.",
-  };
-  const setVer = (v) => {
-    demo.classList.toggle("is-before", v === "before");
-    if (note) note.textContent = NOTES[v];
-  };
-  demo.querySelectorAll("[data-card-ver]").forEach((r) => {
-    r.addEventListener("change", () => setVer(r.value));
-    if (r.checked) setVer(r.value);
   });
 });
 

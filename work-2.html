@@ -169,30 +169,28 @@
       <p><strong>The filter got smaller, not removed.</strong> It went from a full-width button with an icon to plain underlined text with a plus after it. Filtering wasn&rsquo;t the problem this page had, so the control shouldn&rsquo;t compete for attention as though it were. Reduced, it still serves people who want it, without implying the catalog is large enough to need it.</p>
       <div class="demo" data-demo-card>
         <span class="demo__label label">Try it</span>
-        <p class="demo__caption">Switch between the two versions below. <strong>Before</strong> is lifted from the theme that ran it: the circular quick-view
-          button in the top-right, the second call to action over the photo, and the full-width filter button above the grid.
-          <strong>After</strong> is the card as it ships now &mdash; quick view off, the top-right left empty, the PET badge in the free top-left
-          corner, and the filter reduced to underlined text with a plus.</p>
-        <p class="demo__caption">In both versions, pick a colour: the photo swaps in place and hovering it reveals that colour&rsquo;s second
-          shot. Only then does hovering the photo raise <em>Add to cart</em> &mdash; on the live page that button does not exist
-          until a variant is chosen, because a card with several colours has nothing specific to add yet.</p>
-        <div class="demo__stage" data-card-stage>
+        <p class="demo__caption">The two versions side by side, both lifted from the themes that ran them. Hover either photo. On the left,
+          the circular quick-view button appears in the top-right and <em>Choose options</em> slides over the photo &mdash; both only on
+          hover, inside an <code>@media (hover: hover)</code> block, so a phone got neither. On the right the top-right stays empty,
+          the PET badge is always visible, and the photo carries one button instead of two.</p>
+        <p class="demo__caption">Pick a colour on either card: the photo swaps in place and hovering it reveals that colour&rsquo;s second shot.
+          Only on the right does that raise <em>Add to cart</em> &mdash; on the live page the button does not exist until a variant is chosen,
+          because a card with several colours has nothing specific to add yet.</p>
+        <div class="demo__pair">
+        <div class="demo__col demo__col--before">
+          <p class="demo__colhead label">Before</p>
+          <p class="demo__colsub">Quick view on, filter as a full-width button</p>
           <div class="fbar">
             <span class="fbar__count label muted">60 products</span>
             <button class="fbar__btn" type="button" tabindex="-1">
               <svg class="fbar__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" fill="currentColor"/></svg>
-              <span class="fbar__txt">Filter and sort</span>
+              <span class="fbar__txt">Filter</span>
             </button>
           </div>
           <figure class="pcard">
             <div class="pcard__media">
               <img class="pcard__photo" src="images/01-pdp/twist-bag-peach-jelly.jpg" alt="Twist Bag" width="480" height="600" loading="lazy" data-card-photo>
               <img class="pcard__photo pcard__photo--hover" src="images/02-plp/twist-bag-peach-jelly-2.jpg" alt="" width="480" height="600" loading="lazy" data-card-photo-hover>
-              <label class="pet-badge pet-badge--card">
-                <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge">
-                <span class="pet-badge__default"><svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg><span>6</span></span>
-                <span class="pet-badge__hover" aria-hidden="true">6 Bottles Upcycled</span>
-              </label>
               <span class="pcard__qv" aria-hidden="true">
                 <svg viewBox="0 0 15 17" fill="none" aria-hidden="true"><circle cx="7.11113" cy="7.11113" r="6.56113" stroke="currentColor" stroke-width="1.1" fill="none"/><path d="M11.078 12.3282L13.8878 16.0009" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" fill="none"/></svg>
               </span>
@@ -201,7 +199,6 @@
                   <svg class="pcard__cart" viewBox="0 0 18 19" fill="none" aria-hidden="true"><path d="M3.09333 5.87954L16.2853 5.87945C16.3948 5.8795 16.4836 5.96831 16.4836 6.07785V11.4909C16.4836 11.974 16.1363 12.389 15.6603 12.4714C11.3279 13.2209 9.49656 13.2033 5.25251 13.9258C4.68216 14.0229 4.14294 13.6285 4.0774 13.0537C3.77443 10.3963 2.99795 3.58502 2.88887 2.62142C2.75288 1.42015 0.905376 1.51528 0.283581 1.51478" stroke="currentColor"/><path d="M13.3143 16.8554C13.3143 17.6005 13.9183 18.2045 14.6634 18.2045C15.4085 18.2045 16.0125 17.6005 16.0125 16.8554C16.0125 16.1104 15.4085 15.5063 14.6634 15.5063C13.9183 15.5063 13.3143 16.1104 13.3143 16.8554Z" fill="currentColor"/><path d="M3.72831 16.8554C3.72831 17.6005 4.33233 18.2045 5.07741 18.2045C5.8225 18.2045 6.42651 17.6005 6.42651 16.8554C6.42651 16.1104 5.8225 15.5063 5.07741 15.5063C4.33233 15.5063 3.72831 16.1104 3.72831 16.8554Z" fill="currentColor"/></svg>
                 </button>
               </div>
-              <div class="pcard__buy" data-buy-after><button class="pcard__atc" type="button">Add to cart</button></div>
             </div>
             <p class="pcard__title">Twist Bag</p>
             <p class="pcard__price"><span class="pcard__cur">$</span>163<span class="pcard__cents">.00</span></p>
@@ -215,15 +212,39 @@
             </div>
           </figure>
         </div>
-        <div class="demo__controls">
-          <p class="demo__field">
-            <span class="label">Version</span>
-            <span class="demo__seg">
-              <label><input type="radio" name="cardver" value="before" data-card-ver><span>Before</span></label>
-              <label><input type="radio" name="cardver" value="after" data-card-ver checked><span>After</span></label>
-            </span>
-          </p>
-          <p class="demo__note" data-card-note>Quick view removed; the PET badge holds the corner it left, and the filter is sized to the job this page actually has.</p>
+        <div class="demo__col demo__col--after">
+          <p class="demo__colhead label">After</p>
+          <p class="demo__colsub">Quick view off, filter as underlined text</p>
+          <div class="fbar">
+            <span class="fbar__count label muted">60 products</span>
+            <button class="fbar__btn" type="button" tabindex="-1">
+              <svg class="fbar__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" fill="currentColor"/></svg>
+              <span class="fbar__txt">Filter</span>
+            </button>
+          </div>
+          <figure class="pcard">
+            <div class="pcard__media">
+              <img class="pcard__photo" src="images/01-pdp/twist-bag-peach-jelly.jpg" alt="Twist Bag" width="480" height="600" loading="lazy" data-card-photo>
+              <img class="pcard__photo pcard__photo--hover" src="images/02-plp/twist-bag-peach-jelly-2.jpg" alt="" width="480" height="600" loading="lazy" data-card-photo-hover>
+              <label class="pet-badge pet-badge--card">
+                <input class="pet-badge__toggle" type="checkbox" aria-label="Expand the bottle count badge">
+                <span class="pet-badge__default"><svg class="pet-badge__icon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7.80194 1.53055L5.27853 2.02425C4.9714 2.08434 4.77113 2.38204 4.83122 2.68918L5.06379 3.87789C5.12388 4.18503 5.42158 4.3853 5.72871 4.32521L8.25212 3.83151C8.55926 3.77142 8.75953 3.47372 8.69944 3.16658L8.46687 1.97787C8.40678 1.67073 8.10908 1.47046 7.80194 1.53055Z"/><path d="M12.1477 12.502L11.5811 9.76076C11.5598 9.66867 9.93775 8.18117 9.93775 8.18117C10.1998 8.13159 10.1928 6.96284 10.1573 6.77159L9.79608 4.93701C9.76067 4.75284 7.95442 3.88867 7.95442 3.88867L5.84358 4.29951C5.84358 4.29951 4.604 5.75159 4.63942 5.94284L5.00067 7.77742C5.02192 7.90492 5.61692 8.56367 6.19067 8.93909C5.84358 9.36409 5.46108 10.1362 5.48942 10.2778L5.85067 12.1124"/><path d="M2.00464 12.5941C2.00464 12.5941 4.27839 11.5316 6.38214 12.3816C8.25214 13.1395 11.978 13.777 15.0451 12.4737"/><path d="M2.00464 14.9813C2.00464 14.9813 4.20756 13.9188 6.25464 14.7688C7.61464 15.3355 9.98756 15.8384 12.3463 15.5055"/></svg><span>6</span></span>
+                <span class="pet-badge__hover" aria-hidden="true">6 Bottles Upcycled</span>
+              </label>
+              <div class="pcard__buy"><button class="pcard__atc" type="button">Add to cart</button></div>
+            </div>
+            <p class="pcard__title">Twist Bag</p>
+            <p class="pcard__price"><span class="pcard__cur">$</span>163<span class="pcard__cents">.00</span></p>
+            <div class="pcard__colors" role="group" aria-label="Colour">
+            <button class="pcard__swatch is-active" type="button" style="--chip: #F2BAAD" data-photo="images/01-pdp/twist-bag-peach-jelly.jpg" data-photo-hover="images/02-plp/twist-bag-peach-jelly-2.jpg" aria-pressed="true" aria-label="Peach Jelly"></button>
+            <button class="pcard__swatch" type="button" style="--chip: #85843F" data-photo="images/01-pdp/twist-bag-russian-green.jpg" data-photo-hover="images/02-plp/twist-bag-russian-green-2.jpg" aria-pressed="false" aria-label="Russian Green"></button>
+            <button class="pcard__swatch" type="button" style="--chip: #5299B2" data-photo="images/01-pdp/twist-bag-steel-blue.jpg" data-photo-hover="images/02-plp/twist-bag-steel-blue-2.jpg" aria-pressed="false" aria-label="Steel Blue"></button>
+            <button class="pcard__swatch" type="button" style="--chip: #764D2A" data-photo="images/01-pdp/twist-bag-coffee-bean.jpg" data-photo-hover="images/02-plp/twist-bag-coffee-bean-2.jpg" aria-pressed="false" aria-label="Coffee Bean"></button>
+            <button class="pcard__swatch" type="button" style="--chip: #206363" data-photo="images/01-pdp/twist-bag-forest-green.jpg" data-photo-hover="images/02-plp/twist-bag-forest-green-2.jpg" aria-pressed="false" aria-label="Forest Green"></button>
+            <button class="pcard__swatch" type="button" style="--chip: #83A4A7" data-photo="images/01-pdp/twist-bag-mist-grey.jpg" data-photo-hover="images/02-plp/twist-bag-mist-grey-2.jpg" aria-pressed="false" aria-label="Mist Grey"></button>
+            </div>
+          </figure>
+        </div>
         </div>
       </div>
     </section>

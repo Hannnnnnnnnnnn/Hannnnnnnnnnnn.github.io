@@ -892,6 +892,16 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
    Before values are lifted from the miffy-drop2-organized theme, not invented; After matches
    what the live theme's filter_text_underline_style setting renders. */
 
+/* 나란히 놓기 — 토글이 아니라 한 화면에서 둘을 비교한다.
+   좁은 폭에서는 한 열로 떨어뜨린다(400px 에서도 읽혀야 한다).
+   Side by side rather than a toggle; collapses to one column on narrow screens. */
+.demo .demo__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+.demo .demo__colhead { margin: 0 0 2px; }
+.demo .demo__colsub { margin: 0 0 14px; color: var(--muted); font-size: 0.72rem; line-height: 1.4; }
+@media (max-width: 640px) {
+  .demo .demo__pair { grid-template-columns: 1fr; gap: 34px; }
+}
+
 /* 퀵뷰: 라이브 테마에는 마크업이 남아 있고 enable_quick_view 설정만 false 다 */
 /* Quick view still ships in the live markup; only the enable_quick_view setting is false */
 .demo .pcard__qv {
@@ -906,24 +916,19 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .demo .pcard__qv svg { width: 18px; height: 18px; }
 /* 호버로만 나타난다 — 이게 97% 모바일에서 사용량이 0에 수렴한 이유다 */
 /* Hover-only, which is why usage rounded to nothing on a 97% mobile store */
-[data-demo-card].is-before .pcard__media:hover .pcard__qv,
-[data-demo-card].is-before .pcard__media:focus-within .pcard__qv { transform: scale(1); transition-delay: 0.1s; }
+.demo .demo__col--before .pcard__media:hover .pcard__qv,
+.demo .demo__col--before .pcard__media:focus-within .pcard__qv { transform: scale(1); transition-delay: 0.1s; }
 
 /* 사진 위 CTA 는 Before 에만, 장바구니 버튼은 After 에만 */
 /* The in-photo CTA belongs to Before, the add-to-cart slot to After */
 .demo .pcard__buy--before { display: none; }
-[data-demo-card].is-before .pcard__buy--before { display: block; }
-[data-demo-card].is-before [data-buy-after] { display: none; }
-[data-demo-card].is-before .pcard__media:hover .pcard__buy--before .pcard__atc,
-[data-demo-card].is-before .pcard__media:focus-within .pcard__buy--before .pcard__atc {
+.demo .demo__col--before .pcard__buy--before { display: block; }
+.demo .demo__col--before .pcard__media:hover .pcard__buy--before .pcard__atc,
+.demo .demo__col--before .pcard__media:focus-within .pcard__buy--before .pcard__atc {
   opacity: 1; transform: translateY(0); pointer-events: auto;
 }
 .demo .pcard__cart { width: 14px; height: 14px; margin-inline-start: 8px; flex: none; }
 .demo .pcard__buy--before .pcard__atc { display: inline-flex; align-items: center; justify-content: center; }
-
-/* PET 배지는 After 에서 추가된 것이므로 Before 에는 없다 (자리는 유지) */
-/* The badge is an After addition, so it is absent in Before but keeps its box */
-[data-demo-card].is-before .pet-badge { opacity: 0; pointer-events: none; }
 
 /* 필터: 제거가 아니라 축소였다 — 박스 있는 풀폭 버튼 → 밑줄 친 텍스트 + "+" */
 /* The filter shrank rather than went away: boxed full-width button to underlined text + "+" */
@@ -939,17 +944,17 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .demo .fbar__icon { display: none; width: 16px; height: 16px; flex: none; }
 .demo .fbar__txt { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .demo .fbar__btn::after { content: '+'; margin-inline-start: 6px; }
-[data-demo-card].is-before .fbar__count { opacity: 0; }
-[data-demo-card].is-before .fbar__btn {
+/* 행 높이를 맞추려고 자리만 남긴다 — visibility 라야 스크린리더에도 안 읽힌다 */
+/* Kept only to align the two rows; visibility (not opacity) also hides it from AT */
+.demo .demo__col--before .fbar__count { visibility: hidden; }
+.demo .demo__col--before .fbar__btn {
   flex: 1; justify-content: center; padding: 12px;
   border: 1px solid #0c0c0c; background: #0c0c0c; color: #fff;
   font-size: 12px; font-weight: 600; letter-spacing: 2.4px; text-transform: uppercase;
 }
-[data-demo-card].is-before .fbar__icon { display: block; }
-[data-demo-card].is-before .fbar__txt { text-decoration: none; }
-[data-demo-card].is-before .fbar__btn::after { content: none; }
-
-.demo .demo__note { margin: 8px 0 0; color: var(--muted); font-size: 0.72rem; line-height: 1.5; }
+.demo .demo__col--before .fbar__icon { display: block; }
+.demo .demo__col--before .fbar__txt { text-decoration: none; }
+.demo .demo__col--before .fbar__btn::after { content: none; }
 
 
 .demo .pet-badge {
