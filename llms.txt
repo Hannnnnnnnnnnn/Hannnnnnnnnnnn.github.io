@@ -71,8 +71,16 @@ conversion out of scope in writing, which is what stopped him promoting a
 convenient metric later.
 
 Decisions worth reading:
-- Removed desktop-only quick view before adding anything, on a store that is
-  97% mobile, and put the PET badge in the corner it vacated.
+- Turned off quick view before adding anything. It was desktop-only not by
+  intent but by CSS — both triggers sat behind :hover inside an
+  @media (hover: hover) block, so on a 97%-mobile store neither could ever
+  appear. The top-right it held stays empty; the PET badge took the free
+  top-left. He also re-cut the card below the photo: vendor and star rating
+  off (one brand on the whole store, and most products have no reviews, so
+  ratings moved to the product page), title 15px to 12px, price 18px to
+  14px, swatches out of the vendor's row to under the price. The filter
+  shrank rather than went, because 60 products is not a catalogue people
+  need to filter.
 - One metafield rendering at two scales: a per-card bottle badge and a live
   store-wide counter derived from orders, so the individual and cumulative
   claims cannot contradict each other and nobody has to maintain the total.
