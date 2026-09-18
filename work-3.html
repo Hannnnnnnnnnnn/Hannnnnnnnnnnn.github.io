@@ -81,7 +81,7 @@
 
     <p class="hero-type">Pre-order today. Your order is reserved and will ship within 2&ndash;3 weeks.</p>
 
-    <h2 id="problem">2 &middot; The problem</h2>
+    <h2 id="problem">1 &middot; The problem</h2>
     <h3>Nobody assigned this.</h3>
     <p>Months before I joined, a collection launch sold far beyond forecast and shipping slipped badly. I read the aftermath in my first weeks &mdash; support threads asking the same question in different words: <em>when is this actually arriving?</em></p>
     <p>Store-wide reversals peaked at <strong>9.4% of gross sales in October 2025</strong>, the month after that launch, and the highest point in the twelve months I could see.</p>
@@ -156,12 +156,12 @@
     <p>When inventory hit zero the page offered two states: buy now, or nothing. There was no third option for a product that genuinely existed, was genuinely coming, and that customers were willing to wait for.</p>
     <p>Demand arriving during a stockout simply disappeared. Demand arriving <em>before</em> one turned into weeks of silence, which customers read as bad news.</p>
 
-    <h2 id="research">3 &middot; What I found</h2>
+    <h2 id="research">2 &middot; What I found</h2>
     <p><strong>The capability was already there.</strong> Shopify variants carry an inventory policy that allows selling past zero. Turning it on lets an out-of-stock item be purchased &mdash; but the storefront doesn&rsquo;t change. The button still says Add to Cart, the page still behaves like a normal purchase, and the customer finds out about the wait after paying, if at all.</p>
     <p>The gap wasn&rsquo;t a missing feature. <strong>The backend already knew this was a pre-order. The front-end never said so.</strong></p>
     <p>Which meant this could be built without an app &mdash; no subscription, no separate checkout, no data leaving Shopify. Just the theme reading state that already existed.</p>
 
-    <h2 id="decisions">4 &middot; Decisions</h2>
+    <h2 id="decisions">3 &middot; Decisions</h2>
 
     <section class="decision" id="decision-1">
       <span class="label muted">Decision 01</span>
@@ -305,7 +305,7 @@
             <p class="mfd__was">Immediately after checkout, while the decision is still fresh.</p>
           </div>
         </div>
-        <p class="mfd__note">As shipped, each hand-off read the one before it and nothing wrote the fact down anywhere queryable &mdash; which is why section 5 cannot say how much this changed. The order tag closed that gap later. Decision 05 is what it took to make the tag worth trusting.</p>
+        <p class="mfd__note">As shipped, each hand-off read the one before it and nothing wrote the fact down anywhere queryable &mdash; which is why section 4 cannot say how much this changed. The order tag closed that gap later. Decision 05 is what it took to make the tag worth trusting.</p>
         <figcaption class="label muted">The chain that fires the email.</figcaption>
       </figure>
     </section>
@@ -417,7 +417,7 @@ const isPreOrder = lineItems.some(function (li) {
 
     </section>
 
-    <h2 id="outcome">5 &middot; What I can and can&rsquo;t claim</h2>
+    <h2 id="outcome">4 &middot; What I can and can&rsquo;t claim</h2>
     <p><strong>What I can say.</strong> After launch, the &ldquo;where is my order&rdquo; thread that prompted this work stopped being a recurring conversation. Pre-orders became something the store could sell rather than something it had to apologise for.</p>
     <p><strong>What I can&rsquo;t say is how much.</strong></p>
     <p>The flow shipped without a reliable way to identify a pre-order at the order level. The storefront logic and the email trigger both worked, so I stopped there. Months later, when I went back to ask what this had actually changed, I couldn&rsquo;t separate pre-order orders from the rest. Store-wide reversal rates did fall across the period, but that data covers a window including a holiday season and pre-orders were a small share of volume. Attributing that movement to this feature would be a claim I can&rsquo;t support, so I don&rsquo;t make it.</p>
@@ -426,7 +426,7 @@ const isPreOrder = lineItems.some(function (li) {
 
     <p><strong>Still open.</strong> Two orders from August carry the tag with no property at all. The flow as written cannot produce that, so either it was edited after those orders or something else also applies the tag. Until I know which, the gate can be bypassed without anyone noticing. I would rather write that down here than describe the fix as finished.</p>
 
-    <h2 id="next">6 &middot; What&rsquo;s next</h2>
+    <h2 id="next">5 &middot; What&rsquo;s next</h2>
     <p><strong>Per-product delivery windows.</strong> Replace the static 2&ndash;3 weeks with a metafield holding each item&rsquo;s expected arrival, so the page says what we actually know instead of the same hedge everywhere.</p>
     <p><strong>Tell them when it slips.</strong> A delayed restock currently reaches nobody until they ask. Once the date is data, the notification should follow from it.</p>
     <p><strong>Mixed carts.</strong> A cart holding one in-stock item and one pre-order has no stated behaviour &mdash; split the shipment, or hold everything? Either is defensible. Neither is decided, and that ambiguity currently belongs to the customer.</p>

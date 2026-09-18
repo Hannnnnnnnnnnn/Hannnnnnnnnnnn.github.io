@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PLP Revamp &mdash; Hanbyoul Kim</title>
-<meta name="description" content="Half our paid visitors never see the homepage. Redesigning the page that greets them instead &mdash; and learning I had scoped the A/B test to one collection while the split divided the whole store.">
+<meta name="description" content="Half our paid visitors never see the homepage. Redesigning the page that greets them instead &mdash; and learning that my A/B test split the whole store&rsquo;s traffic to measure a change on a single page in it.">
 <link rel="canonical" href="https://hannnnnnnnnnnn.github.io/work-2.html">
 
 <!-- 공유 카드 — 링크를 붙여넣는 모든 곳에서 쓰인다 / Share card, used wherever the link is pasted -->
@@ -58,7 +58,7 @@
 
     <p class="label muted">02 &middot; PLP Revamp</p>
     <h1>Making a product grid introduce the brand</h1>
-    <p class="lead">Redesigning a collection page for visitors who never see the homepage &mdash; and learning the test was scoped to one collection while the split divided the whole store.</p>
+    <p class="lead">Redesigning a collection page for visitors who never see the homepage &mdash; and learning that my A/B test split the whole store&rsquo;s traffic to measure a change on a single page in it.</p>
 
     <ul class="tags label">
       <li>Product Strategy</li>
@@ -100,7 +100,7 @@
       </figure>
     </div>
 
-    <h2 id="problem">2 &middot; The problem</h2>
+    <h2 id="problem">1 &middot; The problem</h2>
     <h3>Half our paid visitors never see the homepage.</h3>
     <p><strong>51% of paid-social sessions land directly on a collection page.</strong> Only 20% start at the homepage. For most of the people we pay to acquire, a product grid is doing the homepage&rsquo;s job &mdash; and it says nothing about who we are.</p>
     <p><strong>57% of all traffic is cold paid social</strong>, converting at roughly 0.1%. They arrive knowing nothing about the brand, land on a grid of bags at a premium price point, and the page offers no reason for it.</p>
@@ -133,7 +133,7 @@
 
     <p><strong>What the page was missing wasn&rsquo;t features. It was context.</strong> No upcycling story at the point of decision. No explanation of the premium. And mix-and-match &mdash; the brand&rsquo;s biggest differentiator and an AOV lever &mdash; invisible on a grid.</p>
 
-    <h2 id="research">3 &middot; Ruling out the wrong problems</h2>
+    <h2 id="research">2 &middot; Ruling out the wrong problems</h2>
     <p>A grid that converts badly invites two obvious diagnoses: it is leaking conversions, or it is hard to browse. Both turned out to be wrong, and ruling them out is what set the scope of the redesign.</p>
 
     <h3>It is not the conversion bottleneck</h3>
@@ -159,14 +159,14 @@
 
     <p><strong>What that leaves is a brief, not a bug list.</strong> Nothing on the page is broken. The page simply has nothing to say to someone who has never heard of the brand and is looking at a $163 bag. So the work became: add brand context without adding an exit, and without pushing product further down the page. Every decision below is that brief applied.</p>
 
-    <h2 id="decisions">4 &middot; Decisions</h2>
+    <h2 id="decisions">3 &middot; Decisions</h2>
 
     <section class="decision" id="decision-1">
       <span class="label muted">Decision 01</span>
       <h3>Taking space back before adding anything</h3>
       <p><strong>Quick view was desktop-only, and this store is 97% mobile.</strong> Not by intent &mdash; by CSS. Both of its triggers were revealed on <code>:hover</code>, inside an <code>@media (hover: hover)</code> block, so on a phone neither ever appeared. Usage rounded to nothing because almost nobody was on a device that could reach it. Meanwhile it still cost the card two things: the circular button in the top-right corner, and a second call to action laid over every photo.</p>
       <p>I turned it off. One section setting removes both triggers at once, and the theme keeps the markup, so it is reversible rather than deleted. The top-right it held is still empty; the PET badge went to the top-left, which was free. The point wasn&rsquo;t to swap one mark for another in the same spot &mdash; it was that the card now carries one always-visible mark where it used to carry two that a phone could never reveal.</p>
-      <p><strong>The filter got smaller, not removed.</strong> It went from a full-width button with an icon to plain underlined text with a plus after it. Filtering wasn&rsquo;t the problem this page had, so the control shouldn&rsquo;t compete for attention as though it were. Reduced, it still serves people who want it, without implying the catalog is large enough to need it.</p>
+      <p><strong>The filter got smaller, not removed.</strong> The whole catalogue is 60 products &mdash; bags, accessories and straps together &mdash; so not many people were ever going to need a filter to get through it. It went from a full-width button with an icon to plain underlined text with a plus after it: still there for anyone who wants it, but no longer sized like a catalogue you have to narrow down before you can shop.</p>
       <p><strong>The card&rsquo;s own hierarchy got re-cut too.</strong> The old card opened with a row that paired the vendor &mdash; &ldquo;Atacz&rdquo;, on an Atacz-only store &mdash; with the colour swatches pushed to its far right, then the title at 15px, the price at 18px, and a star rating under it. Every product said the same brand name. And most products have no reviews at all, so a rating row on a grid is mostly an empty slot pretending to be information &mdash; it belongs on the product page, shown only for the products that actually have one.</p>
       <p>So the vendor and the rating came off, the title went to 12px and the price to 14px, and the swatches moved out of that row to sit beneath the price. On a grid where the photo is doing the selling, the name and the price are what should be read next &mdash; not a brand line that never varies, and not a row of dots you can&rsquo;t act on until the bag has already interested you.</p>
       <div class="demo" data-demo-card>
@@ -404,11 +404,11 @@
       </div>
     </section>
 
-    <h2>5 &middot; What shipped</h2>
+    <h2>4 &middot; What shipped</h2>
     <p>Top banner &rarr; <strong>slogan + live bottle counter</strong> &rarr; product grid with simplified cards and PET badges &rarr; up to 3 contextual banners, one per 2&ndash;3 rows</p>
     <p>Configured 50/50 in Shopify&rsquo;s built-in rollout feature. Assignment came out 49.8 : 50.2 across 70,716 visits &mdash; matching the configuration, which I checked before trusting anything else in the test.</p>
 
-    <h2 id="outcome">6 &middot; Outcome</h2>
+    <h2 id="outcome">5 &middot; Outcome</h2>
 
     <p><strong>Test window</strong> Jul 7 &ndash; Aug 18, 2026 (43 days). <strong>Decision market</strong> US mobile only &mdash; Canadian and desktop volume were too small to read (desktop: 7 sessions vs 11). 2,327 visitors saw the redesigned page.</p>
 
@@ -491,7 +491,7 @@
     <p><strong>Two of the friction metrics sit within chance individually</strong> (dead clicks and quick bounce-backs, at 64% and 49% noise probability). I cite them only as a consistent direction &mdash; the redesign led in all four measured periods &mdash; not as findings.</p>
     <p><strong>Canada is a blank.</strong> 55 vs 57 clickers in July, 9 vs 14 in August. Nothing can be read from that.</p>
 
-    <h2 id="next">7 &middot; What&rsquo;s next</h2>
+    <h2 id="next">6 &middot; What&rsquo;s next</h2>
     <p><strong>Shipped.</strong> The redesign went into the main deploy. Hero copy came down from nine lines to three, restoring first-screen product visibility across every collection.</p>
     <p><strong>A bug the test found that the redesign didn&rsquo;t cause.</strong> Banner 1 used an absolute URL that sent Canadian visitors to the US site. Nothing in the test was designed to catch it &mdash; it surfaced because measuring the page meant looking at it closely. Fixed.</p>
     <p><strong>Banners applied selectively</strong> &mdash; ad landing pages, collections with 20+ products, seasonal campaigns.</p>
