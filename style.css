@@ -934,12 +934,16 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .demo .pcard__buy--before .pcard__atc { display: inline-flex; align-items: center; justify-content: center; }
 
 /* Before 의 카드 타이포와 스워치 위치는 테마 기본값이다 — 리밴프가 넣는 섹션 설정이 없다.
-   제목 기본값은 .card-information__text.h4 = calc(var(--font-heading-scale) * 1.5rem) 이고,
-   heading_scale 100 / body_scale 100 에 html font-size 가 62.5% 이므로 15px 로 떨어진다.
-   After 는 card_title_font_size 12(모바일 10) / card_price_font_size 14(모바일 12) 가 덮는다.
-   Before is simply the theme default; the revamp's per-section font-size settings do not exist
-   there. 15px falls out of the heading scale; After's 12/10 and 14/12 come from the settings. */
+   제목: .card-information__text.h4 = calc(var(--font-heading-scale) * 1.5rem).
+   heading_scale 100 / body_scale 100 에 html font-size 가 62.5% 이므로 15px.
+   가격: .price 컨테이너는 1.4rem 이지만 금액 텍스트는 .price bdi 안에 있고 그쪽이
+   calc(var(--font-price-scale) * 1.8rem) 이라 18px 다 (type_price_font = body → scale 1).
+   After 는 card_title_font_size 12(모바일 10) / card_price_font_size 14(모바일 12) 가
+   .price 와 .price bdi 를 함께 덮어 14px 로 내린다.
+   Before is the theme default. The price number lives in .price bdi at 1.8rem — 18px — not the
+   1.4rem container; the revamp's setting overrides the bdi too, which is what brings it to 14. */
 .demo .demo__col--before .pcard__title { font-size: 15px; }
+.demo .demo__col--before .pcard__price { font-size: 18px; }
 @media screen and (max-width: 749px) {
   .demo .demo__col--after .pcard__title { font-size: 10px; }
   .demo .demo__col--after .pcard__price { font-size: 12px; }

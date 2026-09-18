@@ -167,20 +167,20 @@
       <p><strong>Quick view was desktop-only, and this store is 97% mobile.</strong> Not by intent &mdash; by CSS. Both of its triggers were revealed on <code>:hover</code>, inside an <code>@media (hover: hover)</code> block, so on a phone neither ever appeared. Usage rounded to nothing because almost nobody was on a device that could reach it. Meanwhile it still cost the card two things: the circular button in the top-right corner, and a second call to action laid over every photo.</p>
       <p>I turned it off. One section setting removes both triggers at once, and the theme keeps the markup, so it is reversible rather than deleted. The top-right it held is still empty; the PET badge went to the top-left, which was free. The point wasn&rsquo;t to swap one mark for another in the same spot &mdash; it was that the card now carries one always-visible mark where it used to carry two that a phone could never reveal.</p>
       <p><strong>The filter got smaller, not removed.</strong> It went from a full-width button with an icon to plain underlined text with a plus after it. Filtering wasn&rsquo;t the problem this page had, so the control shouldn&rsquo;t compete for attention as though it were. Reduced, it still serves people who want it, without implying the catalog is large enough to need it.</p>
-      <p><strong>The card&rsquo;s own hierarchy got re-cut too.</strong> The title came down from the theme&rsquo;s default 15px to 12px, and the colour swatches moved from above the title to below the price. On a grid where the photo is doing the selling, the name and the price are what should be read next &mdash; not a row of dots you can&rsquo;t act on until the bag has already interested you.</p>
+      <p><strong>The card&rsquo;s own hierarchy got re-cut too.</strong> The title came down from the theme&rsquo;s default 15px to 12px and the price from 18px to 14px, and the colour swatches moved from above the title to below the price. On a grid where the photo is doing the selling, the name and the price are what should be read next &mdash; not a row of dots you can&rsquo;t act on until the bag has already interested you.</p>
       <div class="demo" data-demo-card>
         <span class="demo__label label">Try it</span>
         <p class="demo__caption">The two versions side by side, both lifted from the themes that ran them. Hover either photo. On the left,
           the circular quick-view button appears in the top-right and <em>Choose options</em> slides over the photo &mdash; both only on
           hover, inside an <code>@media (hover: hover)</code> block, so a phone got neither. On the right the top-right stays empty,
-          the PET badge is always visible, and the photo carries one button instead of two. Below the photo the card is retuned too: the title drops from the theme&rsquo;s default 15px to 12px, and the colour swatches move from above the title to below the price, so name and price read first.</p>
+          the PET badge is always visible, and the photo carries one button instead of two. Below the photo the card is retuned too: the title drops from the theme&rsquo;s default 15px to 12px, the price from 18px to 14px, and the colour swatches move from above the title to below the price, so name and price read first.</p>
         <p class="demo__caption">Pick a colour on either card: the photo swaps in place and hovering it reveals that colour&rsquo;s second shot.
           Only on the right does that raise <em>Add to cart</em> &mdash; on the live page the button does not exist until a variant is chosen,
           because a card with several colours has nothing specific to add yet.</p>
         <div class="demo__pair">
         <div class="demo__col demo__col--before">
           <p class="demo__colhead label">Before</p>
-          <p class="demo__colsub">Quick view on &middot; swatches above the title &middot; 15px title &middot; filter as a full-width button</p>
+          <p class="demo__colsub">Quick view on &middot; swatches above the title &middot; title 15px, price 18px &middot; filter as a full-width button</p>
           <div class="fbar">
             <span class="fbar__count label muted">60 products</span>
             <button class="fbar__btn" type="button" tabindex="-1">
@@ -215,7 +215,7 @@
         </div>
         <div class="demo__col demo__col--after">
           <p class="demo__colhead label">After</p>
-          <p class="demo__colsub">Quick view off &middot; swatches below the price &middot; 12px title &middot; filter as underlined text</p>
+          <p class="demo__colsub">Quick view off &middot; swatches below the price &middot; title 12px, price 14px &middot; filter as underlined text</p>
           <div class="fbar">
             <span class="fbar__count label muted">60 products</span>
             <button class="fbar__btn" type="button" tabindex="-1">
