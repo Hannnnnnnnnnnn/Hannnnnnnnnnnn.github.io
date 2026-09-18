@@ -962,8 +962,35 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 .demo .pcard__more { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
 .demo .pcard__more small { font-size: 10px; }
 .demo .pcard__title small { font-size: 0.86em; font-weight: 400; color: var(--muted); }
-.demo .pcard__rating { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 11px; color: var(--muted); }
-.demo .pcard__stars { color: var(--fg); letter-spacing: 1px; }
+/* 별점은 테마의 .rating-star 를 그대로 옮겼다 — 1rem 이 10px 인 테마라 15px/3px 으로 떨어지고,
+   채움 정도는 그라디언트를 텍스트에 클립해서 낸다. .rating-text(4.38 / 5.0)와 .rating-count((8))는
+   테마에서 display:none 이라 카드에는 별만 보인다 — DOM 에는 있어도 화면에는 없다. */
+/* Lifted from the theme's .rating-star: 15px with 3px tracking (its 1rem is 10px), the fill painted
+   by clipping a gradient to the glyphs. .rating-text and .rating-count are display:none there, so the
+   card shows stars only even though both sit in the DOM. */
+.demo .pcard__rating { margin-top: 8px; }
+.demo .pcard__stars {
+  --letter-spacing: 0.3;
+  --font-size: 1.5;
+  --rating: 4;
+  --rating-max: 5;
+  --rating-decimal: 0.5;
+  --percent: calc((var(--rating) / var(--rating-max) + var(--rating-decimal) * var(--font-size) / (var(--rating-max) * (var(--letter-spacing) + var(--font-size)))) * 100%);
+  display: inline-block;
+  margin: 0;
+  font-family: Times, "Times New Roman", serif;
+  font-size: calc(var(--font-size) * 10px);
+  letter-spacing: calc(var(--letter-spacing) * 10px);
+  line-height: 1;
+}
+.demo .pcard__stars::before {
+  content: "\2605\2605\2605\2605\2605";
+  background: linear-gradient(90deg, var(--fg) var(--percent), rgba(10, 10, 10, 0.15) var(--percent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
 
 /* 필터: 제거가 아니라 축소였다 — 박스 있는 풀폭 버튼 → 밑줄 친 텍스트 + "+" */
 /* The filter shrank rather than went away: boxed full-width button to underlined text + "+" */

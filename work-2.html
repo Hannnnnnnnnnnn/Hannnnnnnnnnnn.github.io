@@ -167,7 +167,7 @@
       <p><strong>Quick view was desktop-only, and this store is 97% mobile.</strong> Not by intent &mdash; by CSS. Both of its triggers were revealed on <code>:hover</code>, inside an <code>@media (hover: hover)</code> block, so on a phone neither ever appeared. Usage rounded to nothing because almost nobody was on a device that could reach it. Meanwhile it still cost the card two things: the circular button in the top-right corner, and a second call to action laid over every photo.</p>
       <p>I turned it off. One section setting removes both triggers at once, and the theme keeps the markup, so it is reversible rather than deleted. The top-right it held is still empty; the PET badge went to the top-left, which was free. The point wasn&rsquo;t to swap one mark for another in the same spot &mdash; it was that the card now carries one always-visible mark where it used to carry two that a phone could never reveal.</p>
       <p><strong>The filter got smaller, not removed.</strong> It went from a full-width button with an icon to plain underlined text with a plus after it. Filtering wasn&rsquo;t the problem this page had, so the control shouldn&rsquo;t compete for attention as though it were. Reduced, it still serves people who want it, without implying the catalog is large enough to need it.</p>
-      <p><strong>The card&rsquo;s own hierarchy got re-cut too.</strong> The old card opened with a row that paired the vendor &mdash; &ldquo;Atacz&rdquo;, on an Atacz-only store &mdash; with the colour swatches pushed to its far right, then the title at 15px, the price at 18px, and a star rating under it. Every product said the same brand name, and the ratings were thin enough to be noise.</p>
+      <p><strong>The card&rsquo;s own hierarchy got re-cut too.</strong> The old card opened with a row that paired the vendor &mdash; &ldquo;Atacz&rdquo;, on an Atacz-only store &mdash; with the colour swatches pushed to its far right, then the title at 15px, the price at 18px, and a star rating under it. Every product said the same brand name. And most products have no reviews at all, so a rating row on a grid is mostly an empty slot pretending to be information &mdash; it belongs on the product page, shown only for the products that actually have one.</p>
       <p>So the vendor and the rating came off, the title went to 12px and the price to 14px, and the swatches moved out of that row to sit beneath the price. On a grid where the photo is doing the selling, the name and the price are what should be read next &mdash; not a brand line that never varies, and not a row of dots you can&rsquo;t act on until the bag has already interested you.</p>
       <div class="demo" data-demo-card>
         <span class="demo__label label">Try it</span>
@@ -217,8 +217,7 @@
             <p class="pcard__title">Twist Bag<small data-variant-label>&nbsp;&ndash;&nbsp;Peach Jelly</small></p>
             <p class="pcard__price"><span class="pcard__cur">$</span>163<span class="pcard__cents">.00</span></p>
             <div class="pcard__rating">
-              <span class="pcard__stars" role="img" aria-label="4.38 out of 5 stars">★★★★½</span>
-              <span>4.38 / 5.0</span><span>(8)</span>
+              <span class="pcard__stars" role="img" aria-label="4.38 out of 5.0 stars, 8 reviews"></span>
             </div>
           </figure>
         </div>
