@@ -865,7 +865,7 @@ html.js :is(.rows li, .section-head, .hero-caption, .prose > *).is-in {
 @keyframes pcard-shine { to { left: 100%; } }
 /* 색을 고르기 전에는 아예 없다 — 라이브에서 슬롯이 비어 있는 것과 같다
    Absent, not merely transparent, until a colour is picked — the live slot is empty */
-.demo .pcard:not(.is-picked) .pcard__buy { display: none; }
+.demo .pcard:not(.is-picked) .pcard__buy:not(.pcard__buy--before) { display: none; }
 .demo .pcard.is-picked:hover .pcard__atc,
 .demo .pcard.is-picked:focus-within .pcard__atc { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .demo .pcard__atc:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
