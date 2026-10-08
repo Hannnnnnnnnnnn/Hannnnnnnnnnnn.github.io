@@ -22,6 +22,7 @@
   <symbol id="i-menu" viewBox="0 0 32 32" fill="none"><path d="M0 26.667h32M0 16h26.98M0 5.333h32" stroke="currentColor"/></symbol>
   <symbol id="i-search" viewBox="0 0 15 17" fill="none"><circle cx="7.11113" cy="7.11113" r="6.56113" stroke="currentColor"/><path d="M11.078 12.3282L13.8878 16.0009" stroke="currentColor" stroke-linecap="round"/></symbol>
   <symbol id="i-cart" viewBox="0 0 24 24" fill="none"><path d="M16 10V6a4 4 0 0 0-8 0v4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.46 15.44 18.39 21a1.39 1.39 0 0 1-1.27.93H6.88A1.39 1.39 0 0 1 5.61 21l-2.07-5.56-1.23-3.26c-.12-.34-.23-.62-.32-.85a17.28 17.28 0 0 1 20 0c-.09.23-.2.51-.32.85Z" stroke="currentColor" stroke-miterlimit="10"/></symbol>
+  <symbol id="i-account" viewBox="0 0 14 18" fill="none"><path d="M7.34497 10.0933C4.03126 10.0933 1.34497 12.611 1.34497 15.7169C1.34497 16.4934 1.97442 17.1228 2.75088 17.1228H11.9391C12.7155 17.1228 13.345 16.4934 13.345 15.7169C13.345 12.611 10.6587 10.0933 7.34497 10.0933Z" stroke="currentColor"/><ellipse cx="7.34503" cy="5.02631" rx="3.63629" ry="3.51313" stroke="currentColor" stroke-linecap="square"/></symbol>
   <symbol id="i-close" viewBox="0 0 12 12" fill="none"><path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-linecap="round"/></symbol>
   <!-- 테마의 두 렌즈를 그대로: 가장자리 변위 맵 + 블러 3 + 채도 1.8, 바 14 / 박스 40 (Chromium 전용) /
        The theme's two lenses verbatim: edge displacement map + blur 3 + saturate 1.8, bar 14 / boxes 40 (Chromium only) -->
@@ -229,18 +230,18 @@
 
       <div class="demo" data-demo-glass>
         <span class="demo__label label">Try it</span>
-        <p class="demo__caption">The same header and menu over the same page, in each surface it has had. Change what sits behind it, and how it is being used &mdash; a phone never hovers.</p>
+        <p class="demo__caption">The same header and menu over the draft&rsquo;s own campaign film, in each surface it has had. Desktop and Phone switch the frame to that device&rsquo;s sizes; a phone never hovers, so it holds the thicker glass.</p>
         <div class="demo__stage">
           <div class="gl" data-glass>
             <div class="gl__page" aria-hidden="true">
-              <img class="gl__bg gl__bg--campaign" src="images/04-header/mini-barrel-mobile.jpg" alt="" width="1050" height="1400" loading="lazy">
+              <video class="gl__bg gl__bg--campaign" src="images/04-header/campaign-loop.mp4" poster="images/04-header/campaign-loop-poster.jpg" width="1280" height="720" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
               <img class="gl__bg gl__bg--lifestyle" src="images/04-header/crew-puff-campaign.jpg" alt="" width="1280" height="854" loading="lazy">
               <div class="gl__bg gl__bg--dark"><p>Made into bags that matter.</p></div>
             </div>
             <div class="gl__bar">
-              <span class="gl__icons"><svg class="gl__icon" aria-hidden="true"><use href="#i-close"/></svg><svg class="gl__icon" aria-hidden="true"><use href="#i-search"/></svg></span>
+              <span class="gl__icons"><span class="gl__btn"><svg class="gl__icon" aria-hidden="true"><use href="#i-close"/></svg></span><span class="gl__btn gl__dsk"><svg class="gl__icon" aria-hidden="true"><use href="#i-search"/></svg></span></span>
               <img class="gl__logo" src="images/04-header/atacz-logo.svg" alt="Atacz" width="120" height="24">
-              <span class="gl__icons gl__icons--end"><svg class="gl__icon" aria-hidden="true"><use href="#i-cart"/></svg></span>
+              <span class="gl__icons gl__icons--end"><span class="gl__btn gl__mob"><svg class="gl__icon" aria-hidden="true"><use href="#i-search"/></svg></span><span class="gl__btn gl__dsk"><svg class="gl__icon" aria-hidden="true"><use href="#i-account"/></svg></span><span class="gl__btn"><svg class="gl__icon" aria-hidden="true"><use href="#i-cart"/></svg></span></span>
             </div>
             <nav class="gl__box gl__menu" aria-label="Menu, as rendered in the demo">
               <ul>
@@ -266,7 +267,7 @@
           <p class="demo__field">
             <span class="label">Behind it</span>
             <span class="demo__seg">
-              <label><input type="radio" name="gl-bg" value="campaign" checked><span>Campaign</span></label>
+              <label><input type="radio" name="gl-bg" value="campaign" checked><span>Campaign film</span></label>
               <label><input type="radio" name="gl-bg" value="lifestyle"><span>Sky</span></label>
               <label><input type="radio" name="gl-bg" value="dark"><span>Black</span></label>
             </span>
@@ -316,24 +317,16 @@ background: rgba(255, 255, 255, calc(0.5 + 0.3 * var(--bar-hover, 0)));
         <input class="hb__state" type="radio" name="hb" id="hb-search" value="search" aria-label="Search box open">
         <input class="hb__state" type="radio" name="hb" id="hb-cart" value="cart" aria-label="Cart box open">
         <span class="demo__label label">Try it</span>
-        <p class="demo__caption">Open the menu, search or cart. Only one box is ever open; the button that opened it turns into its close.</p>
+        <p class="demo__caption">On a phone: open the menu, search or cart. Only one box is ever open, and the button that opened it turns into its close.</p>
         <div class="demo__stage">
           <div class="gl gl--fixed">
             <div class="gl__page" aria-hidden="true">
-              <img class="gl__bg" src="images/04-header/mini-barrel-mobile.jpg" alt="" width="1050" height="1400" loading="lazy">
+              <video class="gl__bg" src="images/04-header/campaign-loop.mp4" poster="images/04-header/campaign-loop-poster.jpg" width="1280" height="720" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
             </div>
             <div class="gl__bar">
-              <span class="gl__icons">
-                <label class="hb__btn" for="hb-menu" data-for="menu"><svg class="gl__icon hb__open" aria-hidden="true"><use href="#i-menu"/></svg><span class="visually-hidden">Open menu</span></label>
-                <label class="hb__btn hb__btn--close" for="hb-none" data-for="menu"><svg class="gl__icon" aria-hidden="true"><use href="#i-close"/></svg><span class="visually-hidden">Close menu</span></label>
-                <label class="hb__btn" for="hb-search" data-for="search"><svg class="gl__icon" aria-hidden="true"><use href="#i-search"/></svg><span class="visually-hidden">Open search</span></label>
-                <label class="hb__btn hb__btn--close" for="hb-none" data-for="search"><svg class="gl__icon" aria-hidden="true"><use href="#i-close"/></svg><span class="visually-hidden">Close search</span></label>
-              </span>
+              <span class="gl__icons"><label class="gl__btn hb__btn" for="hb-menu" data-for="menu"><svg class="gl__icon" aria-hidden="true"><use href="#i-menu"/></svg><span class="visually-hidden">Open menu</span></label><label class="gl__btn hb__btn hb__btn--close" for="hb-none" data-for="menu"><svg class="gl__icon" aria-hidden="true"><use href="#i-close"/></svg><span class="visually-hidden">Close menu</span></label></span>
               <img class="gl__logo" src="images/04-header/atacz-logo.svg" alt="Atacz" width="120" height="24">
-              <span class="gl__icons gl__icons--end">
-                <label class="hb__btn" for="hb-cart" data-for="cart"><svg class="gl__icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="visually-hidden">Open cart</span></label>
-                <label class="hb__btn hb__btn--close" for="hb-none" data-for="cart"><svg class="gl__icon" aria-hidden="true"><use href="#i-close"/></svg><span class="visually-hidden">Close cart</span></label>
-              </span>
+              <span class="gl__icons gl__icons--end"><label class="gl__btn hb__btn" for="hb-search" data-for="search"><svg class="gl__icon" aria-hidden="true"><use href="#i-search"/></svg><span class="visually-hidden">Open search</span></label><label class="gl__btn hb__btn hb__btn--close" for="hb-none" data-for="search"><svg class="gl__icon" aria-hidden="true"><use href="#i-close"/></svg><span class="visually-hidden">Close search</span></label><label class="gl__btn hb__btn" for="hb-cart" data-for="cart"><svg class="gl__icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="visually-hidden">Open cart</span></label><label class="gl__btn hb__btn hb__btn--close" for="hb-none" data-for="cart"><svg class="gl__icon" aria-hidden="true"><use href="#i-close"/></svg><span class="visually-hidden">Close cart</span></label></span>
             </div>
 
             <nav class="gl__box gl__menu hb__box" data-box="menu" aria-label="Menu, as rendered in the demo">
@@ -363,14 +356,14 @@ background: rgba(255, 255, 255, calc(0.5 + 0.3 * var(--bar-hover, 0)));
             <div class="gl__box hb__box hb__search" data-box="search">
               <p class="hb__input">barrel</p>
               <p class="gl__group">Products</p>
-              <p class="hb__row"><img src="images/04-header/mini-barrel-mud.jpg" alt="" width="40" height="50"><span>Mini Barrel Bag<br><span class="hb__muted">$179.00</span></span></p>
+              <p class="hb__row"><img src="images/04-header/mini-barrel-mud.jpg" alt="" width="40" height="50"><span>Mini Barrel Bag<br><span class="hb__muted">$139.00</span></span></p>
               <p class="hb__more">Search for &ldquo;barrel&rdquo;</p>
             </div>
 
             <div class="gl__box hb__box hb__cart" data-box="cart">
               <p class="hb__title">Your cart</p>
-              <p class="hb__row"><img src="images/04-header/mini-barrel-mud.jpg" alt="" width="60" height="75"><span>Mini Barrel Bag<br><span class="hb__muted">Mud &middot; 1</span></span><span class="hb__price">$179.00</span></p>
-              <p class="hb__sum"><span>Subtotal</span><span>$179.00</span></p>
+              <p class="hb__row"><img src="images/04-header/mini-barrel-mud.jpg" alt="" width="60" height="75"><span>Mini Barrel Bag<br><span class="hb__muted">Mud &middot; 1</span></span><span class="hb__price">$139.00</span></p>
+              <p class="hb__sum"><span>Subtotal</span><span>$139.00</span></p>
               <span class="hb__cta hb__cta--checkout">Check out</span>
               <span class="hb__cta">View cart</span>
             </div>
@@ -387,25 +380,55 @@ background: rgba(255, 255, 255, calc(0.5 + 0.3 * var(--bar-hover, 0)));
 
       <div class="demo" data-demo-progress>
         <span class="demo__label label">Try it</span>
-        <p class="demo__caption">Scroll inside the frame. Everything about the bar is a function of one number.</p>
+        <p class="demo__caption">Scroll inside the frame and watch the header become the floating bar. On the homepage it follows the scroll; on a product page it switches at the header&rsquo;s bottom edge with a fade. Phones hold the hover term at 1, so their bar ends at 80%.</p>
         <div class="demo__stage">
           <div class="sb">
-            <div class="sb__bar">
-                <span class="gl__icons"><svg class="gl__icon" aria-hidden="true"><use href="#i-menu"/></svg><svg class="gl__icon" aria-hidden="true"><use href="#i-search"/></svg></span>
-                <img class="sb__logo" src="images/04-header/atacz-logo.svg" alt="Atacz" width="120" height="24">
-                <span class="gl__icons gl__icons--end"><svg class="gl__icon" aria-hidden="true"><use href="#i-cart"/></svg></span>
+            <div class="sb__scroll" data-sb-scroll tabindex="0" aria-label="Scrollable page preview">
+              <p class="sb__ann">Free shipping on all orders $108+</p>
+              <div class="sb__home">
+                <video class="sb__hero" src="images/04-header/campaign-loop.mp4" poster="images/04-header/campaign-loop-poster.jpg" width="1280" height="720" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+                <p class="sb__copy">Made to move, from repurposed PET bottles.</p>
+                <img class="sb__img" src="images/04-header/crew-puff-campaign.jpg" alt="" width="1280" height="854" loading="lazy">
+              </div>
+              <div class="sb__pdp">
+                <div class="sb__media"><img src="images/04-header/mini-barrel-mud.jpg" alt="" width="960" height="1200" loading="lazy"></div>
+                <div class="sb__info">
+                  <p class="sb__title">Mini Barrel Bag</p>
+                  <p class="sb__price">$139.00</p>
+                  <span class="sb__atc">Add to cart</span>
+                </div>
+                <img class="sb__img" src="images/04-header/mini-barrel-mobile.jpg" alt="" width="1050" height="1400" loading="lazy">
+              </div>
             </div>
-            <div class="sb__scroll" data-sb-scroll tabindex="0" aria-label="Scrollable homepage preview">
-              <img class="sb__hero" src="images/04-header/mini-barrel-mobile.jpg" alt="" width="1050" height="1400" loading="lazy">
-              <img class="sb__hero" src="images/04-header/crew-puff-campaign.jpg" alt="" width="1280" height="854" loading="lazy">
-              <p class="sb__copy">Made to move, from repurposed PET bottles.</p>
+            <div class="sb__bar">
+              <span class="gl__icons"><span class="gl__btn"><svg class="gl__icon" aria-hidden="true"><use href="#i-menu"/></svg></span><span class="gl__btn gl__dsk"><svg class="gl__icon" aria-hidden="true"><use href="#i-search"/></svg></span></span>
+              <img class="sb__logo" src="images/04-header/atacz-logo.svg" alt="Atacz" width="120" height="24">
+              <span class="gl__icons gl__icons--end"><span class="gl__btn gl__mob"><svg class="gl__icon" aria-hidden="true"><use href="#i-search"/></svg></span><span class="gl__btn gl__dsk"><svg class="gl__icon" aria-hidden="true"><use href="#i-account"/></svg></span><span class="gl__btn"><svg class="gl__icon" aria-hidden="true"><use href="#i-cart"/></svg></span></span>
             </div>
           </div>
-          <p class="sb__read label"><code>--sticky-progress: <span data-sb-value>0.00</span></code></p>
+          <p class="sb__read label"><code>scroll <span data-sb-y>0</span>px &middot; sticky <span data-sb-on>off</span> &middot; --sticky-progress <span data-sb-value>0.00</span></code></p>
+        </div>
+        <div class="demo__controls">
+          <p class="demo__field">
+            <span class="label">Page</span>
+            <span class="demo__seg">
+              <label><input type="radio" name="sb-page" value="home" checked><span>Homepage</span></label>
+              <label><input type="radio" name="sb-page" value="pdp"><span>Product page</span></label>
+            </span>
+          </p>
+          <p class="demo__field">
+            <span class="label">Device</span>
+            <span class="demo__seg">
+              <label><input type="radio" name="sb-device" value="desktop" checked><span>Desktop</span></label>
+              <label><input type="radio" name="sb-device" value="phone"><span>Phone</span></label>
+            </span>
+          </p>
         </div>
         <details>
           <summary class="label">The scroll handler and the bar, from the theme</summary>
-<pre><code>// 0..1 over the 200px after the announcement bar has gone
+<pre><code>// Transparent header: stick once the announcement bar has gone, 0..1 over 200px.
+// Solid header: stick at the header's bottom edge.
+const stickAt = scrollLinked ? this.headerBounds.top : this.headerBounds.bottom;
 const progress = Math.min(Math.max((scrollTop - this.headerBounds.top) / 200, 0), 1) || 0;
 this.header.style.setProperty('--sticky-progress', progress);
 
@@ -414,8 +437,7 @@ left: calc(var(--bar-inset) * var(--sticky-progress, 1));
 width: calc(100% - var(--bar-inset) * 2 * var(--sticky-progress, 1));
 background: rgba(255, 255, 255,
   calc((0.5 + 0.3 * var(--bar-hover, 0)) * var(--sticky-progress, 1)));
-backdrop-filter: blur(calc(12px * var(--sticky-progress, 1)))
-  saturate(calc(100% + 80% * var(--sticky-progress, 1)));</code></pre>
+--image-logo-height: calc(40px - 10px * var(--sticky-progress, 1)); /* phone: 24px - 7.2px */</code></pre>
         </details>
       </div>
     </section>

@@ -577,7 +577,7 @@ run(() => {
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   document.querySelectorAll("video[autoplay]").forEach((v) => {
     v.autoplay = false;
-    v.controls = true;
+    v.controls = !v.closest(".demo");   // 데모 배경 영상은 멈추기만 / a demo's background video just stops
     v.pause();
   });
 });
@@ -674,25 +674,39 @@ run(() => {
    blur included, so the lens values apply only where this class lands. */
 run(() => {
   if (!(navigator.userAgentData && navigator.userAgentData.brands.some((b) => b.brand === "Chromium"))) return;
-  document.querySelectorAll(".demo .gl").forEach((el) => el.classList.add("is-lens"));
+  document.querySelectorAll(".demo :is(.gl, .sb)").forEach((el) => el.classList.add("is-lens"));
 });
 
-/* ── 6g. 04 Dec 04: 스크롤 연동 바 — 프레임의 처음 200px 을 0..1 로 ──
-   테마의 onScroll 과 같은 식이고, 쓰는 값은 --p 하나다. 나머지는 전부 CSS 의 calc() 다.
-   The theme's formula: 0..1 over the first 200px. One value is written; the rest is calc(). */
+/* ── 6g. 04 Dec 04: 스크롤하면 스티키가 된다 — 테마 StickyHeader.onScroll 의 두 갈래 ──
+   홈(투명 헤더)은 공지 바가 사라지는 지점(headerBounds.top)에서 붙고 200px 동안 0..1,
+   상품 페이지(흰 헤더)는 헤더 바닥(headerBounds.bottom)에서 붙는다. 쓰는 값은 --p 와,
+   붙기 전 헤더의 위치 --y 둘뿐이고 나머지는 전부 CSS calc() 다.
+   The two branches of the theme's onScroll: the transparent homepage header sticks where the
+   announcement bar ends and runs 0..1 over 200px; a solid product-page header sticks at its
+   bottom edge. JS writes only --p and --y (where the header sits before it sticks). */
 run(() => {
   const demo = document.querySelector("[data-demo-progress]");
   if (!demo) return;
   const frame = demo.querySelector(".sb");
   const scroller = demo.querySelector("[data-sb-scroll]");
-  const out = demo.querySelector("[data-sb-value]");
+  const out = (k) => demo.querySelector("[data-sb-" + k + "]");
+  const ANN = 26;  // 공지 바 높이, 드래프트 실측 / announcement bar height, measured on the draft
   const update = () => {
-    const p = Math.min(Math.max(scroller.scrollTop / 200, 0), 1);
+    const y = scroller.scrollTop;
+    const home = demo.querySelector('[name="sb-page"][value="home"]').checked;
+    // 헤더 높이: 데스크톱 18 + 44 + 10 실측, 폰은 아이콘 행 34 / header height: desktop measured, phone with the 34px row
+    const headerH = demo.querySelector('[name="sb-device"][value="desktop"]').checked ? 72 : 62;
+    const stuck = y >= (home ? ANN : ANN + headerH);
+    const p = home ? Math.min(Math.max((y - ANN) / 200, 0), 1) : stuck ? 1 : 0;
     frame.style.setProperty("--p", p);
-    frame.classList.toggle("is-stuck", p > 0);
-    out.textContent = p.toFixed(2);
+    frame.style.setProperty("--y", stuck ? 0 : ANN - y);
+    frame.classList.toggle("is-stuck", stuck);
+    out("y").textContent = Math.round(y);
+    out("on").textContent = stuck ? "on" : "off";
+    out("value").textContent = home ? p.toFixed(2) : "n/a";
   };
   scroller.addEventListener("scroll", update, { passive: true });
+  demo.addEventListener("change", () => { scroller.scrollTop = 0; update(); });
   update();
 });
 
