@@ -1656,9 +1656,10 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
   --box-w: calc(100% - 20px);
   --menu-pad: 20px;
   --hover: 1;                  /* 폰은 호버가 오지 않으므로 80% 고정 / a phone never hovers: held at 80% */
+  --frame-h: 560px;
   position: relative;
   width: min(360px, 100%);
-  height: 560px;
+  height: var(--frame-h);
   overflow: hidden;
   isolation: isolate;
   font-family: var(--shop);
@@ -1674,14 +1675,14 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
   --box-w: min(450px, calc(100% - 40px));
   --menu-pad: 30px;
   --hover: 0;
+  --frame-h: 440px;
   width: 100%;
-  height: 440px;
 }
 /* 서치 아이콘: 데스크톱은 메뉴 옆, 폰은 카트 옆. 계정은 데스크톱에만 (테마의 small-hide)
    Search sits beside the menu on desktop and beside the cart on phones; account is desktop only */
-.demo .gl__dsk { display: none; }
+.demo .gl__btn.gl__dsk { display: none; }
 .demo[data-demo-glass]:has([name="gl-use"]:not([value="touch"]):checked) .gl__dsk,
-.demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .gl__dsk { display: block; }
+.demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .gl__dsk { display: grid; }
 .demo[data-demo-glass]:has([name="gl-use"]:not([value="touch"]):checked) .gl__mob,
 .demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .gl__mob { display: none; }
 
@@ -1856,7 +1857,8 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 .demo .sb { --p: 0; --y: 26; background: #fff; border: 1px solid var(--line); color: #0c0c0c; }
 .demo .sb__scroll { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; }
 .demo .sb__ann { margin: 0; height: 26px; display: grid; place-items: center; max-width: none; background: #f15a29; color: #fff; font-size: 12px; }
-.demo .sb__home .sb__hero { display: block; width: 100%; height: calc(100% - 26px); min-height: 380px; object-fit: cover; }
+/* 히어로는 공지 바 아래 화면 한 장 — % 는 높이가 정해지지 않은 부모라 안 먹는다 / one screen under the announcement bar; % has no definite parent height */
+.demo .sb__home .sb__hero { display: block; width: 100%; height: calc(var(--frame-h) - 26px); object-fit: cover; }
 .demo .sb__img { display: block; width: 100%; height: auto; }
 .demo .sb__copy { margin: 0; max-width: none; padding: 40px 24px; font-size: 20px; font-weight: 600; line-height: 1.25; }
 .demo .sb__pdp,
