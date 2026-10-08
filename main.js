@@ -666,3 +666,66 @@ run(() => {
       link.rel = "noopener";
     });
 });
+
+/* ── 6f. 04 Dec 02·03: 리퀴드 글래스 렌즈는 Chromium 에서만 ──
+   테마와 같은 판정이다. url() 을 backdrop-filter 에 쓰면 다른 브라우저는 선언 전체(블러까지)를
+   버리므로, 클래스가 붙은 곳에서만 렌즈 값을 쓴다.
+   Same gate as the theme: elsewhere url() in backdrop-filter voids the whole declaration,
+   blur included, so the lens values apply only where this class lands. */
+run(() => {
+  if (!(navigator.userAgentData && navigator.userAgentData.brands.some((b) => b.brand === "Chromium"))) return;
+  document.querySelectorAll(".demo .gl").forEach((el) => el.classList.add("is-lens"));
+});
+
+/* ── 6g. 04 Dec 04: 스크롤 연동 바 — 프레임의 처음 200px 을 0..1 로 ──
+   테마의 onScroll 과 같은 식이고, 쓰는 값은 --p 하나다. 나머지는 전부 CSS 의 calc() 다.
+   The theme's formula: 0..1 over the first 200px. One value is written; the rest is calc(). */
+run(() => {
+  const demo = document.querySelector("[data-demo-progress]");
+  if (!demo) return;
+  const frame = demo.querySelector(".sb");
+  const scroller = demo.querySelector("[data-sb-scroll]");
+  const out = demo.querySelector("[data-sb-value]");
+  const update = () => {
+    const p = Math.min(Math.max(scroller.scrollTop / 200, 0), 1);
+    frame.style.setProperty("--p", p);
+    frame.classList.toggle("is-stuck", p > 0);
+    out.textContent = p.toFixed(2);
+  };
+  scroller.addEventListener("scroll", update, { passive: true });
+  update();
+});
+
+/* ── 6h. 04 Dec 06: 보틀 — 테마 블록의 launchBottle 그대로 ──
+   속도는 px/초, 회전은 도/초라 주사율과 무관하게 같은 궤적이다. 동시 30개 상한, 키보드로
+   누르면(detail 0) 숫자 가운데에서 출발. 병은 데모 안에 붙고 position: fixed 로 화면 기준이다.
+   The theme block's launchBottle: time-based, 30 in flight at most, keyboard presses start
+   from the centre of the number. Bottles live inside the demo and are fixed to the viewport. */
+run(() => {
+  const demo = document.querySelector("[data-demo-bottle]");
+  if (!demo) return;
+  const template = demo.querySelector("[data-bottle-template]");
+  let flying = 0;
+  demo.addEventListener("click", (event) => {
+    const trigger = event.target.closest("[data-bottle-trigger]");
+    if (!trigger || flying >= 30 || reduce) return;
+    const rect = trigger.getBoundingClientRect();
+    const x0 = event.detail ? event.clientX : rect.left + rect.width / 2;
+    const y0 = event.detail ? event.clientY : rect.top + rect.height / 2;
+    const vx = (Math.random() - 0.5) * 600;
+    const vy = -(800 + Math.random() * 400);
+    const spin = (Math.random() - 0.5) * 1440;
+    const bottle = template.content.firstElementChild.cloneNode(true);
+    demo.append(bottle);
+    flying++;
+    const t0 = performance.now();
+    const step = (now) => {
+      const t = (now - t0) / 1000;
+      const y = y0 + vy * t + 1200 * t * t;   // 중력 2400px/s² 의 절반 / half of 2400px/s² gravity
+      bottle.style.transform = `translate(${x0 + vx * t}px, ${y}px) translate(-50%, -50%) rotate(${spin * t}deg)`;
+      if (y < innerHeight + 60) requestAnimationFrame(step);
+      else { bottle.remove(); flying--; }
+    };
+    requestAnimationFrame(step);
+  });
+});
