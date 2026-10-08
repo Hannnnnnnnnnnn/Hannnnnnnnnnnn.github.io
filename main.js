@@ -701,6 +701,10 @@ run(() => {
     frame.style.setProperty("--p", p);
     frame.style.setProperty("--y", stuck ? 0 : ANN - y);
     frame.classList.toggle("is-stuck", stuck);
+    // 상품 페이지: 메인 버튼이 프레임 위로 완전히 지나가면 sticky ATC (테마의 IntersectionObserver 조건)
+    // Product page: the sticky ATC once the main button is fully above the frame (the theme's IO condition)
+    const atc = demo.querySelector("[data-sb-atc]");
+    frame.classList.toggle("is-satc", !home && atc.getBoundingClientRect().bottom < scroller.getBoundingClientRect().top);
     out("y").textContent = Math.round(y);
     out("on").textContent = stuck ? "on" : "off";
     out("value").textContent = home ? p.toFixed(2) : "n/a";
@@ -742,4 +746,12 @@ run(() => {
     };
     requestAnimationFrame(step);
   });
+});
+
+/* ── 6i. 04 데모: 데스크톱 프레임 = 1440px 캔버스를 래퍼 폭에 맞춰 축소 ──
+   --s 하나만 쓴다. 폰 모드에선 쓰이지 않는다(스케일 없음).
+   Desktop frames are a 1440px canvas scaled to the wrapper; this writes --s only. */
+run(() => {
+  const ro = new ResizeObserver((entries) => entries.forEach((e) => e.target.style.setProperty("--s", e.contentRect.width / 1440)));
+  document.querySelectorAll(".demo .dev").forEach((el) => ro.observe(el));
 });

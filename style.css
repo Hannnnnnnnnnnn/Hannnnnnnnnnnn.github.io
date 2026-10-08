@@ -1657,8 +1657,9 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
   --menu-pad: 20px;
   --hover: 1;                  /* 폰은 호버가 오지 않으므로 80% 고정 / a phone never hovers: held at 80% */
   --frame-h: 560px;
+  --hero-h: 500px;             /* 테마 mobile_height_px / the theme's mobile_height_px */
   position: relative;
-  width: min(360px, 100%);
+  width: 100%;
   height: var(--frame-h);
   overflow: hidden;
   isolation: isolate;
@@ -1675,9 +1676,41 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
   --box-w: min(450px, calc(100% - 40px));
   --menu-pad: 30px;
   --hover: 0;
-  --frame-h: 440px;
-  width: 100%;
+  --frame-h: 900px;
+  --hero-h: 780px;             /* 테마 desktop_height_px / the theme's desktop_height_px */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1440px;
+  transform: scale(var(--s, 0.5));
+  transform-origin: 0 0;
 }
+/* 데스크톱은 1440px 페이지를 실제 치수로 그리고 통째로 축소한다 — 바·로고·박스의 비율이 실제 화면과
+   같아진다. --s 는 래퍼 폭 / 1440 (main.js 6i). 폰은 실제 크기 그대로.
+   Desktop draws a 1440px page at real sizes and scales the whole thing down, so the bar, logo
+   and boxes keep their true proportions; --s is wrapper width / 1440 (main.js 6i). Phones are drawn 1:1. */
+.demo .dev { position: relative; width: min(360px, 100%); }
+.demo[data-demo-glass]:has([name="gl-use"]:not([value="touch"]):checked) .dev,
+.demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .dev { width: 100%; aspect-ratio: 1440 / 900; overflow: hidden; }
+.demo[data-demo-progress] .dev { outline: 1px solid var(--line); }
+
+/* 배너 문구 — 드래프트 hero_carousel_pxPhQn 설정 그대로. 폰: 왼쪽 8 · 아래 24 · 패딩 15 · 18/12/12px,
+   데스크톱: 40 · 40 · 20 · 32/14/14px, 박스 최대 450px
+   The banner copy, from the draft's hero_carousel_pxPhQn settings: phone 8/24 offset, 15 padding,
+   18/12/12px; desktop 40/40, 20 padding, 32/14/14px, box at most 450px */
+.demo .gl__vid { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.demo .hc { position: absolute; left: 8px; bottom: 24px; max-width: 75%; padding: 15px; color: #fff; text-align: left; }
+.demo .hc .hc__h { margin: 0 0 10px; max-width: none; font-size: 18px; font-weight: 600; line-height: 1.2; }
+.demo .hc .hc__s { margin: 0 0 14px; max-width: none; font-size: 12px; line-height: 1.4; }
+.demo .hc .hc__l { display: block; font-size: 12px; text-decoration: underline; }
+.demo[data-demo-glass]:has([name="gl-use"]:not([value="touch"]):checked) .hc,
+.demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .hc { left: 40px; bottom: 40px; max-width: 450px; padding: 20px; }
+.demo[data-demo-glass]:has([name="gl-use"]:not([value="touch"]):checked) .hc__h,
+.demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .hc__h { font-size: 32px; }
+.demo[data-demo-glass]:has([name="gl-use"]:not([value="touch"]):checked) .hc__s,
+.demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .hc__s { margin-bottom: 20px; font-size: 14px; }
+.demo[data-demo-glass]:has([name="gl-use"]:not([value="touch"]):checked) .hc__l,
+.demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .hc__l { font-size: 14px; }
 /* 서치 아이콘: 데스크톱은 메뉴 옆, 폰은 카트 옆. 계정은 데스크톱에만 (테마의 small-hide)
    Search sits beside the menu on desktop and beside the cart on phones; account is desktop only */
 .demo .gl__btn.gl__dsk { display: none; }
@@ -1854,22 +1887,117 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
    Demo I: the homepage sticks once the 26px announcement bar is gone and runs --p 0..1 over
    200px (the theme's formulas). A product page sticks past the header's bottom edge, with a
    0.4s fade. Before it sticks, the header sits --y px down and scrolls away with the page. */
-.demo .sb { --p: 0; --y: 26; background: #fff; border: 1px solid var(--line); color: #0c0c0c; }
+.demo .sb { --p: 0; --y: 26; background: #fff; color: #0c0c0c; }
 .demo .sb__scroll { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; }
 .demo .sb__ann { margin: 0; height: 26px; display: grid; place-items: center; max-width: none; background: #f15a29; color: #fff; font-size: 12px; }
-/* 히어로는 공지 바 아래 화면 한 장 — % 는 높이가 정해지지 않은 부모라 안 먹는다 / one screen under the announcement bar; % has no definite parent height */
-.demo .sb__home .sb__hero { display: block; width: 100%; height: calc(var(--frame-h) - 26px); object-fit: cover; }
+/* 히어로 = 테마 배너 높이(폰 500 / 데스크톱 780px) / the hero is the theme's banner height */
+.demo .sb__home .sb__hero { position: relative; height: var(--hero-h); }
 .demo .sb__img { display: block; width: 100%; height: auto; }
 .demo .sb__copy { margin: 0; max-width: none; padding: 40px 24px; font-size: 20px; font-weight: 600; line-height: 1.25; }
 .demo .sb__pdp,
 .demo[data-demo-progress]:has([name="sb-page"][value="pdp"]:checked) .sb__home { display: none; }
-.demo[data-demo-progress]:has([name="sb-page"][value="pdp"]:checked) .sb__pdp { display: block; padding-top: calc(var(--btn-h) + 28px); }
-.demo .sb__media { background: #f5f5f5; }
-.demo .sb__media img { display: block; width: 100%; height: auto; }
-.demo .sb__info { padding: 20px 24px 32px; }
-.demo .sb__title { margin: 0; font-size: 20px; font-weight: 600; }
-.demo .sb__price { margin: 6px 0 16px; font-size: 18px; }
-.demo .sb__atc { display: block; padding: 13px; border: 1px solid #0c0c0c; font-size: 12px; letter-spacing: 0.2em; text-align: center; text-transform: uppercase; }
+.demo[data-demo-progress]:has([name="sb-page"][value="pdp"]:checked) .sb__pdp { display: flex; }
+
+/* ── 데모 I 의 상품 페이지 — 드래프트 /products/mini-barrel-bag 그대로 ──
+   1920px 실측을 1440 캔버스로 옮겼다: 콘텐츠 = min(1600, 폭) - 좌우 50, 미디어 60% · 정보 40%,
+   정보 칼럼은 왼쪽 패딩 70 · 위 30 · sticky. 글자·버튼은 px 고정값 그대로.
+   폰은 창 폭을 줄일 수 없어 실측하지 못했다 — 테마의 폰 구조(가로 슬라이더, 썸네일 없음, 좌우 15px)로 그렸다.
+   The product page in demo I, as the draft renders /products/mini-barrel-bag. Measured at 1920 and
+   carried to the 1440 canvas by the theme's own rules (content = min(1600, width) - 2 x 50, media 60%,
+   info 40% with 70px left padding, 30px top, sticky); type and buttons are fixed px. The phone layout
+   could not be measured (the window cannot be narrowed) and follows the theme's phone structure. */
+.demo .pp { --pp-pad: 0px; align-items: flex-start; flex-direction: column; padding: calc(var(--btn-h) + 40px) var(--pp-pad) 120px; font-family: var(--shop); color: #0c0c0c; }
+.demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .pp { --pp-pad: 50px; flex-direction: row; }
+.demo .pp ul { list-style: none; margin: 0; padding: 0; max-width: none; }
+.demo .pp li { margin: 0; }
+.demo .pp p { margin: 0; max-width: none; }
+.demo .pp img { display: block; width: 100%; height: auto; }
+
+.demo .pp__media { position: relative; width: 100%; }
+.demo .pp__gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.demo .pp__gallery > li { position: relative; flex: 0 0 100%; scroll-snap-align: start; background: #f5f5f5; }
+.demo .pp__tcol { display: none; }
+.demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .pp__media { flex: 0 0 60%; }
+.demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .pp__gallery { flex-direction: column; gap: 8px; overflow: visible; }
+/* 썸네일 열: 미디어 오른쪽 끝에 걸쳐(오른쪽 -30) 폭 60, 섹션 위에서 60 아래에 붙는다
+   The thumbnail column straddles the media's right edge (-30), 60 wide, stuck 60px down */
+.demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .pp__tcol { display: block; position: absolute; top: 0; bottom: 0; right: -30px; width: 60px; }
+.demo .pp__thumbs { position: sticky; top: 60px; display: grid; gap: 8px; padding-top: 60px; }
+.demo .pp__thumbs li { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: #f5f5f5; }
+.demo .pp__thumbs img { height: 100%; object-fit: cover; }
+.demo .pp__thumbs .is-on { outline: 1px solid #0c0c0c; outline-offset: -1px; }
+.demo .pp__thumb--video::after { content: ""; position: absolute; right: 4px; bottom: 4px; width: 14px; height: 14px; background: #0c0c0c url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M3 2l5 3-5 3z' fill='%23fff'/%3E%3C/svg%3E") center / 10px no-repeat; }
+/* PET 배지: 실측 74x36, 12/12, 패딩 6/12, 반경 30, rgba(84,213,131,.5), 흰 12px / the PET badge, measured */
+.demo .pp__pet { position: absolute; top: 12px; left: 12px; display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 30px; background: rgba(84, 213, 131, 0.5); color: #fff; font-size: 12px; }
+.demo .pp__pet svg { width: 22px; height: 22px; }
+
+.demo .pp__info { width: 100%; padding: 20px 15px 0; }
+.demo[data-demo-progress]:has([name="sb-device"][value="desktop"]:checked) .pp__info { position: sticky; top: 0; flex: 0 0 40%; padding: 30px 0 0 70px; }
+.demo .pp__badge { margin-bottom: 4px; font-size: 14px; font-weight: 600; letter-spacing: 0.56px; line-height: 16.8px; text-transform: uppercase; color: #dc2626; }
+.demo .pp__title { margin-bottom: 20px; font-size: 24px; font-weight: 600; letter-spacing: 0.6px; line-height: 31.2px; }
+/* 가격: 금액 22px · $ 15.4px · .00 13.2px 위첨자, 자간 1.3 / price: 22px, $ 15.4px, .00 13.2px superscript */
+.demo .pp__price { margin-bottom: 20px; font-size: 22px; font-weight: 500; letter-spacing: 1.3px; line-height: 37.8px; }
+.demo .pp__price .pp__cur { font-size: 15.4px; }
+.demo .pp__price sup { font-size: 13.2px; }
+.demo .pp__option { margin-bottom: 4px; font-size: 13px; letter-spacing: 0.4px; line-height: 19.5px; text-transform: uppercase; }
+.demo .pp__option span { text-transform: none; }
+.demo .pp__swatches { display: flex; gap: 8px; margin-bottom: 33px; }
+.demo .pp__swatches span { width: 76px; height: 101px; background: #f5f5f5; }
+.demo .pp__swatches img { height: 100%; object-fit: cover; }
+.demo .pp__swatches .is-on { outline: 2px solid #0c0c0c; outline-offset: -2px; }
+.demo .pp__atc { display: grid; place-items: center; height: 50px; margin-bottom: 10px; border: 1px solid #0c0c0c; font-size: 12px; letter-spacing: 2.4px; text-transform: uppercase; }
+.demo .pp__shop { display: grid; place-items: center; height: 50px; background: #5433eb; color: #fff; font-size: 17px; letter-spacing: 0.2px; }
+.demo .pp__shop b { font-weight: 700; letter-spacing: -0.4px; }
+.demo .pp__more { display: block; margin: 16px 0 35px; font-size: 12px; letter-spacing: 0.5px; text-align: center; text-decoration: underline; }
+
+/* Pair well with: 위 1px 선, 제목 16px, 카드 170px(사진 4:5, 이름 12 · 변형 10, 가격 14/9.8/8.4, 칩 14, 버튼 33)
+   Pair well with: 1px top rule, 16px title, 170px cards (4:5 photo, 12/10 name, 14/9.8/8.4 price, 14px chips, 33px button) */
+.demo .pp__pairs { padding: 16px 15px 5px; border-top: 1px solid #0c0c0c; }
+.demo .pp__ptitle { margin-bottom: 14px; font-size: 16px; line-height: 28.8px; }
+.demo .pp__rail { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+.demo .pp__card { flex: 0 0 170px; display: flex; flex-direction: column; }
+.demo .pp__cimg { display: block; aspect-ratio: 4 / 5; background: #f5f5f5; }
+.demo .pp__cimg img { height: 100%; object-fit: cover; }
+.demo .pp__cname { margin-top: 9px; font-size: 12px; letter-spacing: 0.6px; line-height: 15.6px; }
+.demo .pp__cvar { font-size: 10px; }
+.demo .pp__cprice { margin-top: 12px; font-size: 14px; font-weight: 500; letter-spacing: 1.3px; }
+.demo .pp__cprice .pp__cur { font-size: 9.8px; }
+.demo .pp__cprice sup { font-size: 8.4px; }
+.demo .pp__dots { display: flex; align-items: center; gap: 4px; margin-top: 8px; }
+.demo .pp__dot { width: 14px; height: 14px; border-radius: 50%; background-size: cover; }
+.demo .pp__dot.is-on { box-shadow: 0 0 0 1px #fff, 0 0 0 2px #0c0c0c; }
+.demo .pp__more-n { font-size: 11.67px; }
+.demo .pp__cbtn { display: grid; place-items: center; height: 33px; margin-top: 12px; border: 1px solid #0c0c0c; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+.demo .pp__cbtn--sold { width: 120px; height: 40px; margin-top: 26px; }
+.demo .pp__acc { max-width: none; margin-top: 26px; padding: 0; background: none; border-bottom: 1px solid #0c0c0c; }
+.demo .pp .acc__head { margin: 0; }
+
+/* sticky ATC: 바 아래 8px, 오른쪽 끝 = 바 오른쪽 끝, 유리 50%, 가격 14px + 검정 버튼 36px(11px/500/0.2em) —
+   테마 .sticky-atc 그대로. 메인 버튼이 화면 위로 완전히 지나가면 0.4s 페이드 인
+   The sticky ATC, as the theme's .sticky-atc: 8px under the bar, right edge on the bar's, 50% glass,
+   14px price and a 36px black button; fades in once the main button is fully past the top */
+.demo .sb__satc {
+  position: absolute;
+  z-index: 1;
+  top: calc(10px + var(--bar-h) + 8px);
+  right: var(--inset);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 4px 4px 16px;
+  background: rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.5), inset -1px -1px 0 rgba(255, 255, 255, 0.12), inset 0 0 16px rgba(255, 255, 255, 0.08), 0 2px 12px rgba(0, 0, 0, 0.06);
+  font-size: 14px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0s 0.4s;
+}
+.demo .sb.is-satc .sb__satc { opacity: 1; visibility: visible; transition: opacity 0.4s ease; }
+/* 폰은 80% (테마 2f854c6) / phones hold 80%, as the theme now does */
+.demo[data-demo-progress]:has([name="sb-device"][value="phone"]:checked) .sb__satc { background: rgba(255, 255, 255, 0.8); }
+.demo .sb__satc-btn { display: grid; place-items: center; min-height: 36px; padding: 0 16px; background: #0c0c0c; color: #fff; font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; }
 
 .demo .sb__bar {
   position: absolute;
