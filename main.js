@@ -667,6 +667,16 @@ run(() => {
     });
 });
 
+/* ── 6f0. 04 데모: 폰으로 보면 폰 모드로 연다 ──
+   1440 캔버스는 좁은 화면에서 5분의 1 크기가 되어 읽히지 않는다. 800px 미만이면 기기 토글을
+   Phone 으로 시작한다(데스크톱은 여전히 고를 수 있다).
+   On a narrow screen the 1440 canvas shrinks to a fifth and stops reading, so below 800px the
+   device toggles start on Phone (Desktop is still one tap away). */
+run(() => {
+  if (!matchMedia("(max-width: 799px)").matches) return;
+  document.querySelectorAll('.demo [name="gl-use"][value="touch"], .demo [name="sb-device"][value="phone"]').forEach((i) => { i.checked = true; });
+});
+
 /* ── 6f. 04 Dec 02·03: 리퀴드 글래스 렌즈는 Chromium 에서만 ──
    테마와 같은 판정이다. url() 을 backdrop-filter 에 쓰면 다른 브라우저는 선언 전체(블러까지)를
    버리므로, 클래스가 붙은 곳에서만 렌즈 값을 쓴다.
