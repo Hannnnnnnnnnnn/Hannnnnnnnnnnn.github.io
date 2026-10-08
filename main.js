@@ -752,6 +752,10 @@ run(() => {
    --s 하나만 쓴다. 폰 모드에선 쓰이지 않는다(스케일 없음).
    Desktop frames are a 1440px canvas scaled to the wrapper; this writes --s only. */
 run(() => {
-  const ro = new ResizeObserver((entries) => entries.forEach((e) => e.target.style.setProperty("--s", e.contentRect.width / 1440)));
-  document.querySelectorAll(".demo .dev").forEach((el) => ro.observe(el));
+  const devs = document.querySelectorAll(".demo .dev");
+  const fit = (el) => el.style.setProperty("--s", el.getBoundingClientRect().width / 1440);
+  // RO 가 주 경로지만 숨은 탭에선 콜백이 없으므로 로드·토글 때도 직접 잰다
+  // RO is the main path, but a hidden tab delivers no callbacks, so measure on load and on toggles too
+  const ro = new ResizeObserver((entries) => entries.forEach((e) => fit(e.target)));
+  devs.forEach((el) => { ro.observe(el); fit(el); el.closest(".demo").addEventListener("change", () => fit(el)); });
 });
