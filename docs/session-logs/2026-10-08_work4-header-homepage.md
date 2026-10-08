@@ -42,3 +42,13 @@
   읽기 전에 work-4 를 여기 올렸다. 오너 결정: "일단 그대로 두자" → **두 벌을 유지하고, 고칠 때는 양쪽에.**
 - 800px 미만에서 데모가 Phone 으로 열린다(1440 캔버스가 폰에선 0.21배라 안 읽힘). 양쪽 동일.
 - 남은 것: 히어로 녹화 2개, 데스크톱 햄버거 재검토(오너), 폰 상품 페이지·80% 유리의 실기기 확인.
+
+## 5차 (같은 날) — Before/After, 데스크톱·폰 동시 표시
+/portfolio `product/header/` 와 같은 변경. 자세한 내용은 그 저장소 `SESSION-LOG.md` 2026-10-08 (later).
+- Dec 04: 상품 페이지 sticky ATC 문단(오너: 세일즈에 중요), 데모에 Before(live)/After 토글. **라이브는
+  `enable_sticky_header` 꺼짐** — 헤더가 그냥 스크롤되어 사라지고 sticky ATC 없음. "vendor header hides on scroll
+  down" 문장을 이에 맞게 고침.
+- Dec 02·04: Device 토글 대신 데스크톱·폰 프레임을 나란히(폰은 JS 복제, `.dev--desk` 클래스, 같은 높이로 축소).
+  900px 이상에선 데모가 본문 칸 오른쪽 여백까지 넓어진다. 위의 "800px 미만 Phone 으로 열림"은 없어졌다.
+- Dec 01: 라이브·드래프트(`188817080624`) 홈페이지 실제 캡처 두 장을 폰 프레임에(`images/04-header/home-*.jpg`).
+  드래프트 2·3번 배너가 Miffy·Most Loved 로 바뀌면 다시 캡처.
