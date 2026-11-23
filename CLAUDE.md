@@ -19,7 +19,7 @@ GitHub Pages가 저장소 루트를 그대로 서빙한다. 페이지 6개 (홈 
 | 커밋 author | `Hannnnnnnnnnnn` | 잔디가 포트폴리오 계정에 찍혀야 함 |
 
 **GitHub은 "누가 push했는지"가 아니라 커밋의 author 이메일로 기여를 귀속시킨다.** 그래서
-이 저장소만 local git 신원을 덮어쓴다 (global은 `Han-Atacz / han.kim@atacz.com`이고
+이 저장소만 local git 신원을 덮어쓴다 (global은 회사 계정 `Han-Atacz` 이고
 건드리지 않는다):
 
     git config user.name  Hannnnnnnnnnnn
